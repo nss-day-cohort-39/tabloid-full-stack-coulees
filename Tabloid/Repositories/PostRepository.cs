@@ -4,16 +4,25 @@ using Microsoft.EntityFrameworkCore;
 using Tabloid.Data;
 using Tabloid.Models;
 using Microsoft.VisualBasic;
+using System.Security.Claims;
+
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
+using Microsoft.Extensions.Configuration;
 
 namespace Tabloid.Repositories
 {
+   
     public class PostRepository
     {
         //saving an instance of our app db context
         private readonly ApplicationDbContext _context;
+        private readonly UserProfileRepository _userProfileRepository;
+
         public PostRepository(ApplicationDbContext context)
         {
             _context = context;
+            _userProfileRepository = new UserProfileRepository(context);
         }
 
         public List<Post> GetAll()
@@ -44,9 +53,10 @@ namespace Tabloid.Repositories
         {
             return _context.Post.Include(p => p.UserProfile)
                             .Where(p => p.UserProfileId == id)
-                            .OrderBy(p => p.Title)
+                            .OrderByDescending(p => p.CreateDateTime)
                             .ToList();
         }
+       
         public void Add(Post post)
         {
             post.CreateDateTime = DateAndTime.Now;
@@ -76,6 +86,6 @@ namespace Tabloid.Repositories
                             .OrderByDescending(p => p.PublishDateTime)
                             .ToList();
         }
-
+       
     }
 }
