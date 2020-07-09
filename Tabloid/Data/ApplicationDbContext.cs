@@ -8,6 +8,7 @@ namespace Tabloid.Data
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : base(options) { }
 
         public DbSet<UserProfile> UserProfile { get; set; }
+        public DbSet<Post> Post { get; set; }
         public DbSet<UserType> UserType { get; set; }
     }
 }

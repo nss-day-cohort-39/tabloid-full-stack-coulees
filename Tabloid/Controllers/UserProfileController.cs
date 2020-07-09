@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Infrastructure;
 using System;
 using Tabloid.Data;
@@ -7,6 +8,7 @@ using Tabloid.Repositories;
 
 namespace Tabloid.Controllers
 {
+  
     [Route("api/[controller]")]
     [ApiController]
     public class UserProfileController : ControllerBase
