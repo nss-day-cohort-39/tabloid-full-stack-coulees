@@ -71,7 +71,7 @@ namespace Tabloid.Repositories
         {
             return _context.Post
                             .Include(p => p.UserProfile)
-                            //.Where(p => p.IsApproved == true)
+                            .Where(p => p.IsApproved == true)
                             .Where(p => p.PublishDateTime <= DateAndTime.Now)
                             .OrderByDescending(p => p.PublishDateTime)
                             .ToList();
