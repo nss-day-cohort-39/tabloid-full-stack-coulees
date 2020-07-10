@@ -25,7 +25,7 @@ namespace Tabloid.Repositories
 
         public List<Tag> GetAll()
         {
-            return _context.Tag.ToList();
+            return _context.Tag.OrderBy(t => t.Name).ToList();
         }
 
         public Tag GetById(int id)

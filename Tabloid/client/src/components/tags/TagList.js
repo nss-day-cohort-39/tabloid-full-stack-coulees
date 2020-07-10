@@ -33,7 +33,7 @@ const TagList = () => {
             <div className="container">
                 <div className="row justify-content-center">
                     <div id="tagList" className="cards-column">
-                        <Button color="primary" onClick={addModalToggle} className="mb-4">Add New Tag</Button>
+                        <Button color="primary" onClick={addModalToggle} className="mb-4">Create Tag</Button>
                         <ListGroup>
                             {
                                 (tags.length)
@@ -55,7 +55,7 @@ const TagList = () => {
 
             <Modal isOpen={addModal} toggle={addModalToggle}>
                 <ModalHeader toggle={addModalToggle}>
-                    Add a Tag
+                    Create a Tag
                 </ModalHeader>
                 <ModalBody>
                     <TagForm toggle={addModalToggle} />
