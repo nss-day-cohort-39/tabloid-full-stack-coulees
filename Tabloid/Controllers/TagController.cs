@@ -42,7 +42,7 @@ namespace Tabloid.Controllers
         public IActionResult Post(Tag tag)
         {
             _tagRepository.Add(tag);
-            return CreatedAtAction("Get", new { id = tag.Id }, tag);
+            return CreatedAtAction(nameof(Get), new { id = tag.Id }, tag);
         }
 
         [HttpPut("{id}")]
