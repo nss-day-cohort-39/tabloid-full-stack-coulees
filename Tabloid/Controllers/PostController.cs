@@ -56,13 +56,6 @@ namespace Tabloid.Controllers
             return Ok(_postRepository.GetByUserProfileId(currentUserId));
         }
 
-        //public IActionResult GetComments()
-        //{
-        //    int currentUserId = GetCurrentUserProfile().Id;
-
-        //    return Ok(_postRepository.GetByUserProfileId(currentUserId));
-        //}
-
         //https://localhost/api/post/getpublished
         [HttpGet("getpublished")]
         public IActionResult GetPublished()
