@@ -27,6 +27,7 @@ namespace Tabloid.Repositories
         {
             return _context.Post
                             .Include(p => p.UserProfile)
+                            .Include(p => p.Category)
                             .ToList();
         }
 
@@ -45,11 +46,13 @@ namespace Tabloid.Repositories
         {
             return _context.Post
                             .Include(p => p.UserProfile)
+                            .Include(p => p.Category)
                             .FirstOrDefault(p => p.Id == id);
         }
         public List<Post> GetByUserProfileId(int id)
         {
             return _context.Post.Include(p => p.UserProfile)
+                            .Include(p => p.Category)
                             .Where(p => p.UserProfileId == id)
                             .OrderByDescending(p => p.CreateDateTime)
                             .ToList();
@@ -79,6 +82,7 @@ namespace Tabloid.Repositories
         {
             return _context.Post
                             .Include(p => p.UserProfile)
+                            .Include(p => p.Category)
                             .Where(p => p.IsApproved == true)
                             .Where(p => p.PublishDateTime <= DateAndTime.Now)
                             .OrderByDescending(p => p.PublishDateTime)

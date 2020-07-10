@@ -9,6 +9,7 @@ const Post = ({ post }) => {
             <CardBody>
                 <strong><Link to={`/posts/${post.id}`}>{post.title}</Link></strong>
                 <div className="text-left px-2">{post.userProfile.fullName}</div>
+                <div className="text-left px-2">{post.category.name}</div>
             </CardBody>
         </Card>
     );

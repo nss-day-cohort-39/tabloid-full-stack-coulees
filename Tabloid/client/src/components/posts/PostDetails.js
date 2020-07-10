@@ -23,6 +23,7 @@ const PostDetails = () => {
             <h2>{post.title}</h2>
             <h3>{post.userProfile.displayName}</h3>
             <h3>{dateTimeFormat}</h3>
+            <h3>{post.category.name}</h3>
             <hr />
             <img src={post.imageLocation} alt={post.title} className="img-fluid" />
             <p>{post.content}</p>
