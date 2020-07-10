@@ -3,17 +3,16 @@ import { PostContext } from '../../providers/PostProvider';
 import Post from './Post';
 
 const MyPosts = () => {
-    const { posts, getPostsByUser } = useContext(PostContext);
-
+    const { posts, getPostsByCurrentUser } = useContext(PostContext);
     useEffect(() => {
-        getPostsByUser()
+        getPostsByCurrentUser()
     }, []);
 
     return (
         <div className="container">
             <div className="row justify-content-center">
                 <div className="cards-column">
-                    {
+                    {                        
                         (posts.length)
                             ? posts.map((post) => (
                                 <Post key={post.id} post={post} />

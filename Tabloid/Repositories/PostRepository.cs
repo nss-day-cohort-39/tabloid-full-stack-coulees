@@ -17,12 +17,10 @@ namespace Tabloid.Repositories
     {
         //saving an instance of our app db context
         private readonly ApplicationDbContext _context;
-        private readonly UserProfileRepository _userProfileRepository;
 
         public PostRepository(ApplicationDbContext context)
         {
             _context = context;
-            _userProfileRepository = new UserProfileRepository(context);
         }
 
         public List<Post> GetAll()
@@ -56,7 +54,7 @@ namespace Tabloid.Repositories
                             .OrderByDescending(p => p.CreateDateTime)
                             .ToList();
         }
-       
+
         public void Add(Post post)
         {
             post.CreateDateTime = DateAndTime.Now;

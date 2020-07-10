@@ -46,6 +46,16 @@ namespace Tabloid.Controllers
             return Ok(_postRepository.GetByUserProfileId(id));
         }
 
+
+        //https://localhost/api/post/getbyuser/1
+        [HttpGet("currentUser")]
+        public IActionResult GetByCurrentUser()
+        {
+            int currentUserId = GetCurrentUserProfile().Id;
+
+            return Ok(_postRepository.GetByUserProfileId(currentUserId));
+        }
+
         //https://localhost/api/post/getpublished
         [HttpGet("getpublished")]
         public IActionResult GetPublished()
