@@ -17,7 +17,7 @@ const TagDeleteModal = ({ toggle, tag }) => {
     return (
         <>
             <Form onSubmit={submitForm}>
-                <div class="lead mb-2">Are you sure you wish to delete the tag "{tag.name}"?</div>
+                <div className="lead mb-2">Are you sure you wish to delete the tag "{tag.name}"?</div>
                 <div className="text-right">
                     <Button
                         type="button"
