@@ -1,7 +1,9 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿
+using Microsoft.AspNetCore.Mvc;
 
 namespace Tabloid.Controllers
 {
+   
     [Route("api/[controller]")]
     [ApiController]
     public class HelloController : ControllerBase
