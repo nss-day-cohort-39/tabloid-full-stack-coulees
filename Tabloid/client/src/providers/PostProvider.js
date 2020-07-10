@@ -31,6 +31,27 @@ export const PostProvider = (props) => {
                 .then(setPosts));
     };
 
+    const getPost = (id) =>
+        getToken().then((token) =>
+            fetch(`/api/post/${id}`, {
+                method: "GET",
+                headers: {
+                    Authorization: `Bearer ${token}`,
+                },
+            }).then((res) => res.json())
+        );
+
+    const getPostsByCurrentUser = () => {
+        getToken().then((token) =>
+            fetch(apiUrl + `/currentUser`, {
+                method: "GET",
+                headers: {
+                    Authorization: `Bearer ${token}`
+                }
+            }).then(resp => resp.json())
+                .then(setPosts));
+    };
+
     const addPost = (post) => {
         getToken().then((token) =>
             fetch(apiUrl, {
@@ -62,27 +83,6 @@ export const PostProvider = (props) => {
     //         }).then(resp => resp.json())
     //             .then(setPosts));
     // }
-
-    const getPost = (id) =>
-        getToken().then((token) =>
-            fetch(`/api/post/${id}`, {
-                method: "GET",
-                headers: {
-                    Authorization: `Bearer ${token}`,
-                },
-            }).then((res) => res.json())
-        );
-
-    const getPostsByCurrentUser = () => {
-        getToken().then((token) =>
-            fetch(apiUrl + `/currentUser`, {
-                method: "GET",
-                headers: {
-                    Authorization: `Bearer ${token}`
-                }
-            }).then(resp => resp.json())
-                .then(setPosts));
-    };
 
     return (
         <PostContext.Provider value={{
