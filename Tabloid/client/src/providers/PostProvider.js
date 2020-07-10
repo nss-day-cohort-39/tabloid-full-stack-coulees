@@ -63,16 +63,15 @@ export const PostProvider = (props) => {
     //             .then(setPosts));
     // }
 
-    const getPost = (id) => {
+    const getPost = (id) =>
         getToken().then((token) =>
-            fetch(apiUrl + `/${id}`, {
+            fetch(`/api/post/${id}`, {
                 method: "GET",
                 headers: {
-                    Authorization: `Bearer ${token}`
-                }
-            }).then(resp => resp.json())
-                .then(setPosts));
-    };
+                    Authorization: `Bearer ${token}`,
+                },
+            }).then((res) => res.json())
+        );
 
     const getPostsByCurrentUser = () => {
         getToken().then((token) =>
