@@ -1,6 +1,7 @@
 import React, { useContext, useEffect, useState } from 'react';
 import { useParams } from "react-router-dom";
 import { PostContext } from '../../providers/PostProvider';
+import { Button } from "reactstrap"
 
 const PostDetails = () => {
     const [post, setPost] = useState();
@@ -27,6 +28,10 @@ const PostDetails = () => {
             <hr />
             <img src={post.imageLocation} alt={post.title} className="img-fluid" />
             <p>{post.content}</p>
+
+            <Button color="secondary" onClick={() => {
+                viewComment()
+            }}>View Comments</Button>
         </div >
     );
 };
