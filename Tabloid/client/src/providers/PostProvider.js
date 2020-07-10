@@ -8,9 +8,8 @@ export const PostProvider = (props) => {
     const { getToken } = useContext(UserProfileContext)
     const [posts, setPosts] = useState([]);
 
-    const history = useHistory()
-
     const apiUrl = '/api/post'
+    const history = useHistory();
 
     const getAllPosts = () => {
         getToken().then((token) =>
@@ -69,8 +68,8 @@ export const PostProvider = (props) => {
                     return resp.json();
                 }
                 throw new Error("Unauthorized");
-            }).then(getAllPosts)
-                .then(() => history.push('/myposts')));
+            }).then(resp => history.push(`/posts/${resp.id}`))
+                .then(getAllPosts));
     };
 
     // const searchPosts = (q) => {

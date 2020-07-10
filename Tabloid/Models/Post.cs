@@ -22,6 +22,7 @@ namespace Tabloid.Models
         [MaxLength(255)]
         public string ImageLocation { get; set; }
 
+        [Required]
         public DateTime CreateDateTime { get; set; }
 
         public DateTime PublishDateTime { get; set; }

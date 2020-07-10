@@ -44,7 +44,7 @@ const PostForm = () => {
                     <Label for='PublishDate'>Choose a Date to Publish Your Post</Label>
                     <Input type='date' name='PublishDate' id='publishDate' innerRef={publishDate} />
                 </FormGroup>
-                <Button onClick={handleSubmit}>Submit</Button>
+                <Button onClick={handleSubmit}>Save</Button>
             </Form>
         </div>
     )
