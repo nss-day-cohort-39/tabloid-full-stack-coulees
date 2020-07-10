@@ -29,13 +29,13 @@ namespace Tabloid.Controllers
         [HttpGet("{id}")]
         public IActionResult Get(int id)
         {
-            var post = _tagRepository.GetById(id);
-            if (post == null)
+            var tag = _tagRepository.GetById(id);
+            if (tag == null)
 
             {
                 return NotFound();
             }
-            return Ok(post);
+            return Ok(tag);
         }
 
         [HttpPost]
