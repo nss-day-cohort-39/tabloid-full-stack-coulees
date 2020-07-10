@@ -10,8 +10,6 @@ const TagForm = ({ toggle }) => {
         getAllTags()
     }, []);
 
-    console.log(tags);
-
     const name = useRef();
 
     const [showError, setError] = useState(false);
@@ -19,9 +17,11 @@ const TagForm = ({ toggle }) => {
     const submitForm = (e) => {
         e.preventDefault();
 
-        const alreadyExists = tags.filter(tag => tag.name === name.current.value);
+        const alreadyExists = tags.some(tag => tag.name === name.current.value);
 
-        if (!alreadyExists) {
+        console.log(alreadyExists);
+
+        if (alreadyExists) {
             setError(true);
         } else {
             addTag({ name: name.current.value })
@@ -35,7 +35,7 @@ const TagForm = ({ toggle }) => {
         <Form onSubmit={submitForm}>
             <FormGroup>
                 <Label for="postTitle">Name</Label>
-                <Input type="text" name="tagName" id="tagName" innerRef={name} placeholder="" />
+                <Input type="text" name="tagName" id="tagName" innerRef={name} placeholder="" onChange={() => setError(false)} />
             </FormGroup>
             <FormGroup className="text-right">
                 <Button
@@ -48,7 +48,7 @@ const TagForm = ({ toggle }) => {
                     color="primary"
                     className="ml-2"
                 >Save</Button>
-                <Alert color="danger" isOpen={showError}>
+                <Alert color="danger" isOpen={showError} className="mt-2 text-center">
                     This tag already exists!
                 </Alert>
             </FormGroup>
