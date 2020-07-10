@@ -1,10 +1,8 @@
 import React, { useContext, useRef } from 'react'
 import { Form, FormGroup, Input, Row, FormText, Button, Label } from 'reactstrap'
 import { PostContext } from "../../providers/PostProvider";
-import { useHistory } from "react-router-dom"
 
 const PostForm = () => {
-    const history = useHistory();
     const { addPost } = useContext(PostContext)
 
     const title = useRef()
@@ -22,7 +20,6 @@ const PostForm = () => {
         }
         console.log(Post)
         addPost(Post)
-        history.push('/myposts')
     }
 
     return (

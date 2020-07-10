@@ -1,11 +1,14 @@
 import React, { useState, useContext } from "react";
 import { UserProfileContext } from "../providers/UserProfileProvider";
+import { useHistory } from "react-router-dom";
 
 export const PostContext = React.createContext();
 
 export const PostProvider = (props) => {
     const { getToken } = useContext(UserProfileContext)
     const [posts, setPosts] = useState([]);
+
+    const history = useHistory()
 
     const apiUrl = '/api/post'
 
@@ -66,7 +69,8 @@ export const PostProvider = (props) => {
                     return resp.json();
                 }
                 throw new Error("Unauthorized");
-            }));
+            }).then(getAllPosts)
+                .then(() => history.push('/myposts')));
     };
 
     // const searchPosts = (q) => {
