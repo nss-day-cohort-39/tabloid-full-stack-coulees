@@ -2,7 +2,7 @@ import React, { useContext, useEffect, useState } from 'react';
 import { useParams } from "react-router-dom";
 import { PostContext } from '../../providers/PostProvider';
 import { Button, Modal, ModalHeader, ModalFooter, ModalBody } from 'reactstrap';
-import PostForm from './PostForm';
+import EditPostForm from './EditPostForm';
 
 const PostDetails = () => {
     const [deleteModal, showDelete] = useState(false)
@@ -49,8 +49,8 @@ const PostDetails = () => {
                     </Modal >
                     <Modal isOpen={editModal}>
                         <ModalBody>
-                            <PostForm post={post} showEdit={showEdit} />
-                            <Button className='btn mt-1' outline={true} onClick={() => showEdit(false)}>cancel</Button>
+                            <EditPostForm postId={post.id} showEdit={showEdit} />
+                            <Button className='btn mt-1' size='small' outline={true} onClick={() => showEdit(false)}>cancel</Button>
                         </ModalBody>
                     </Modal>
                 </>
