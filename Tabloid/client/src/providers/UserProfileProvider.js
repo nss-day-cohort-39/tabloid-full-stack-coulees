@@ -10,6 +10,7 @@ export function UserProfileProvider(props) {
 
   const userProfile = sessionStorage.getItem("userProfile");
   const [isLoggedIn, setIsLoggedIn] = useState(userProfile != null);
+  const [isAdmin, setIsAdmin] = useState(false)
   const [isFirebaseReady, setIsFirebaseReady] = useState(false);
   const [users, setUsers] = useState([])
 
@@ -25,6 +26,9 @@ export function UserProfileProvider(props) {
       .then((userProfile) => {
         sessionStorage.setItem("userProfile", JSON.stringify(userProfile));
         setIsLoggedIn(true);
+        if (userProfile.userType.name === 'Admin') {
+          setIsAdmin(true)
+        }
       });
   };
 
@@ -81,7 +85,7 @@ export function UserProfileProvider(props) {
   };
 
   return (
-    <UserProfileContext.Provider value={{ isLoggedIn, login, logout, register, getToken, getAllUsers, users }}>
+    <UserProfileContext.Provider value={{ isLoggedIn, login, logout, register, getToken, getAllUsers, users, isAdmin }}>
       {isFirebaseReady
         ? props.children
         : <Spinner className="app-spinner dark" />}
