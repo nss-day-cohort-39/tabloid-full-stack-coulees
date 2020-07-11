@@ -37,6 +37,7 @@ export function UserProfileProvider(props) {
       .then(() => {
         sessionStorage.clear()
         setIsLoggedIn(false);
+        setIsAdmin(false)
       });
   };
 

@@ -16,8 +16,6 @@ export default function Header() {
   const [isOpen, setIsOpen] = useState(false);
   const toggle = () => setIsOpen(!isOpen);
 
-  console.log(isAdmin)
-
   return (
     <div>
       <Navbar color="light" light expand="md">
@@ -42,7 +40,7 @@ export default function Header() {
                 </NavItem>
               </>
             }
-            {isAdmin &&
+            {isLoggedIn && isAdmin &&
               <>
                 <NavItem>
                   <NavLink tag={RRNavLink} to="/users">Users</NavLink>
