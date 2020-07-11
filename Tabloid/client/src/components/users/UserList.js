@@ -14,8 +14,8 @@ const UserList = () => {
         <Table>
             <thead className='thead-dark'>
                 <tr>
-                    <th>Full Name</th>
                     <th>Display Name</th>
+                    <th>Full Name</th>
                     <th>User Type</th>
                 </tr>
             </thead>
