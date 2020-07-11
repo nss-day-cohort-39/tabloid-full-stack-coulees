@@ -33,7 +33,7 @@ export const CategoryProvider = (props) => {
                 if (resp.ok) {
                     return resp.json();
                 }
-                throw new Error("Unauthorized");
+                alert("Name field is required")
             }));
     };
 

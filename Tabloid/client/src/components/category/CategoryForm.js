@@ -4,8 +4,8 @@ import { Form } from "reactstrap"
 import { CategoryContext } from "../../providers/CategoryProvider"
 
 
-export const CategoryForm = () => {
-    const { addCategory } = useContext(CategoryContext)
+export const CategoryForm = ({toggle}) => {
+    const { getAllCategory, addCategory } = useContext(CategoryContext)
     const history = useHistory()
     const name = useRef("name")
     const form = useRef("form")
@@ -13,9 +13,11 @@ export const CategoryForm = () => {
     const addNewCategory = () => {
         return addCategory({
             name: name.current.value
-        }).then(() => {
-            history.push("/category")
-        })
+        }).then(toggle
+            //() => {
+        //     history.push("/category")
+        // }
+        ).then(getAllCategory)
     }
     
     return (
