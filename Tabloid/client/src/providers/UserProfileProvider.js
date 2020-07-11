@@ -81,12 +81,20 @@ export function UserProfileProvider(props) {
         headers: {
           Authorization: `Bearer ${token}`
         }
-      }).then(resp => resp.json()))
-      .then(setUsers);
+      }).then(resp => {
+        if (resp.ok) {
+          return resp.json();
+        }
+        throw new Error("Unauthorized");
+      })
+        .then(setUsers));
   };
 
   return (
-    <UserProfileContext.Provider value={{ isLoggedIn, login, logout, register, getToken, getAllUsers, users, isAdmin }}>
+    <UserProfileContext.Provider value={{
+      isLoggedIn, login, logout, register,
+      getToken, getAllUsers, users, isAdmin, setIsAdmin
+    }}>
       {isFirebaseReady
         ? props.children
         : <Spinner className="app-spinner dark" />}

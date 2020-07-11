@@ -46,7 +46,7 @@ export default function ApplicationViews() {
         </Route>
 
         <Route path="/login">
-          <Login />
+          {isLoggedIn ? <Redirect to="/" /> : <Login />}
         </Route>
 
         <Route path="/register">
