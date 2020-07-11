@@ -14,7 +14,7 @@ export const CategoryForm = () => {
         return addCategory({
             name: name.current.value
         }).then(() => {
-            history.push("/")
+            history.push("/category")
         })
     }
     
