@@ -1,10 +1,10 @@
 import React, { useContext } from "react"
 import { Card, CardImg, CardBody, CardFooter, Button } from "reactstrap"
 import { Link, useHistory } from "react-router-dom"
-import { UserProfileContext } from "../../providers/UserProfileProvider";
+import { PostContext } from "../../providers/PostProvider";
 
 const Post = ({ post }) => {
-    const { getPost } = useContext(UserProfileContext)
+    const { getPost } = useContext(PostContext)
 
     const history = useHistory()
     const currentUserId = JSON.parse(sessionStorage.getItem("userProfile")).id
