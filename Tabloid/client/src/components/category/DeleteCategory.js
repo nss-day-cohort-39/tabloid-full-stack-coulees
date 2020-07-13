@@ -9,10 +9,13 @@ const DeleteCategory = ({category, toggleDelete}) => {
 
     const submitForm = (e) => {
         e.preventDefault();
-        deleteCategory(category.id)
+        if(category.id !== 0){
+            deleteCategory(category.id)
             .then(getAllCategory)
             .then(toggleDelete)
-            .catch((err) => alert(`An error ocurred: ${err.message}`));            
+            .catch((err) => alert(`An error ocurred: ${err.message}`)); 
+        }
+                  
     };
     return (
         <>

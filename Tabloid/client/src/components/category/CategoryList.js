@@ -10,23 +10,28 @@ const CategoryList = () => {
 
     const [modal, setModal] = useState(false)
     const toggle = () => setModal(!modal)
-
-
+    const renderListItem = (category) => {
+        if(category.id > 0){
+            return (<div className = "container fluid categoryContainer">
+                     <Category Key = {category.id} category={category} />
+                    </div>)
+        }
+    }
+    
     useEffect(() => {
-        getAllCategory()
+        getAllCategory()       
     }, []);
+    console.log('-->',categories)
     return (
         <>
             {/* <Link to={`/addCategory`}>Add New Category</Link> */}
-            <Button onClick = {toggle} color = "info" size = "sm" className = "addNewCategory">Add new category</Button>
+            <Button onClick = {toggle} color = "info" size = "sm" className = "addNewCategory">Create Category</Button>
             <div>
                 {
                     (categories.length) 
                     ? categories.map((category) => (
-                        <div className = "container fluid categoryContainer">
-                            <Category Key = {category.id} category={category} />
-                        </div>
-                      )) 
+                        renderListItem(category)
+                    )) 
                     : <div className="alert alert-secondary mt-1" role="alert"> No categories were found.</div>
                 }
             </div>

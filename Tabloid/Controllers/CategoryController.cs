@@ -17,10 +17,12 @@ namespace Tabloid.Controllers
     public class CategoryController : ControllerBase
     {
         private readonly CategoryRepository _categoryRepository;
+        private readonly PostRepository _postRepository;
         //using context instead of config
         public CategoryController(ApplicationDbContext context)
         {
             _categoryRepository = new CategoryRepository(context);
+            _postRepository = new PostRepository(context);
         }
 
         [HttpGet]
@@ -78,6 +80,12 @@ namespace Tabloid.Controllers
         [HttpDelete("{id}")]
         public IActionResult Delete(int id)
         {
+            List<Post> categoryList = _postRepository.GetByCategoryId(id);
+            foreach (Post post in categoryList)
+            {
+                post.CategoryId = 0;
+                _postRepository.Update(post);
+            }
             _categoryRepository.Delete(id);
             return NoContent();
         }

@@ -19,13 +19,14 @@ export const EditCategory = ({ selectedCategory, toggleEdit }) => {
     const editCategory = () => {
         if(updatedCategory.name !== "")
         {
-        
-            updateCategory({
-                id: parseInt(updatedCategory.id),
-                name: updatedCategory.name
-            })
-            .then(getAllCategory)
-            .then(toggleEdit)
+            if(updatedCategory.id !== 0){
+                updateCategory({
+                    id: parseInt(updatedCategory.id),
+                    name: updatedCategory.name
+                })
+                .then(getAllCategory)
+                .then(toggleEdit)
+            }
         }else{
             window.alert("Name is required!")
         }        

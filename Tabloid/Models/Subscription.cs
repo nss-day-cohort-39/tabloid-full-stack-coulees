@@ -16,7 +16,6 @@ namespace Tabloid.Models
         
         [Required]
         public int ProviderUserProfileId { get; set; }
-
         public UserProfile SubscriberUserProfile { get; set; }
 
         [Required]
