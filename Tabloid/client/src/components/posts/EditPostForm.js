@@ -28,6 +28,15 @@ const EditPostForm = ({ showEdit }) => {
             publishDateTime: (publishDate.current.value) ? publishDate.current.value : null,
             categoryId: 1 //THIS NEEDS TO BE CHANGED ONCE THE CATEGORY REPO/PROVIDER IS CREATED
         }
+
+        if (!Post.title.length) {
+            window.alert("Post must have a title.")
+            return
+        }
+        if (!Post.content.length) {
+            window.alert("Post must have content.")
+            return
+        }
         //add back all of the values that the user is not allowed to change (Categories will eventually be changeable)
         Post.id = post.id
         Post.createDateTime = post.createDateTime
@@ -39,6 +48,8 @@ const EditPostForm = ({ showEdit }) => {
             showEdit(false)
         }
     }
+
+    //setting default value for date
 
     return (
         <div className="container border pl-5 pr-5 mt-2 pb-1">

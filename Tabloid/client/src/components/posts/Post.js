@@ -1,14 +1,17 @@
-import React from "react"
+import React, { useContext } from "react"
 import { Card, CardImg, CardBody, CardFooter, Button } from "reactstrap"
 import { Link, useHistory } from "react-router-dom"
+import { UserProfileContext } from "../../providers/UserProfileProvider";
 
 const Post = ({ post }) => {
+    const { getPost } = useContext(UserProfileContext)
 
     const history = useHistory()
     const currentUserId = JSON.parse(sessionStorage.getItem("userProfile")).id
     const checkCurrentUser = (post, currentUser) => {
         const handleClick = () => history.push(`/editpost/${post.id}`)
         if (post.userProfileId === currentUser) {
+            getPost(post.id)
             return (
                 <CardFooter>
                     <Button onClick={handleClick}>Edit</Button>
