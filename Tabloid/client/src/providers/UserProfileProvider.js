@@ -59,7 +59,8 @@ export function UserProfileProvider(props) {
         headers: {
           Authorization: `Bearer ${token}`
         }
-      }).then(resp => resp.json()));
+      }).then(resp => resp.json())
+        .then(setUsers));
   };
 
   const saveUser = (userProfile) => {
@@ -92,7 +93,7 @@ export function UserProfileProvider(props) {
 
   return (
     <UserProfileContext.Provider value={{
-      isLoggedIn, login, logout, register,
+      isLoggedIn, login, logout, register, getUserProfile,
       getToken, getAllUsers, users, isAdmin, setIsAdmin
     }}>
       {isFirebaseReady
