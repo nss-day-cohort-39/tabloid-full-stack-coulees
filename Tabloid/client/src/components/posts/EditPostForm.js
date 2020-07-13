@@ -2,23 +2,31 @@ import React, { useContext, useRef, useEffect, useState } from 'react'
 import { Form, FormGroup, Input, Row, FormText, Button, Label, Spinner } from 'reactstrap'
 import { PostContext } from "../../providers/PostProvider";
 import { useParams } from 'react-router-dom';
+import 'reactstrap-date-picker'
+import DatePicker from 'reactstrap-date-picker/lib/DatePicker';
 
 //There are two ways to access this form:
 //1) By the post list views; and 2) By the post details view
 //The post details view passes in a showEdit function that toggles a modal. Otherwise, showEdit is ignored.
 const EditPostForm = ({ showEdit }) => {
     const [ready, set] = useState(false)
+    const [publishDate, setPublishDate] = useState(null)
     const { post, updatePost, getPost } = useContext(PostContext)
     const { id } = useParams()
 
+    const handleDateChange = (e) => {
+        console.log(e)
+        setPublishDate(e)
+    }
+
     useEffect(() => {
         getPost(id).then(() => set(true))
+        setPublishDate(post.publishDateTime)
     }, [])
 
     const title = useRef()
     const imageUrl = useRef()
     const content = useRef()
-    const publishDate = useRef()
 
     const handleSubmit = () => {
         const Post = {
@@ -26,7 +34,7 @@ const EditPostForm = ({ showEdit }) => {
             title: title.current.value,
             imageLocation: imageUrl.current.value,
             content: content.current.value,
-            publishDateTime: publishDate.current.value.length ? publishDate.current.value : null,
+            publishDateTime: publishDate,
             categoryId: 1 //THIS NEEDS TO BE CHANGED ONCE THE CATEGORY REPO/PROVIDER IS CREATED
         }
 
@@ -72,7 +80,7 @@ const EditPostForm = ({ showEdit }) => {
                     </FormGroup>
                     <FormGroup className='text-center'>
                         <Label for='PublishDate'>Choose a Date to Publish Your Post</Label>
-                        <Input type='text' name='PublishDate' id='publishDate' innerRef={publishDate} defaultValue={post.publishDateTime ? post.publishDateTime : ""} />
+                        <DatePicker value={publishDate} onChange={handleDateChange} />
                     </FormGroup>
                     <div className='d-flex flex-row-reverse'>
                         <Button size='sm mb-1' onClick={handleSubmit}>Save</Button>
