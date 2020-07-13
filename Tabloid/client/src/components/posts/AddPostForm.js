@@ -1,14 +1,20 @@
-import React, { useContext, useRef } from 'react'
+import React, { useContext, useRef, useState } from 'react'
 import { Form, FormGroup, Input, Row, FormText, Button, Label } from 'reactstrap'
 import { PostContext } from "../../providers/PostProvider";
+import DatePicker from 'reactstrap-date-picker/lib/DatePicker';
 
 const AddPostForm = () => {
     const { addPost } = useContext(PostContext)
+    const [publishDate, set] = useState()
+
+    const handleDateChange = (e) => {
+        console.log(e)
+        set(e)
+    }
 
     const title = useRef()
     const imageUrl = useRef()
     const content = useRef()
-    const publishDate = useRef()
 
     const handleSubmit = () => {
         const Post = {
@@ -51,7 +57,7 @@ const AddPostForm = () => {
                 </FormGroup>
                 <FormGroup className='text-center'>
                     <Label for='PublishDate'>Choose a Date to Publish Your Post</Label>
-                    <Input type='date' name='PublishDate' id='publishDate' innerRef={publishDate} />
+                    <DatePicker value={publishDate} onChange={handleDateChange} />
                 </FormGroup>
                 <div className='d-flex flex-row-reverse'>
                     <Button size='sm mb-1' onClick={handleSubmit}>Save</Button>
