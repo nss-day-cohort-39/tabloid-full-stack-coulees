@@ -17,7 +17,7 @@ namespace Tabloid.Models
         [Required]
         public int ProviderUserProfileId { get; set; }
 
-        public UserProfile UserProfile { get; set; }
+        public UserProfile SubscriberUserProfile { get; set; }
 
         [Required]
         public DateTime BeginDateTime { get; set; }

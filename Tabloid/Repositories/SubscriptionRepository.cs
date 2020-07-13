@@ -25,19 +25,19 @@ namespace Tabloid.Repositories
         public List<Subscription> GetAll()
         {
             return _context.Subscription
-                            .Include(p => p.UserProfile)
+                            .Include(p => p.SubscriberUserProfile)
                             .ToList();
         }
 
         public Subscription GetById(int id)
         {
             return _context.Subscription
-                            .Include(p => p.UserProfile)
+                            .Include(p => p.SubscriberUserProfile)
                             .FirstOrDefault(p => p.Id == id);
         }
         public List<Subscription> GetByUserProfileId(int id)
         {
-            return _context.Subscription.Include(p => p.UserProfile)
+            return _context.Subscription.Include(p => p.SubscriberUserProfile)
                             .Where(p => p.Id== id)
                             .ToList();
         }
