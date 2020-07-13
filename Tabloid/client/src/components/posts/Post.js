@@ -3,6 +3,7 @@ import { Card, CardImg, CardBody, CardFooter, Button } from "reactstrap"
 import { Link, useHistory } from "react-router-dom"
 
 const Post = ({ post }) => {
+
     const history = useHistory()
     const currentUserId = JSON.parse(sessionStorage.getItem("userProfile")).id
     const checkCurrentUser = (post, currentUser) => {

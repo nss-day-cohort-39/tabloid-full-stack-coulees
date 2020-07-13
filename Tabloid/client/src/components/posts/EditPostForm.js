@@ -46,21 +46,21 @@ const EditPostForm = ({ showEdit }) => {
                 <FormText className='h4 text-center'>Edit Post</FormText>
                 <Row>
                     <FormGroup className='row col mr-1'>
-                        <Input type='text' name='Title' id='postTitle' innerRef={title} defaultValue={post.title}
+                        <Input type='text' name='Title' id='postTitle' innerRef={title} defaultValue={post ? post.title : ''}
                             placeholder='Title' className='form-control form-control-sm'></Input>
                     </FormGroup>
                     <FormGroup className='row col'>
-                        <Input type='text' name='ImageUrl' id='postImageUrl' innerRef={imageUrl} defaultValue={post.imageLocation ? post.imageLocation : ''}
+                        <Input type='text' name='ImageUrl' id='postImageUrl' innerRef={imageUrl} defaultValue={post ? post.imageLocation : ''}
                             placeholder='Image URL' className='form-control form-control-sm'></Input>
                     </FormGroup>
                 </Row>
                 <FormGroup className='row'>
-                    <Input type='textarea' name='Content' id='postContent' innerRef={content} defaultValue={post.content}
+                    <Input type='textarea' name='Content' id='postContent' innerRef={content} defaultValue={post ? post.content : ''}
                         placeholder='Add your content...' className='form-control form-control-sm'></Input>
                 </FormGroup>
                 <FormGroup className='text-center'>
                     <Label for='PublishDate'>Choose a Date to Publish Your Post</Label>
-                    <Input type='date' name='PublishDate' id='publishDate' innerRef={publishDate} defaultValue={post.publishDateTime ? post.publishDateTime : ''} />
+                    <Input type='date' name='PublishDate' id='publishDate' innerRef={publishDate} defaultValue={post ? post.publishDateTime : ''} />
                 </FormGroup>
                 <div className='d-flex flex-row-reverse'>
                     <Button size='sm mb-1' onClick={handleSubmit}>Save</Button>
