@@ -39,12 +39,6 @@ namespace Tabloid.Repositories
             _context.SaveChanges();
         }
 
-        public void Update(PostTag postTag)
-        {
-            _context.Entry(postTag).State = EntityState.Modified;
-            _context.SaveChanges();
-        }
-
         public void Delete(int id)
         {
             var postTag = GetById(id);
