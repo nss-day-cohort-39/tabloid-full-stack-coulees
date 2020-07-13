@@ -4,14 +4,11 @@ import { Link, useHistory } from "react-router-dom"
 import { PostContext } from "../../providers/PostProvider";
 
 const Post = ({ post }) => {
-    const { getPost } = useContext(PostContext)
-
     const history = useHistory()
     const currentUserId = JSON.parse(sessionStorage.getItem("userProfile")).id
     const checkCurrentUser = (post, currentUser) => {
         const handleClick = () => history.push(`/editpost/${post.id}`)
         if (post.userProfileId === currentUser) {
-            getPost(post.id)
             return (
                 <CardFooter>
                     <Button onClick={handleClick}>Edit</Button>

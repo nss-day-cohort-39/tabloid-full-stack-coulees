@@ -18,7 +18,8 @@ const AddPostForm = () => {
             imageLocation: imageUrl.current.value,
             content: content.current.value,
             publishDateTime: (publishDate.current.value) ? publishDate.current.value : null,
-            categoryId: 1 //THIS NEEDS TO BE CHANGED ONCE THE CATEGORY REPO/PROVIDER IS CREATED
+            categoryId: 1, //THIS NEEDS TO BE CHANGED ONCE THE CATEGORY REPO/PROVIDER IS CREATED
+            isApproved: true
         }
         addPost(Post)
     }
