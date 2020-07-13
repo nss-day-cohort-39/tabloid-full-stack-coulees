@@ -79,7 +79,7 @@ export const CommentProvider = (props) => {
                     Authorization: `Bearer ${token}`,
                     "Content-Type": "application/json"
                 }
-            })).then(getAllComments);
+            }));
     };
 
     return (

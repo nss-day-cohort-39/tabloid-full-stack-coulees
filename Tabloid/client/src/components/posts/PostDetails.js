@@ -1,9 +1,9 @@
 import React, { useContext, useEffect, useState } from 'react';
-import { useParams } from "react-router-dom";
+import { useParams, useHistory } from "react-router-dom";
 import { PostContext } from '../../providers/PostProvider';
-import { Button } from "reactstrap"
+import { Button, Modal, ModalBody, ModalHeader, ModalFooter } from "reactstrap"
 import CommentList from '../comment/CommentList';
-import { useHistory } from "react-router-dom";
+import EditPostForm from './EditPostForm'
 
 const PostDetails = () => {
     const [deleteModal, showDelete] = useState(false)
@@ -77,6 +77,9 @@ const PostDetails = () => {
             <hr />
             <img src={post.imageLocation} alt={post.title} className="img-fluid" />
             <p>{post.content}</p>
+            <Button color="secondary" onClick={() => {
+                history.push(`/CommentList/${id}`)
+            }}>View Comments</Button>
         </div >
     );
 };
