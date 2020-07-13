@@ -8,7 +8,7 @@ import { useParams } from "react-router-dom";
 import Comment from "./Comment"
 
 const CommentList = () => {
-    const { comments, getCommentByPostId, deleteComment, editComment } = useContext(CommentContext);
+    const { comments, getCommentByPostId, deleteComment } = useContext(CommentContext);
 
 
 
@@ -16,12 +16,9 @@ const CommentList = () => {
     const addModalToggle = () => setAddModal(!addModal)
 
 
-    const [editModal, setEditModal] = useState(false)
-    const editModalToggle = () => setEditModal(!editModal)
 
 
-    const [deleteModal, setDeleteModal] = useState(false)
-    const deleteModalToggle = () => setDeleteModal(!deleteModal)
+
 
 
     const [currentComment, setComments] = useState(null)
@@ -48,8 +45,6 @@ const CommentList = () => {
                                             <Comment comment={comment} />
                                             <div className="d-flex justify-content-end">
 
-                                                <Button color="info" className="ml-2" onClick={() => { setComments(comments); editModalToggle(); }}>Edit</Button>
-                                                <Button color="danger" className="ml-2" onClick={() => { deleteComment(comment.id).then(getCommentByPostId(id)); }}>Delete</Button>
 
                                             </div>
                                         </ListGroupItem>
@@ -70,23 +65,9 @@ const CommentList = () => {
                 </ModalBody>
             </Modal>
 
-            <Modal isOpen={editModal} toggle={editModalToggle}>
-                <ModalHeader toggle={editModalToggle}>
-                    Edit Comment
-                </ModalHeader>
-                <ModalBody>
-                    <CommentEditModal toggle={editModalToggle} comment={comments} />
-                </ModalBody>
-            </Modal>
 
-            <Modal isOpen={deleteModal} toggle={deleteModalToggle}>
-                <ModalHeader toggle={deleteModalToggle}>
-                    Delete Comment
-                </ModalHeader>
-                <ModalBody>
-                    <CommentDeleteModal toggle={deleteModalToggle} comment={comments} />
-                </ModalBody>
-            </Modal>
+
+
         </>
     );
 };

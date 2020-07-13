@@ -35,7 +35,7 @@ const CommentForm = ({ toggle }) => {
 
             <FormGroup>
                 <Label for="postTitle">Content</Label>
-                <Input type="text" name="commentComment" id="commentComment" innerRef={content} placeholder="" />
+                <Input type='textarea' name="commentComment" id="commentComment" innerRef={content} placeholder="" />
             </FormGroup>
 
             <FormGroup className="text-right">

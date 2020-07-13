@@ -69,19 +69,24 @@ const PostDetails = () => {
 
 
     return (
-        <div className="container">
-            <h2>{post.title}</h2>
-            <h3>{post.userProfile.displayName}</h3>
-            <h3>{dateTimeFormat}</h3>
-            <h3>{post.category.name}</h3>
-            <hr />
-            <img src={post.imageLocation} alt={post.title} className="img-fluid" />
-            <p>{post.content}</p>
+        <>
+            <div className="container">
+                <h2>{post.title}</h2>
+                <h3>{post.userProfile.displayName}</h3>
+                <h3>{dateTimeFormat ? dateTimeFormat : ''}</h3>
+                <h3>{post.category.name}</h3>
+                <hr />
+                <img src={post.imageLocation} alt={post.title} className="img-fluid" />
+                <p>{post.content}</p>
+                {renderButtons(post, currentUserId)}
+            </div >
+            {renderModals(post, currentUserId)}
             <Button color="secondary" onClick={() => {
                 history.push(`/CommentList/${id}`)
             }}>View Comments</Button>
-        </div >
+        </>
     );
 };
+
 
 export default PostDetails;

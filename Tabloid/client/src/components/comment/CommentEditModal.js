@@ -2,6 +2,7 @@ import React, { useContext, useRef } from "react";
 import { Form, FormGroup, Label, Input, Button, Card, CardBody, CardHeader } from "reactstrap";
 import { CommentContext } from "../../providers/CommentProvider";
 import { useParams } from "react-router-dom";
+import { UserProfileContext } from "../../providers/UserProfileProvider";
 
 const CommentEditModal = ({ toggle, comment }) => {
 
@@ -19,7 +20,10 @@ const CommentEditModal = ({ toggle, comment }) => {
                 postId: parseInt(id),
                 id: comment.id,
                 subject: subject.current.value,
-                content: content.current.value
+                content: content.current.value,
+                createDateTime: comment.createDateTime,
+                userProfileId: comment.userProfileId
+
             })
             .then(() => getCommentByPostId(id))
             .then(toggle)
@@ -32,10 +36,9 @@ const CommentEditModal = ({ toggle, comment }) => {
                 <Label for="commentSubject">Subject</Label>
                 <Input type="text" name="commentSubject" id="commentSubject" innerRef={subject} defaultValue={comment.subject} />
             </FormGroup>
-
             <FormGroup>
                 <Label for="commentSubject">Content</Label>
-                <Input type="text" name="commentContent" id="commentContent" innerRef={content} defaultValue={comment.content} />
+                <Input type='textarea' name="commentContent" id="commentContent" innerRef={content} defaultValue={comment.content} />
             </FormGroup>
 
             <FormGroup className="text-right">

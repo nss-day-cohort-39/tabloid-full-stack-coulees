@@ -7,6 +7,8 @@ const CommentDeleteModal = ({ toggle, comment }) => {
 
     const { getCommentByPostId, deleteComment } = useContext(CommentContext);
 
+
+
     const { id } = useParams();
 
     const submitForm = (e) => {
