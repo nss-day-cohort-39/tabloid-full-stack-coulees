@@ -1,13 +1,16 @@
 import React, { useState, useContext } from "react";
 import { UserProfileContext } from "../providers/UserProfileProvider";
+import { useHistory } from "react-router-dom";
 
 export const PostContext = React.createContext();
 
 export const PostProvider = (props) => {
     const { getToken } = useContext(UserProfileContext)
     const [posts, setPosts] = useState([]);
+    const [post, setPost] = useState();
 
     const apiUrl = '/api/post'
+    const history = useHistory();
 
     const getAllPosts = () => {
         getToken().then((token) =>
@@ -31,6 +34,27 @@ export const PostProvider = (props) => {
                 .then(setPosts));
     };
 
+    const getPost = (id) =>
+        getToken().then((token) =>
+            fetch(`/api/post/${id}`, {
+                method: "GET",
+                headers: {
+                    Authorization: `Bearer ${token}`,
+                },
+            }).then((res) => res.json()).then(setPost)
+        );
+
+    const getPostsByCurrentUser = () => {
+        getToken().then((token) =>
+            fetch(apiUrl + `/currentUser`, {
+                method: "GET",
+                headers: {
+                    Authorization: `Bearer ${token}`
+                }
+            }).then(resp => resp.json())
+                .then(setPosts));
+    };
+
     const addPost = (post) => {
         getToken().then((token) =>
             fetch(apiUrl, {
@@ -45,33 +69,50 @@ export const PostProvider = (props) => {
                     return resp.json();
                 }
                 throw new Error("Unauthorized");
-            }));
+            }).then(resp => history.push(`/posts/${resp.id}`))
+                .then(getAllPosts));
     };
 
-    const getPost = (id) =>
+    const deletePost = (id) => {
         getToken().then((token) =>
-            fetch(`/api/post/${id}`, {
-                method: "GET",
+            fetch(apiUrl + `/${id}`, {
+                method: "DELETE",
                 headers: {
                     Authorization: `Bearer ${token}`,
-                },
-            }).then((res) => res.json())
-        );
-
-    const getPostsByCurrentUser = () => {
-        getToken().then((token) =>
-            fetch(apiUrl + `/currentUser`, {
-                method: "GET",
-                headers: {
-                    Authorization: `Bearer ${token}`
+                    "Content-Type": "application/json"
                 }
-            }).then(resp => resp.json())
-            .then(setPosts));
-    };
+            }).then(resp => {
+                if (resp.ok) {
+                    return
+                }
+                else {
+                    window.alert("You may not delete a post that is not your own.")
+                }
+            }).then(() => history.push('/posts')))
+    }
+
+    const updatePost = (post) => {
+        getToken().then((token) =>
+            fetch(apiUrl + `/${post.id}`, {
+                method: "PUT",
+                headers: {
+                    Authorization: `Bearer ${token}`,
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify(post)
+            }).then(resp => {
+                if (resp.ok) {
+                    return;
+                }
+                throw new Error("Unauthorized");
+            }).then(getPost(post.id))
+                .then(() => history.push(`/posts/${post.id}`)))
+    }
 
     return (
         <PostContext.Provider value={{
-            posts, getAllPosts, addPost, getPost, getPostsByCurrentUser, getPublishedPosts
+            posts, getAllPosts, addPost, getPost, deletePost, post,
+            getPostsByCurrentUser, getPublishedPosts, updatePost
         }}>
             {props.children}
         </PostContext.Provider>
