@@ -21,6 +21,14 @@ const AddPostForm = () => {
             categoryId: 1, //THIS NEEDS TO BE CHANGED ONCE THE CATEGORY REPO/PROVIDER IS CREATED
             isApproved: true
         }
+        if (!Post.title.length) {
+            window.alert("Post must have a title.")
+            return
+        }
+        if (!Post.content.length) {
+            window.alert("Post must have content.")
+            return
+        }
         addPost(Post)
     }
 
