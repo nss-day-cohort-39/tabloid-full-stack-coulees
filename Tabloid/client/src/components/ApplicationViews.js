@@ -10,6 +10,7 @@ import PostDetails from "./posts/PostDetails";
 import TagList from "./tags/TagList";
 import TagForm from "./tags/TagForm";
 import UserList from "./users/UserList";
+import UserDetails from "./users/UserDetails";
 
 export default function ApplicationViews() {
   const { isLoggedIn } = useContext(UserProfileContext);
@@ -43,6 +44,10 @@ export default function ApplicationViews() {
 
         <Route path="/users" exact>
           {isLoggedIn ? <UserList /> : <Redirect to="/login" />}
+        </Route>
+
+        <Route path="/users/:firebaseUserId" exact>
+          {isLoggedIn ? <UserDetails /> : <Redirect to="/login" />}
         </Route>
 
         <Route path="/login">
