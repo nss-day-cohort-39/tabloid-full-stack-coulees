@@ -26,7 +26,7 @@ const EditPostForm = ({ showEdit }) => {
             title: title.current.value,
             imageLocation: imageUrl.current.value,
             content: content.current.value,
-            publishDateTime: (publishDate.current.value) ? publishDate.current.value : null,
+            publishDateTime: publishDate.current.value.length ? publishDate.current.value : null,
             categoryId: 1 //THIS NEEDS TO BE CHANGED ONCE THE CATEGORY REPO/PROVIDER IS CREATED
         }
 
@@ -72,7 +72,7 @@ const EditPostForm = ({ showEdit }) => {
                     </FormGroup>
                     <FormGroup className='text-center'>
                         <Label for='PublishDate'>Choose a Date to Publish Your Post</Label>
-                        <Input type='date' name='PublishDate' id='publishDate' innerRef={publishDate} defaultValue={post ? post.publishDateTime : ''} />
+                        <Input type='text' name='PublishDate' id='publishDate' innerRef={publishDate} defaultValue={post.publishDateTime ? post.publishDateTime : ""} />
                     </FormGroup>
                     <div className='d-flex flex-row-reverse'>
                         <Button size='sm mb-1' onClick={handleSubmit}>Save</Button>
