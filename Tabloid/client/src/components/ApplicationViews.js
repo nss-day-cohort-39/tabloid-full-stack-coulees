@@ -7,13 +7,10 @@ import Hello from "./Hello";
 import PostList from "./posts/PostList";
 import MyPosts from "./posts/MyPosts";
 import PostDetails from "./posts/PostDetails";
-<<<<<<< HEAD
 import CategoryList from "./category/CategoryList";
 import {CategoryForm} from "./category/CategoryForm";
-=======
 import TagList from "./tags/TagList";
 import TagForm from "./tags/TagForm";
->>>>>>> master
 
 export default function ApplicationViews() {
   const { isLoggedIn } = useContext(UserProfileContext);
