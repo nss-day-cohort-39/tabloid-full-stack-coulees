@@ -21,7 +21,7 @@ export const CommentProvider = (props) => {
     };
 
     const addComment = (comment) => {
-        getToken().then((token) =>
+        return getToken().then((token) =>
             fetch(apiUrl, {
                 method: "POST",
                 headers: {

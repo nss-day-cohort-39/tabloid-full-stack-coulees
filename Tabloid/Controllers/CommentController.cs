@@ -5,6 +5,7 @@ using System.Security.Claims;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.VisualBasic;
 using Tabloid.Data;
 using Tabloid.Models;
 using Tabloid.Repositories;
@@ -20,11 +21,13 @@ namespace Tabloid.Controllers
 
         private readonly UserProfileRepository _userProfileRepository;
 
-       //using context instead of config
+
+        //using context instead of config
         public CommentController(ApplicationDbContext context)
         {
             _commentRepository = new CommentRepository(context);
             _userProfileRepository = new UserProfileRepository(context);
+         
         }
 
         [HttpGet]
@@ -78,6 +81,15 @@ namespace Tabloid.Controllers
             return NoContent();
         }
 
+        [HttpPost]
+        public IActionResult Comment(Comment comment)
+        {
+            var currentUserProfile = GetCurrentUserProfile();
+            comment.UserProfileId = currentUserProfile.Id;
+            comment.CreateDateTime = DateAndTime.Now;
+            _commentRepository.Add(comment);
+            return CreatedAtAction(nameof(Get), new { id = comment.Id }, comment);
+        }
         private UserProfile GetCurrentUserProfile()
         {
             var firebaseUserId = User.FindFirst(ClaimTypes.NameIdentifier).Value;

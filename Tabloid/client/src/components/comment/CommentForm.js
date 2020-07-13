@@ -1,19 +1,27 @@
 import React, { useContext, useRef } from "react";
 import { Form, FormGroup, Label, Input, Button, Card, CardBody, CardHeader } from "reactstrap";
 import { CommentContext } from "../../providers/CommentProvider";
+import { useParams } from "react-router-dom";
 
 
 const CommentForm = ({ toggle }) => {
 
-    const { getAllComments, addComment } = useContext(CommentContext);
+    const { getCommentByPostId, addComment } = useContext(CommentContext);
 
     const subject = useRef();
     const content = useRef();
+    const { id } = useParams();
 
     const submitForm = (e) => {
         e.preventDefault();
-        addComment({ subject: subject.current.value })
-            .then(getAllComments)
+        addComment(
+            {
+                postId: parseInt(id),
+                subject: subject.current.value,
+                content: content.current.value
+            }
+        )
+            .then(() => getCommentByPostId(id))
             .then(toggle)
             .catch((err) => alert(`An error ocurred: ${err.message}`));
     };
