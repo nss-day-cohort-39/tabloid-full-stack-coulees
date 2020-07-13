@@ -1,15 +1,18 @@
 import React, { useContext, useEffect } from "react";
 import { Button, Form } from 'reactstrap';
 import { CommentContext } from "../../providers/CommentProvider";
+import { useParams } from "react-router-dom";
 
 const CommentDeleteModal = ({ toggle, comment }) => {
 
-    const { getAllComments, deleteComment } = useContext(CommentContext);
+    const { getCommentByPostId, deleteComment } = useContext(CommentContext);
+
+    const { id } = useParams();
 
     const submitForm = (e) => {
         e.preventDefault();
         deleteComment(comment.id)
-            .then(getAllComments)
+            .then(() => getCommentByPostId(id))
             .then(toggle)
             .catch((err) => alert(`An error ocurred: ${err.message}`));
     };

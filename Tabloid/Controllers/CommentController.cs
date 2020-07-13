@@ -81,6 +81,19 @@ namespace Tabloid.Controllers
             return NoContent();
         }
 
+        //[HttpDelete("{id}")]
+        //public IActionResult Delete(int id)
+        //{
+        //    int userId = GetCurrentUserProfile().Id;
+        //    Comment comment = _commentRepository.GetCommentById(id);
+        //    if (userId == comment.UserProfileId)
+        //    {
+        //        _commentRepository.Delete(id);
+        //        return NoContent();
+        //    }
+        //    return Unauthorized();
+        //}
+
         [HttpPost]
         public IActionResult Comment(Comment comment)
         {

@@ -8,7 +8,7 @@ import { useParams } from "react-router-dom";
 import Comment from "./Comment"
 
 const CommentList = () => {
-    const { comments, getCommentByPostId } = useContext(CommentContext);
+    const { comments, getCommentByPostId, deleteComment, editComment } = useContext(CommentContext);
 
 
 
@@ -24,7 +24,7 @@ const CommentList = () => {
     const deleteModalToggle = () => setDeleteModal(!deleteModal)
 
 
-    // const [currentComment, setComments] = useState(null)
+    const [currentComment, setComments] = useState(null)
 
     const { id } = useParams();
 
@@ -35,10 +35,10 @@ const CommentList = () => {
 
     return (
         <>
-            <div className="container">
+            <div className="container flex">
                 <div className="row justify-content-center">
                     <div id="commentList" className="cards-column">
-                        <Button color="primary" onClick={addModalToggle} className="mb-4">Add Comment</Button>
+                        <Button color="secondary" onClick={addModalToggle} className="mb-4">Add Comment</Button>
                         <ListGroup>
                             {
                                 (comments.length)
@@ -47,8 +47,10 @@ const CommentList = () => {
 
                                             <Comment comment={comment} />
                                             <div className="d-flex justify-content-end">
-                                                {/* <Button color="secondary" outline size="sm" className="ml-2" onClick={() => { setComments(comments); editModalToggle(); }}>Edit</Button>
-                                                <Button color="secondary" outline size="sm" className="ml-2" onClick={() => { setComments(comments); deleteModalToggle(); }}>Delete</Button> */}
+
+                                                <Button color="info" className="ml-2" onClick={() => { setComments(comments); editModalToggle(); }}>Edit</Button>
+                                                <Button color="danger" className="ml-2" onClick={() => { deleteComment(comment.id).then(getCommentByPostId(id)); }}>Delete</Button>
+
                                             </div>
                                         </ListGroupItem>
                                     ))
@@ -68,7 +70,7 @@ const CommentList = () => {
                 </ModalBody>
             </Modal>
 
-            {/* <Modal isOpen={editModal} toggle={editModalToggle}>
+            <Modal isOpen={editModal} toggle={editModalToggle}>
                 <ModalHeader toggle={editModalToggle}>
                     Edit Comment
                 </ModalHeader>
@@ -84,7 +86,7 @@ const CommentList = () => {
                 <ModalBody>
                     <CommentDeleteModal toggle={deleteModalToggle} comment={comments} />
                 </ModalBody>
-            </Modal> */}
+            </Modal>
         </>
     );
 };

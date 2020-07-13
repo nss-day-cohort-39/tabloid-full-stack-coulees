@@ -33,7 +33,6 @@ const PostDetails = () => {
             <hr />
             <img src={post.imageLocation} alt={post.title} className="img-fluid" />
             <p>{post.content}</p>
-
             <Button color="secondary" onClick={() => {
                 return history.push(`/CommentList/${post.id}`)
             }}>View Comments</Button>
