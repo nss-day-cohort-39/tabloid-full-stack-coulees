@@ -39,15 +39,11 @@ namespace Tabloid.Controllers
             }
             return Ok(post);
         }
-        //https://localhost/api/post/getbyuser/1
         [HttpGet("getbyuser/{id}")]
         public IActionResult GetByUser(int id)
         {
             return Ok(_postRepository.GetByUserProfileId(id));
         }
-
-
-        //https://localhost/api/post/getbyuser/1
         [HttpGet("currentUser")]
         public IActionResult GetByCurrentUser()
         {
@@ -55,8 +51,6 @@ namespace Tabloid.Controllers
 
             return Ok(_postRepository.GetByUserProfileId(currentUserId));
         }
-
-        //https://localhost/api/post/getpublished
         [HttpGet("getpublished")]
         public IActionResult GetPublished()
         {
@@ -77,14 +71,15 @@ namespace Tabloid.Controllers
             }
 
         }
-
         [HttpPost]
         public IActionResult Post(Post post)
         {
+            int userId = GetCurrentUserProfile().Id;
+            post.UserProfileId = userId;
             _postRepository.Add(post);
+            post.IsApproved = false;
             return CreatedAtAction("Get", new { id = post.Id }, post);
         }
-
         [HttpPut("{id}")]
         public IActionResult Put(int id, Post post)
         {
@@ -96,12 +91,17 @@ namespace Tabloid.Controllers
             _postRepository.Update(post);
             return NoContent();
         }
-
         [HttpDelete("{id}")]
         public IActionResult Delete(int id)
         {
-            _postRepository.Delete(id);
-            return NoContent();
+            int userId = GetCurrentUserProfile().Id;
+            Post PostToDelete = _postRepository.GetById(id);
+            if(userId == PostToDelete.UserProfileId)
+            {
+                _postRepository.Delete(id);
+                return NoContent();
+            }
+            return Unauthorized();
         }
         private UserProfile GetCurrentUserProfile()
         {

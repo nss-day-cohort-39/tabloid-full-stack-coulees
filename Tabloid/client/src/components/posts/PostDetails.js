@@ -6,12 +6,14 @@ import CommentList from '../comment/CommentList';
 import { useHistory } from "react-router-dom";
 
 const PostDetails = () => {
-    const [post, setPost] = useState();
-    const { getPost } = useContext(PostContext);
+    const [deleteModal, showDelete] = useState(false)
+    const [editModal, showEdit] = useState(false)
+    const { post, getPost, deletePost } = useContext(PostContext);
     const { id } = useParams();
+    const currentUserId = JSON.parse(sessionStorage.getItem("userProfile")).id
 
     useEffect(() => {
-        getPost(id).then(setPost);
+        getPost(id);
     }, []);
 
     const history = useHistory();
@@ -20,8 +22,50 @@ const PostDetails = () => {
         return null;
     }
 
-    const date = new Date(post.publishDateTime);
-    const dateTimeFormat = new Intl.DateTimeFormat('en', { year: 'numeric', month: 'short', day: '2-digit' }).format(date);
+    const confirmDelete = () => {
+        showDelete(false)
+        deletePost(post.id)
+    }
+
+    const renderButtons = (post, currentUserId) => {
+
+        if (post.userProfileId === currentUserId) {
+            return (
+                <>
+                    <Button onClick={() => showEdit(true)}>Edit</Button>
+                    <Button className='btn btn-danger ml-2' onClick={() => showDelete(true)}>Delete</Button>
+                </>
+            )
+        }
+    }
+
+    const renderModals = (post, currentUserId) => {
+        if (post.userProfileId === currentUserId) {
+            return (
+                <>
+                    <Modal isOpen={deleteModal} >
+                        <ModalHeader>Are you sure you want to delete this post?</ModalHeader>
+                        <ModalFooter>
+                            <Button className='btn btn-danger' onClick={confirmDelete}>Delete</Button>
+                            <Button onClick={() => showDelete(false)}>Cancel</Button>
+                        </ModalFooter>
+                    </Modal >
+                    <Modal isOpen={editModal}>
+                        <ModalBody>
+                            <EditPostForm postId={post.id} showEdit={showEdit} />
+                            <Button className='btn mt-1' size='small' outline={true} onClick={() => showEdit(false)}>cancel</Button>
+                        </ModalBody>
+                    </Modal>
+                </>
+            )
+        }
+    }
+
+    let dateTimeFormat
+    if (post.publishDateTime) {
+        const date = new Date(post.publishDateTime);
+        dateTimeFormat = new Intl.DateTimeFormat('en', { year: 'numeric', month: 'short', day: '2-digit' }).format(date);
+    }
 
 
     return (
@@ -33,9 +77,6 @@ const PostDetails = () => {
             <hr />
             <img src={post.imageLocation} alt={post.title} className="img-fluid" />
             <p>{post.content}</p>
-            <Button color="secondary" onClick={() => {
-                return history.push(`/CommentList/${post.id}`)
-            }}>View Comments</Button>
         </div >
     );
 };

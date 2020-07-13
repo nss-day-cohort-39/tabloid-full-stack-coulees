@@ -7,6 +7,8 @@ import Hello from "./Hello";
 import PostList from "./posts/PostList";
 import MyPosts from "./posts/MyPosts";
 import PostDetails from "./posts/PostDetails";
+import AddPostForm from "./posts/AddPostForm";
+import EditPostForm from "./posts/EditPostForm";
 import TagList from "./tags/TagList";
 import TagForm from "./tags/TagForm";
 import CommentList from "./comment/CommentList";
@@ -31,6 +33,14 @@ export default function ApplicationViews() {
 
         <Route path="/posts/:id">
           {isLoggedIn ? <PostDetails /> : <Redirect to="/login" />}
+        </Route>
+
+        <Route path="/newpost" exact>
+          {isLoggedIn ? <AddPostForm /> : <Redirect to="/login" />}
+        </Route>
+
+        <Route path="/editpost/:id" exact>
+          {isLoggedIn ? <EditPostForm /> : <Redirect to="/login" />}
         </Route>
 
         <Route path="/tags" exact>

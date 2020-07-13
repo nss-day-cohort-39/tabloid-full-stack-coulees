@@ -17,3 +17,12 @@ p {
     white-space: pre-wrap;
 }
 
+.fake-link{
+  color: blue;
+  font-family: helvetica;
+  text-decoration: none;
+}
+
+.fake-link:hover {
+  text-decoration: underline;
+}
