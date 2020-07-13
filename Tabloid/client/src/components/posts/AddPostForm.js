@@ -1,7 +1,6 @@
 import React, { useContext, useRef } from 'react'
 import { Form, FormGroup, Input, Row, FormText, Button, Label } from 'reactstrap'
 import { PostContext } from "../../providers/PostProvider";
-import { useParams } from 'react-router-dom';
 
 const AddPostForm = () => {
     const { addPost } = useContext(PostContext)

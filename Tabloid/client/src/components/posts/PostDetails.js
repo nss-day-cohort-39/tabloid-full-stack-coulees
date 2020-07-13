@@ -58,15 +58,18 @@ const PostDetails = () => {
         }
     }
 
-    const date = new Date(post.publishDateTime);
-    const dateTimeFormat = new Intl.DateTimeFormat('en', { year: 'numeric', month: 'short', day: '2-digit' }).format(date);
+    let dateTimeFormat
+    if (post.publishDateTime) {
+        const date = new Date(post.publishDateTime);
+        dateTimeFormat = new Intl.DateTimeFormat('en', { year: 'numeric', month: 'short', day: '2-digit' }).format(date);
+    }
 
     return (
         <>
             <div className="container">
                 <h2>{post.title}</h2>
                 <h3>{post.userProfile.displayName}</h3>
-                <h3>{dateTimeFormat}</h3>
+                <h3>{dateTimeFormat ? dateTimeFormat : ''}</h3>
                 <h3>{post.category.name}</h3>
                 <hr />
                 <img src={post.imageLocation} alt={post.title} className="img-fluid" />
