@@ -1,5 +1,5 @@
-import React, { useContext, useRef, useEffect } from 'react'
-import { Form, FormGroup, Input, Row, FormText, Button, Label } from 'reactstrap'
+import React, { useContext, useRef, useEffect, useState } from 'react'
+import { Form, FormGroup, Input, Row, FormText, Button, Label, Spinner } from 'reactstrap'
 import { PostContext } from "../../providers/PostProvider";
 import { useParams } from 'react-router-dom';
 
@@ -7,11 +7,12 @@ import { useParams } from 'react-router-dom';
 //1) By the post list views; and 2) By the post details view
 //The post details view passes in a showEdit function that toggles a modal. Otherwise, showEdit is ignored.
 const EditPostForm = ({ showEdit }) => {
+    const [ready, set] = useState(false)
     const { post, updatePost, getPost } = useContext(PostContext)
     const { id } = useParams()
 
     useEffect(() => {
-        getPost(id)
+        getPost(id).then(() => set(true))
     }, [])
 
     const title = useRef()
@@ -50,35 +51,38 @@ const EditPostForm = ({ showEdit }) => {
     }
 
     //setting default value for date
+    if (ready === true) {
+        return (
+            <div className="container border pl-5 pr-5 mt-2 pb-1">
+                <Form>
+                    <FormText className='h4 text-center'>Edit Post</FormText>
+                    <Row>
+                        <FormGroup className='row col mr-1'>
+                            <Input type='text' name='Title' id='postTitle' innerRef={title} defaultValue={post ? post.title : ''}
+                                placeholder='Title' className='form-control form-control-sm'></Input>
+                        </FormGroup>
+                        <FormGroup className='row col'>
+                            <Input type='text' name='ImageUrl' id='postImageUrl' innerRef={imageUrl} defaultValue={post ? post.imageLocation : ''}
+                                placeholder='Image URL' className='form-control form-control-sm'></Input>
+                        </FormGroup>
+                    </Row>
+                    <FormGroup className='row'>
+                        <Input type='textarea' name='Content' id='postContent' innerRef={content} defaultValue={post ? post.content : ''}
+                            placeholder='Add your content...' className='form-control form-control-sm'></Input>
+                    </FormGroup>
+                    <FormGroup className='text-center'>
+                        <Label for='PublishDate'>Choose a Date to Publish Your Post</Label>
+                        <Input type='date' name='PublishDate' id='publishDate' innerRef={publishDate} defaultValue={post ? post.publishDateTime : ''} />
+                    </FormGroup>
+                    <div className='d-flex flex-row-reverse'>
+                        <Button size='sm mb-1' onClick={handleSubmit}>Save</Button>
+                    </div>
+                </Form>
+            </div>
+        )
+    }
+    else return <Spinner />
 
-    return (
-        <div className="container border pl-5 pr-5 mt-2 pb-1">
-            <Form>
-                <FormText className='h4 text-center'>Edit Post</FormText>
-                <Row>
-                    <FormGroup className='row col mr-1'>
-                        <Input type='text' name='Title' id='postTitle' innerRef={title} defaultValue={post ? post.title : ''}
-                            placeholder='Title' className='form-control form-control-sm'></Input>
-                    </FormGroup>
-                    <FormGroup className='row col'>
-                        <Input type='text' name='ImageUrl' id='postImageUrl' innerRef={imageUrl} defaultValue={post ? post.imageLocation : ''}
-                            placeholder='Image URL' className='form-control form-control-sm'></Input>
-                    </FormGroup>
-                </Row>
-                <FormGroup className='row'>
-                    <Input type='textarea' name='Content' id='postContent' innerRef={content} defaultValue={post ? post.content : ''}
-                        placeholder='Add your content...' className='form-control form-control-sm'></Input>
-                </FormGroup>
-                <FormGroup className='text-center'>
-                    <Label for='PublishDate'>Choose a Date to Publish Your Post</Label>
-                    <Input type='date' name='PublishDate' id='publishDate' innerRef={publishDate} defaultValue={post ? post.publishDateTime : ''} />
-                </FormGroup>
-                <div className='d-flex flex-row-reverse'>
-                    <Button size='sm mb-1' onClick={handleSubmit}>Save</Button>
-                </div>
-            </Form>
-        </div>
-    )
 }
 
 export default EditPostForm
