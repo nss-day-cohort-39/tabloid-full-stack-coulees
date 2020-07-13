@@ -3,6 +3,9 @@ import { Link } from "react-router-dom"
 import {Modal, Button, ModalHeader, ModalBody} from 'reactstrap'
 import DeleteCategory from "./DeleteCategory";
 import { EditCategory } from "./EditCategory";
+import "./Category.css";
+
+
 
 const Category = ({ category }) => {
     const [modal, setModal] = useState(false)
@@ -10,13 +13,15 @@ const Category = ({ category }) => {
 
     const [editModal, setEditModal] = useState(false)
     const toggleEdit = () => setEditModal(!editModal)
-     console.log("cat ->", category)
     return (
         <>
             <div className = "category">           
                 <Link to={`/category/`}>
-                    {category.name} <Button onClick = {toggleEdit} color="info">Edit</Button>
-                    <span><Button onClick = {toggle} color="danger">Delete</Button></span>
+                    <div className = "row category"> 
+                        <div className = "col-sm-3 my-auto">{category.name} </div>
+                        <div className = "col-sm-1 my-auto"><Button color = "info" size="sm" onClick = {toggleEdit}>Edit</Button></div>
+                        <div className = "col-sm-1 my-auto"><span><Button color="danger" size="sm" onClick = {toggle}>Delete</Button></span></div>
+                    </div>      
                 </Link>
             </div>
             

@@ -48,21 +48,6 @@ export const PostProvider = (props) => {
             }));
     };
 
-    // const searchPosts = (q) => {
-    //     if (!q) {
-    //         getAllPosts()
-    //         return
-    //     }
-    //     getToken().then((token) =>
-    //         fetch(apiUrl + `/search?q=${q}`, {
-    //             method: "GET",
-    //             headers: {
-    //                 Authorization: `Bearer ${token}`
-    //             }
-    //         }).then(resp => resp.json())
-    //             .then(setPosts));
-    // }
-
     const getPost = (id) =>
         getToken().then((token) =>
             fetch(`/api/post/${id}`, {
@@ -81,7 +66,7 @@ export const PostProvider = (props) => {
                     Authorization: `Bearer ${token}`
                 }
             }).then(resp => resp.json())
-                .then(setPosts));
+            .then(setPosts));
     };
 
     return (

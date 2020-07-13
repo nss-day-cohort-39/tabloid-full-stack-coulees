@@ -1,27 +1,22 @@
 import React, { useContext, useRef } from "react"
-import {useHistory} from 'react-router-dom'
 import { Form } from "reactstrap"
 import { CategoryContext } from "../../providers/CategoryProvider"
 
 
 export const CategoryForm = ({toggle}) => {
     const { getAllCategory, addCategory } = useContext(CategoryContext)
-    const history = useHistory()
     const name = useRef("name")
-    const form = useRef("form")
 
     const addNewCategory = () => {
         return addCategory({
             name: name.current.value
-        }).then(toggle
-            //() => {
-        //     history.push("/category")
-        // }
-        ).then(getAllCategory)
+        })
+        .then(toggle)
+        .then(getAllCategory)
     }
     
     return (
-        <Form className="categoryForm" ref={form}>
+        <Form className="categoryForm">
             <h2 className="categoryForm__title">New Category</h2>
             <fieldset>
                 <div className="form-group">
