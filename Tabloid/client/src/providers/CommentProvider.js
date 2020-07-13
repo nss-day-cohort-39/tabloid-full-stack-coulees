@@ -1,68 +1,69 @@
-// import React, { useState, useContext } from "react";
-// import { UserProfileContext } from "../providers/UserProfileProvider";
+import React, { useState, useContext } from "react";
+import { UserProfileContext } from "../providers/UserProfileProvider";
 
-// export const CommentContext = React.createContext();
+export const CommentContext = React.createContext();
 
-// export const CommentProvider = (props) => {
-//     const { getToken } = useContext(UserProfileContext)
-//     const [comments, setComments] = useState([]);
+export const CommentProvider = (props) => {
+    const { getToken } = useContext(UserProfileContext)
+    const [comments, setComments] = useState([]);
 
-//     const apiUrl = '/api/post'
+    const apiUrl = '/api/comment'
 
-//     const getAllComments = () => {
-//         getToken().then((token) =>
-//             fetch(apiUrl, {
-//                 method: "GET",
-//                 headers: {
-//                     Authorization: `Bearer ${token}`
-//                 }
-//             }).then(resp => resp.json())
-//                 .then(setPosts));
-//     };
+    const getAllComments = () => {
+        getToken().then((token) =>
+            fetch(apiUrl, {
+                method: "GET",
+                headers: {
+                    Authorization: `Bearer ${token}`
+                }
+            }).then(resp => resp.json())
+                .then(setComments));
+    };
 
-//     const addComment = (comment) => {
-//         getToken().then((token) =>
-//             fetch(apiUrl, {
-//                 method: "POST",
-//                 headers: {
-//                     Authorization: `Bearer ${token}`,
-//                     "Content-Type": "application/json"
-//                 },
-//                 body: JSON.stringify(comment)
-//             }).then(resp => {
-//                 if (resp.ok) {
-//                     return resp.json();
-//                 }
-//                 throw new Error("Unauthorized");
-//             }));
-//     };
+    const addComment = (comment) => {
+        getToken().then((token) =>
+            fetch(apiUrl, {
+                method: "POST",
+                headers: {
+                    Authorization: `Bearer ${token}`,
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify(comment)
+            }).then(resp => {
+                if (resp.ok) {
+                    return resp.json();
+                }
+                throw new Error("Unauthorized");
+            }));
+    };
 
-//     const getComment = (id) =>
-//         getToken().then((token) =>
-//             fetch(`/api/post/${id}`, {
-//                 method: "GET",
-//                 headers: {
-//                     Authorization: `Bearer ${token}`,
-//                 },
-//             }).then((res) => res.json())
-//         );
+    const getComment = (id) =>
+        getToken().then((token) =>
+            fetch(`/api/comment/${id}`, {
+                method: "GET",
+                headers: {
+                    Authorization: `Bearer ${token}`,
+                },
+            }).then((res) => res.json())
+        );
 
-//     const getPostsByCurrentUser = () => {
-//         getToken().then((token) =>
-//             fetch(apiUrl + `/currentUser`, {
-//                 method: "GET",
-//                 headers: {
-//                     Authorization: `Bearer ${token}`
-//                 }
-//             }).then(resp => resp.json())
-//                 .then(setPosts));
-//     };
+    const getCommentByPostId = (id) => {
+        console.log("HERE");
+        getToken().then((token) =>
+            fetch(`/api/comment/getcommentsbypost/${id}`, {
+                method: "GET",
+                headers: {
+                    Authorization: `Bearer ${token}`
+                }
+            }).then(resp => resp.json())
+                .then(setComments));
+    };
 
-//     return (
-//         <CommentContext.Provider value={{
-
-//         }}>
-//             {props.children}
-//         </CommentContext.Provider>
-//     );
-// };
+    return (
+        <CommentContext.Provider value={{
+            comments, getAllComments, addComment, getComment, getCommentByPostId
+        }}>
+            {props.children}
+        </CommentContext.Provider>
+    );
+};

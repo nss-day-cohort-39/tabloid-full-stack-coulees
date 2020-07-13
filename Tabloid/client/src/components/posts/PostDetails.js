@@ -2,6 +2,8 @@ import React, { useContext, useEffect, useState } from 'react';
 import { useParams } from "react-router-dom";
 import { PostContext } from '../../providers/PostProvider';
 import { Button } from "reactstrap"
+import CommentList from '../comment/CommentList';
+import { useHistory } from "react-router-dom";
 
 const PostDetails = () => {
     const [post, setPost] = useState();
@@ -12,12 +14,15 @@ const PostDetails = () => {
         getPost(id).then(setPost);
     }, []);
 
+    const history = useHistory();
+
     if (!post) {
         return null;
     }
 
     const date = new Date(post.publishDateTime);
     const dateTimeFormat = new Intl.DateTimeFormat('en', { year: 'numeric', month: 'short', day: '2-digit' }).format(date);
+
 
     return (
         <div className="container">
@@ -30,7 +35,7 @@ const PostDetails = () => {
             <p>{post.content}</p>
 
             <Button color="secondary" onClick={() => {
-                viewComment()
+                return history.push(`/CommentList/${post.id}`)
             }}>View Comments</Button>
         </div >
     );

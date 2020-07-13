@@ -84,20 +84,9 @@ export const PostProvider = (props) => {
                 .then(setPosts));
     };
 
-    const getComments = () => {
-        getToken().then((token) =>
-            fetch(apiUrl + `/comments`, {
-                method: "GET",
-                headers: {
-                    Authorization: `Bearer ${token}`
-                }
-            }).then(resp => resp.json())
-                .then(setPosts));
-    };
-
     return (
         <PostContext.Provider value={{
-            posts, getAllPosts, addPost, getPost, getPostsByCurrentUser, getPublishedPosts, getComments
+            posts, getAllPosts, addPost, getPost, getPostsByCurrentUser, getPublishedPosts
         }}>
             {props.children}
         </PostContext.Provider>

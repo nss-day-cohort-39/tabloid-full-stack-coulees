@@ -16,27 +16,26 @@ namespace Tabloid.Repositories
         {
             _context = context;
         }
-        public List<Comment> GetAll()
-        {
-            return _context.Comment
-                           .Include(c=> c.Post)
-                           .ToList();
-        }
-        public Comment GetById(int id)
+
+        public Comment GetCommentById(int id)
         {
             return _context.Comment
                            .Include(c => c.Post)
                            .FirstOrDefault(c => c.Id == id);
         }
-
-        public List<Comment> GetByPostId(int id)
+        public List<Comment> GetAllComments()
         {
             return _context.Comment
-                            .Include(c => c.Subject)
-                            .Include(c => c.Content)
-                            .Include(c => c.UserProfile.DisplayName)
+                           .Include(c=> c.Post)
+                           .ToList();
+        }
+        public List<Comment> GetCommentsByPostId(int id)
+        {
+            return _context.Comment
+                            .Include(c => c.UserProfile)
+                            .Include(c => c.Post)
                             .OrderBy(c => c.CreateDateTime)
-                            .Where(p => p.PostId == id)
+                            .Where(c => c.PostId == id)
                             .ToList();
         }
         
@@ -54,7 +53,7 @@ namespace Tabloid.Repositories
 
         public void Delete(int id)
         {
-            var comment = GetById(id);
+            var comment = GetCommentById(id);
             _context.Comment.Remove(comment);
             _context.SaveChanges();
         }

@@ -30,20 +30,20 @@ namespace Tabloid.Controllers
         [HttpGet]
         public IActionResult Get()
         {
-            return Ok(_commentRepository.GetAll());
+            return Ok(_commentRepository.GetAllComments());
         }
 
-        //https://localhost/api/post/getbycomment/1
-        [HttpGet("getbycomment/{id}")]
-        public IActionResult GetByPost(int id)
+        //https://localhost/api/comment/getcomment/1
+        [HttpGet("getcomment/{id}")]
+        public IActionResult GetComment(int id)
         {
-            return Ok(_commentRepository.GetByPostId(id));
+            return Ok(_commentRepository.GetCommentById(id));
         }
 
         [HttpGet("{id}")]
         public IActionResult Get(int id)
         {
-            var comment = _commentRepository.GetById(id);
+            var comment = _commentRepository.GetCommentById(id);
             if (comment == null)
 
             {
@@ -62,6 +62,13 @@ namespace Tabloid.Controllers
 
             _commentRepository.Update(comment);
             return NoContent();
+        }
+
+        //https://localhost/api/comment/getcommentsbypost/1
+        [HttpGet("getcommentsbypost/{id}")]
+        public IActionResult GetByPost(int id)
+        {
+            return Ok(_commentRepository.GetCommentsByPostId(id));
         }
 
         [HttpDelete("{id}")]

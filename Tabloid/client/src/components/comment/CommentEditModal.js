@@ -2,17 +2,16 @@ import React, { useContext, useRef } from "react";
 import { Form, FormGroup, Label, Input, Button, Card, CardBody, CardHeader } from "reactstrap";
 import { CommentContext } from "../../providers/CommentProvider";
 
+const CommentEditModal = ({ toggle, comment }) => {
 
-const CommentForm = ({ toggle }) => {
-
-    const { getAllComments, addComment } = useContext(CommentContext);
+    const { getAllComments, editComment } = useContext(CommentContext);
 
     const subject = useRef();
     const content = useRef();
 
     const submitForm = (e) => {
         e.preventDefault();
-        addComment({ subject: subject.current.value })
+        editComment(comment.id, { id: comment.id, subject: subject.current.value })
             .then(getAllComments)
             .then(toggle)
             .catch((err) => alert(`An error ocurred: ${err.message}`));
@@ -21,13 +20,13 @@ const CommentForm = ({ toggle }) => {
     return (
         <Form onSubmit={submitForm}>
             <FormGroup>
-                <Label for="postTitle">Subject</Label>
-                <Input type="text" name="commentSubject" id="commentSubject" innerRef={subject} placeholder="" />
+                <Label for="commentSubject">Subject</Label>
+                <Input type="text" name="commentSubject" id="commentSubject" innerRef={subject} defaultValue={comment.subject} />
             </FormGroup>
 
             <FormGroup>
-                <Label for="postTitle">Content</Label>
-                <Input type="text" name="commentComment" id="commentComment" innerRef={content} placeholder="" />
+                <Label for="commentSubject">Content</Label>
+                <Input type="text" name="commentContent" id="commentContent" innerRef={content} defaultValue={comment.content} />
             </FormGroup>
 
             <FormGroup className="text-right">
@@ -47,4 +46,4 @@ const CommentForm = ({ toggle }) => {
 
 }
 
-export default CommentForm;
+export default CommentEditModal;
