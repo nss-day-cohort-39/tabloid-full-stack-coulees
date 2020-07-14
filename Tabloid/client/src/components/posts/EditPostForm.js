@@ -2,6 +2,7 @@ import React, { useContext, useRef, useEffect, useState } from 'react'
 import { Form, FormGroup, Input, Row, FormText, Button, Label, Spinner } from 'reactstrap'
 import { PostContext } from "../../providers/PostProvider";
 import { useParams } from 'react-router-dom';
+import DatePicker from 'reactstrap-date-picker/lib/DatePicker';
 import { PostTagContext } from '../../providers/PostTagProvider';
 import PostTagForm from './PostTagForm';
 import { CategoryContext } from '../../providers/CategoryProvider';
@@ -11,6 +12,7 @@ import { CategoryContext } from '../../providers/CategoryProvider';
 //The post details view passes in a showEdit function that toggles a modal. Otherwise, showEdit is ignored.
 const EditPostForm = ({ showEdit }) => {
     const [ready, set] = useState(false)
+    const [publishDate, setPublishDate] = useState(null)
     const [tagReady, tagSet] = useState(false)
     const { post, updatePost, getPost } = useContext(PostContext)
     const { id } = useParams();
@@ -19,7 +21,15 @@ const EditPostForm = ({ showEdit }) => {
 
     const [categorySelect, setCategorySelection] = useState("");
 
+    const handleDateChange = (e) => {
+        console.log(e)
+        setPublishDate(e)
+    }
+
     useEffect(() => {
+        getPost(id)
+            .then((post) => setPublishDate(post.publishDateTime))
+            .then(() => set(true))
         getAllCategory()
     }, [])
     const handleCategorySelection = (e) => {
@@ -39,7 +49,6 @@ const EditPostForm = ({ showEdit }) => {
     const title = useRef()
     const imageUrl = useRef()
     const content = useRef()
-    const publishDate = useRef()
 
     //state to store the tag array
     const [chosenTags, setChosenTags] = useState([]);
@@ -50,7 +59,8 @@ const EditPostForm = ({ showEdit }) => {
             title: title.current.value,
             imageLocation: imageUrl.current.value,
             content: content.current.value,
-            publishDateTime: publishDate.current.value.length ? publishDate.current.value : null,
+            publishDateTime: publishDate,
+            publishDateTime: publishDate,
             categoryId: (categorySelect !== "" ? +categorySelect : post.categoryId)
         }
         if (categorySelect === "") {
@@ -97,7 +107,7 @@ const EditPostForm = ({ showEdit }) => {
                     </FormGroup>
                     <FormGroup className='text-center'>
                         <Label for='PublishDate'>Choose a Date to Publish Your Post</Label>
-                        <Input type='text' name='PublishDate' id='publishDate' innerRef={publishDate} defaultValue={post.publishDateTime ? post.publishDateTime : ""} />
+                        <DatePicker value={publishDate} onChange={handleDateChange} />
                     </FormGroup>
                     <FormGroup>
                         <Label for='categoryId'>Category</Label>

@@ -1,25 +1,29 @@
+import { PostContext } from "../../providers/PostProvider";
+import DatePicker from 'reactstrap-date-picker/lib/DatePicker';
 import React, { useContext, useRef, useState, useEffect } from 'react'
 import { Form, FormGroup, Input, Row, FormText, Button, Label, Badge, Modal, ModalHeader, ModalBody } from 'reactstrap'
-import { PostContext } from "../../providers/PostProvider";
 import PostTagForm from './PostTagForm';
 import { CategoryContext } from '../../providers/CategoryProvider';
 
 const AddPostForm = () => {
     const { addPost } = useContext(PostContext)
     const { categories, getAllCategory } = useContext(CategoryContext)
+    const [publishDate, set] = useState()
+    const [categorySelect, setCategorySelection] = useState("");
+    const [chosenTags, setChosenTags] = useState([]);
+
+    const handleDateChange = (e) => {
+        set(e.target.value)
+    }
 
     const title = useRef()
     const imageUrl = useRef()
     const content = useRef()
-    const publishDate = useRef()
-    const [categorySelect, setCategorySelection] = useState("");
-
-    //state to store the tag array
-    const [chosenTags, setChosenTags] = useState([]);
 
     useEffect(() => {
         getAllCategory()
     }, [])
+
     const handleCategorySelection = (e) => {
         setCategorySelection(e.target.value)
     }
@@ -28,7 +32,7 @@ const AddPostForm = () => {
             title: title.current.value,
             imageLocation: imageUrl.current.value,
             content: content.current.value,
-            publishDateTime: (publishDate.current.value) ? publishDate.current.value : null,
+            publishDateTime: publishDate,
             categoryId: +categorySelect,
             isApproved: true
         }
@@ -67,7 +71,7 @@ const AddPostForm = () => {
                     </FormGroup>
                     <FormGroup className='text-center'>
                         <Label for='PublishDate'>Choose a Date to Publish Your Post</Label>
-                        <Input type='date' name='PublishDate' id='publishDate' innerRef={publishDate} />
+                        <Input type='date' name='PublishDate' id='publishDate' onChange={handleDateChange} />
                     </FormGroup>
                     <FormGroup>
                         <Label for='categoryId'>Category</Label>
@@ -87,5 +91,6 @@ const AddPostForm = () => {
         </>
     )
 }
+
 
 export default AddPostForm

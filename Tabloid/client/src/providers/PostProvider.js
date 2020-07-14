@@ -6,6 +6,7 @@ import { PostTagContext } from "./PostTagProvider";
 export const PostContext = React.createContext();
 
 export const PostProvider = (props) => {
+    const { postTags, getAllPostTags } = useContext(PostTagContext)
     const { getToken } = useContext(UserProfileContext)
     const [posts, setPosts] = useState([]);
     const [post, setPost] = useState();
@@ -13,7 +14,7 @@ export const PostProvider = (props) => {
     const apiUrl = '/api/post'
     const history = useHistory();
 
-    const { postTags, getAllPostTags } = useContext(PostTagContext)
+
 
     const getAllPosts = () => {
         getToken().then((token) =>
@@ -44,7 +45,11 @@ export const PostProvider = (props) => {
                 headers: {
                     Authorization: `Bearer ${token}`,
                 },
-            }).then((res) => res.json()).then(setPost)
+            }).then((res) => res.json())
+                .then((post) => {
+                    setPost(post)
+                    return post
+                })
         );
 
     const getPostsByCurrentUser = () => {
