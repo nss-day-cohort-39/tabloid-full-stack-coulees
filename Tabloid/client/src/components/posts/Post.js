@@ -1,7 +1,7 @@
 import React, { useContext } from "react"
 import { Card, CardImg, CardBody, CardFooter, Button } from "reactstrap"
 import { Link, useHistory } from "react-router-dom"
-import { PostContext } from "../../providers/PostProvider";
+
 
 const Post = ({ post }) => {
     const history = useHistory()
@@ -20,7 +20,7 @@ const Post = ({ post }) => {
         <Card className="m-4" id={`post-${post.id}`}>
             <CardImg top src={post.imageLocation} alt={post.title} />
             <CardBody>
-                <strong><Link to={`/posts/${post.id}`}>{post.title}</Link></strong>
+                <strong className="text-left px-2"><Link to={`/posts/${post.id}`}>{post.title}</Link></strong>
                 <div className="text-left px-2">{post.userProfile.fullName}</div>
                 <div className="text-left px-2">{post.categoryId !== 0 && currentUserId !== post.userProfileId? post.category.name : ""}</div>
             </CardBody>

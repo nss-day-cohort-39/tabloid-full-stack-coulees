@@ -1,8 +1,8 @@
 import React, { useContext, useEffect, useState } from 'react';
-import { useParams } from "react-router-dom";
+import { useParams, useHistory } from "react-router-dom";
 import { PostContext } from '../../providers/PostProvider';
-import { Button, Modal, ModalHeader, ModalFooter, ModalBody } from 'reactstrap';
-import EditPostForm from './EditPostForm';
+import { Button, Modal, ModalBody, ModalHeader, ModalFooter } from "reactstrap"
+import EditPostForm from './EditPostForm'
 
 const PostDetails = () => {
     const [deleteModal, showDelete] = useState(false)
@@ -14,6 +14,8 @@ const PostDetails = () => {
     useEffect(() => {
         getPost(id);
     }, []);
+
+    const history = useHistory();
 
     if (!post) {
         return null;
@@ -64,6 +66,7 @@ const PostDetails = () => {
         dateTimeFormat = new Intl.DateTimeFormat('en', { year: 'numeric', month: 'short', day: '2-digit' }).format(date);
     }
 
+
     return (
         <>
             <div className="container">
@@ -77,8 +80,12 @@ const PostDetails = () => {
                 {renderButtons(post, currentUserId)}
             </div >
             {renderModals(post, currentUserId)}
+            <Button color="secondary" onClick={() => {
+                history.push(`/CommentList/${id}`)
+            }}>View Comments</Button>
         </>
     );
 };
+
 
 export default PostDetails;
