@@ -90,6 +90,12 @@ namespace Tabloid.Controllers
             {
                 return BadRequest();
             }
+            //delete the tags associated with the post
+            List<PostTag> postTags = _postTagRepository.GetByPostId(id);
+            foreach (PostTag postTag in postTags)
+            {
+                _postTagRepository.Delete(postTag.Id);
+            }
 
             _postRepository.Update(post);
             return NoContent();

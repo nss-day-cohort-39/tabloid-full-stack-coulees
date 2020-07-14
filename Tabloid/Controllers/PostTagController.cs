@@ -38,6 +38,18 @@ namespace Tabloid.Controllers
             return Ok(postTag);
         }
 
+        [HttpGet("getbypostid/{id}")]
+        public IActionResult GetByPostTags(int id)
+        {
+            var postTags = _postTagRepository.GetByPostId(id);
+            if (postTags == null)
+
+            {
+                return NotFound();
+            }
+            return Ok(postTags);
+        }
+
         [HttpPost]
         public IActionResult Post(PostTag postTag)
         {

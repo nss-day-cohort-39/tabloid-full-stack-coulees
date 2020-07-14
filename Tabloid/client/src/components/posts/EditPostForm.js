@@ -2,6 +2,10 @@ import React, { useContext, useRef, useEffect, useState } from 'react'
 import { Form, FormGroup, Input, Row, FormText, Button, Label, Spinner } from 'reactstrap'
 import { PostContext } from "../../providers/PostProvider";
 import { useParams } from 'react-router-dom';
+import { TagContext } from "../../providers/TagProvider";
+import xIcon from "../tags/x.svg"
+import { PostTagContext } from '../../providers/PostTagProvider';
+import PostTagForm from './PostTagForm';
 
 //There are two ways to access this form:
 //1) By the post list views; and 2) By the post details view
@@ -9,16 +13,22 @@ import { useParams } from 'react-router-dom';
 const EditPostForm = ({ showEdit }) => {
     const [ready, set] = useState(false)
     const { post, updatePost, getPost } = useContext(PostContext)
-    const { id } = useParams()
+    const { id } = useParams();
+    const { postTags, getAllPostTags } = useContext(PostTagContext);
 
     useEffect(() => {
-        getPost(id).then(() => set(true))
+        getPost(id)
+            .then(getAllPostTags(id))
+            .then(() => set(true))
     }, [])
 
     const title = useRef()
     const imageUrl = useRef()
     const content = useRef()
     const publishDate = useRef()
+
+    //state to store the tag array
+    const [chosenTags, setChosenTags] = useState([]);
 
     const handleSubmit = () => {
         const Post = {
@@ -44,7 +54,7 @@ const EditPostForm = ({ showEdit }) => {
         Post.userProfileId = post.userProfileId
         Post.categoryId = post.categoryId
         Post.isApproved = post.isApproved
-        updatePost(Post)
+        updatePost(Post, chosenTags)
         if (showEdit) {
             showEdit(false)
         }
@@ -73,6 +83,9 @@ const EditPostForm = ({ showEdit }) => {
                     <FormGroup className='text-center'>
                         <Label for='PublishDate'>Choose a Date to Publish Your Post</Label>
                         <Input type='text' name='PublishDate' id='publishDate' innerRef={publishDate} defaultValue={post.publishDateTime ? post.publishDateTime : ""} />
+                    </FormGroup>
+                    <FormGroup>
+                        <PostTagForm postTags={postTags.map(pt => pt.tag)} chosenTags={chosenTags} setChosenTags={setChosenTags} />
                     </FormGroup>
                     <div className='d-flex flex-row-reverse'>
                         <Button size='sm mb-1' onClick={handleSubmit}>Save</Button>

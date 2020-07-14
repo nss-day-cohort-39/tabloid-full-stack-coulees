@@ -3,7 +3,7 @@ import { Form, FormGroup, Label, Button, Badge, InputGroup, InputGroupAddon } fr
 import { TagContext } from "../../providers/TagProvider";
 import xIcon from "../tags/x.svg"
 
-const PostTagForm = ({ chosenTags, setChosenTags }) => {
+const PostTagForm = ({ chosenTags, setChosenTags, postTags }) => {
 
     const { tags, getAllTags } = useContext(TagContext);
 
@@ -12,6 +12,7 @@ const PostTagForm = ({ chosenTags, setChosenTags }) => {
 
     useEffect(() => {
         getAllTags()
+        setChosenTags(postTags);
     }, []);
 
     //state for the options that appear in the tag drop-down
@@ -20,9 +21,7 @@ const PostTagForm = ({ chosenTags, setChosenTags }) => {
         setTagOptions(tags);
     }, [tags]);
 
-    const updateChosenTags = (e) => {
-        e.preventDefault();
-
+    const updateChosenTags = () => {
         //check to see if the current tag has already been selected
         if (!chosenTags.some(tag => tag.id === +selectedTagId)) {
             //get the tag object to pass to the chosenTags array
@@ -46,6 +45,16 @@ const PostTagForm = ({ chosenTags, setChosenTags }) => {
         }
     }
 
+    //console.log(postTags);
+    //console.log(chosenTags);
+
+    // if (postTags !== null) {
+    //     postTags.forEach(pt => {
+    //         setSelectedTagId(pt.tagid);
+    //         updateChosenTags();
+    //     })
+    // }
+
     return (
         <>
             <FormGroup>
@@ -60,7 +69,7 @@ const PostTagForm = ({ chosenTags, setChosenTags }) => {
                         }
                     </select>
                     <InputGroupAddon addonType="append">
-                        <Button id="addTagButton" type="button" color="secondary" onClick={updateChosenTags}>Add</Button>
+                        <Button id="addTagButton" type="button" color="secondary" onClick={e => { e.preventDefault(); updateChosenTags(); }}>Add</Button>
                     </InputGroupAddon>
                 </InputGroup>
             </FormGroup>
