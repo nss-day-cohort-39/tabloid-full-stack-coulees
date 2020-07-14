@@ -4,6 +4,7 @@ using Tabloid.Repositories;
 using Tabloid.Models;
 using Microsoft.AspNetCore.Authorization;
 using System.Security.Claims;
+using System.Collections.Generic;
 
 namespace Tabloid.Controllers
 {
@@ -14,12 +15,14 @@ namespace Tabloid.Controllers
     {
         private readonly PostRepository _postRepository;
         private readonly UserProfileRepository _userProfileRepository;
+        private readonly CommentRepository _commentRepository;
 
         //using context instead of config
         public PostController(ApplicationDbContext context)
         {
             _postRepository = new PostRepository(context);
             _userProfileRepository = new UserProfileRepository(context);
+            _commentRepository = new CommentRepository(context);
         }
 
         [HttpGet]
@@ -96,8 +99,13 @@ namespace Tabloid.Controllers
         {
             int userId = GetCurrentUserProfile().Id;
             Post PostToDelete = _postRepository.GetById(id);
-            if(userId == PostToDelete.UserProfileId)
+            List<Comment> CommentsToDelete = _commentRepository.GetCommentsByPostId(id);
+            if (userId == PostToDelete.UserProfileId)
             {
+                foreach (Comment comment in CommentsToDelete)
+                {
+                    _commentRepository.Delete(comment.Id);
+                }
                 _postRepository.Delete(id);
                 return NoContent();
             }
