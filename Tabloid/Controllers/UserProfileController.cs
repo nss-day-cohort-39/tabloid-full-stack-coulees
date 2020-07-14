@@ -29,6 +29,16 @@ namespace Tabloid.Controllers
             }
             return Unauthorized();
         }
+        [HttpGet("active")]
+        public IActionResult GetActiveUsers()
+        {
+            var currentUser = GetCurrentUserProfile();
+            if (currentUser.UserType.Name == "Admin")
+            {
+                return Ok(_userProfileRepository.GetAllActive());
+            }
+            return Unauthorized();
+        }
         [HttpGet("{firebaseUserId}")]
         public IActionResult GetUserProfile(string firebaseUserId)
         {

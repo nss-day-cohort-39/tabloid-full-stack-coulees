@@ -97,6 +97,22 @@ export function UserProfileProvider(props) {
         .then(setUsers));
   };
 
+  const getActiveUsers = () => {
+    return getToken().then((token) =>
+      fetch(apiUrl + "/active", {
+        method: "GET",
+        headers: {
+          Authorization: `Bearer ${token}`
+        }
+      }).then(resp => {
+        if (resp.ok) {
+          return resp.json();
+        }
+        throw new Error("Unauthorized");
+      })
+        .then(setUsers));
+  };
+
   const deactivateUser = (user) => {
     return getToken().then((token) =>
       fetch(apiUrl + `/deactivate/${user.id}`, {
@@ -117,7 +133,7 @@ export function UserProfileProvider(props) {
 
   return (
     <UserProfileContext.Provider value={{
-      isLoggedIn, login, logout, register, getUserProfile, user,
+      isLoggedIn, login, logout, register, getUserProfile, user, getActiveUsers,
       getToken, getAllUsers, users, isAdmin, setIsAdmin, setUser, deactivateUser
     }}>
       {isFirebaseReady

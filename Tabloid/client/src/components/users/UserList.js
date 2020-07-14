@@ -5,10 +5,10 @@ import User from './User'
 
 const UserList = () => {
     const [ready, set] = useState(false)
-    const { getAllUsers, users } = useContext(UserProfileContext)
+    const { getActiveUsers, users } = useContext(UserProfileContext)
 
     useEffect(() => {
-        getAllUsers().then(() => set(true))
+        getActiveUsers().then(() => set(true))
     }, [])
 
     if (ready) {

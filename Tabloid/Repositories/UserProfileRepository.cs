@@ -21,6 +21,14 @@ namespace Tabloid.Repositories
                     .OrderBy(up => up.DisplayName)
                     .ToList();
         }
+        public List<UserProfile> GetAllActive()
+        {
+            return _context.UserProfile
+                    .Include(up => up.UserType)
+                    .Where(up => up.IsApproved == true)
+                    .OrderBy(up => up.DisplayName)
+                    .ToList();
+        }
 
         public UserProfile GetByFirebaseUserId(string firebaseUserId)
         {
