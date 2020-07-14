@@ -13,6 +13,7 @@ export function UserProfileProvider(props) {
   const [isAdmin, setIsAdmin] = useState(false)
   const [isFirebaseReady, setIsFirebaseReady] = useState(false);
   const [users, setUsers] = useState([])
+  const [user, setUser] = useState({})
 
   useEffect(() => {
     firebase.auth().onAuthStateChanged((u) => {
@@ -60,7 +61,10 @@ export function UserProfileProvider(props) {
           Authorization: `Bearer ${token}`
         }
       }).then(resp => resp.json())
-        .then(setUsers));
+        .then((user) => {
+          setUser(user)
+          return user
+        }));
   };
 
   const saveUser = (userProfile) => {
@@ -93,8 +97,8 @@ export function UserProfileProvider(props) {
 
   return (
     <UserProfileContext.Provider value={{
-      isLoggedIn, login, logout, register, getUserProfile,
-      getToken, getAllUsers, users, isAdmin, setIsAdmin
+      isLoggedIn, login, logout, register, getUserProfile, user,
+      getToken, getAllUsers, users, isAdmin, setIsAdmin, setUser
     }}>
       {isFirebaseReady
         ? props.children
