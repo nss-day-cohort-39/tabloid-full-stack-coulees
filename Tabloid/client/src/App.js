@@ -8,24 +8,27 @@ import { CategoryProvider } from './providers/CategoryProvider';
 import { SubscriptionProvider } from './providers/SubscriptionProvider';
 import { TagProvider } from './providers/TagProvider';
 import { PostTagProvider } from './providers/PostTagProvider';
+import { CommentProvider } from './providers/CommentProvider';
 
 //it is important that PostTagProvider stays outside of Post Provider
 function App() {
   return (
     <Router>
       <UserProfileProvider>
-        <PostProvider>
-          <CategoryProvider>     
-            <SubscriptionProvider>
+        <PostTagProvider>
+          <PostProvider>
+            <CategoryProvider>
+              <SubscriptionProvider>
                 <CommentProvider>
-                    <TagProvider>
-                        <Header />
-                        <ApplicationViews />              
-                    </TagProvider>
+                  <TagProvider>
+                    <Header />
+                    <ApplicationViews />
+                  </TagProvider>
                 </CommentProvider>
-            </SubscriptionProvider>
-          </CategoryProvider>
-        </PostProvider>
+              </SubscriptionProvider>
+            </CategoryProvider>
+          </PostProvider>
+        </PostTagProvider>
       </UserProfileProvider>
     </Router>
   );
