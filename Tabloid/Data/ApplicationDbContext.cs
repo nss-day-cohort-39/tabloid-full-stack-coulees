@@ -13,5 +13,6 @@ namespace Tabloid.Data
         public DbSet<Category> Category { get; set; }
         public DbSet<Tag> Tag { get; set; }
         public DbSet<UserType> UserType { get; set; }
+        public DbSet<Subscription> Subscription { get; set; }
     }
 }
