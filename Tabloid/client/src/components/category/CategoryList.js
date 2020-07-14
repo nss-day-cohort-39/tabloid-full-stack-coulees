@@ -11,8 +11,8 @@ const CategoryList = () => {
     const toggle = () => setModal(!modal)
     const renderListItem = (category) => {
         if(category.id > 0){
-            return (<div className = "container fluid categoryContainer">
-                     <Category Key={category.id} category={category} />
+            return (<div key={"categoryWrapper-"+category.id} className = "container fluid categoryContainer">
+                     <Category key={"category-"+category.id} category={category} />
                     </div>)
         }
     }
