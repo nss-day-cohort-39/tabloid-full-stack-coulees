@@ -112,7 +112,7 @@ export const PostProvider = (props) => {
     }
 
     const updatePost = (post, tags) => {
-        getToken().then((token) =>
+        return getToken().then((token) =>
             fetch(apiUrl + `/${post.id}`, {
                 method: "PUT",
                 headers: {

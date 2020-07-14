@@ -12,7 +12,9 @@ const PostTagForm = ({ chosenTags, setChosenTags, postTags }) => {
 
     useEffect(() => {
         getAllTags()
-        setChosenTags(postTags);
+        if (postTags !== undefined) {
+            setChosenTags(postTags);
+        }
     }, []);
 
     //state for the options that appear in the tag drop-down
@@ -75,7 +77,7 @@ const PostTagForm = ({ chosenTags, setChosenTags, postTags }) => {
             </FormGroup>
             <div id="tagPreview">
                 {
-                    chosenTags.length > 0
+                    chosenTags !== undefined && chosenTags.length > 0
                         ?
                         chosenTags.map(tag => <Badge key={"tag-" + tag.id} className="pt-1 pl-2 mr-2 mb-2" color="info" style={{ cursor: "pointer" }} onClick={() => { removeTag(tag.id) }}>{tag.name} <img src={xIcon} /></Badge>)
                         :

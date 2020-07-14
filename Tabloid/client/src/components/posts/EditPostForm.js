@@ -12,14 +12,19 @@ import PostTagForm from './PostTagForm';
 //The post details view passes in a showEdit function that toggles a modal. Otherwise, showEdit is ignored.
 const EditPostForm = ({ showEdit }) => {
     const [ready, set] = useState(false)
+    const [tagReady, tagSet] = useState(false)
     const { post, updatePost, getPost } = useContext(PostContext)
     const { id } = useParams();
     const { postTags, getAllPostTags } = useContext(PostTagContext);
 
     useEffect(() => {
         getPost(id)
-            .then(getAllPostTags(id))
             .then(() => set(true))
+    }, [])
+
+    useEffect(() => {
+        getAllPostTags(id)
+            .then(() => tagSet(true))
     }, [])
 
     const title = useRef()
@@ -61,7 +66,7 @@ const EditPostForm = ({ showEdit }) => {
     }
 
     //setting default value for date
-    if (ready === true) {
+    if (ready === true && tagReady === true) {
         return (
             <div className="container border pl-5 pr-5 mt-2 pb-1">
                 <Form>

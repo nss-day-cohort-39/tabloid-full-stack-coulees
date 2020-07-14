@@ -1,4 +1,4 @@
-import React, { useContext, useEffect } from "react";
+import React, { useContext } from "react";
 import { TagContext } from "../../providers/TagProvider";
 import { Button, Form } from 'reactstrap';
 
