@@ -26,7 +26,7 @@ const CommentList = () => {
                 <div className="row justify-content-center">
                     <div id="commentList" className="cards-column">
                         <Button color="secondary" onClick={addModalToggle} className="mb-4">Add Comment</Button>
-                        <h3>Comments for {post.title}</h3>
+                        {post ? (<h3>Comments for {post.title}</h3>) : (<h3>Comments for post</h3>)}
                         <ListGroup>
                             {
                                 (comments.length)

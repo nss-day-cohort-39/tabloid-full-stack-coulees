@@ -1,7 +1,7 @@
 import React, { useContext } from "react"
 import { Card, CardImg, CardBody, CardFooter, Button } from "reactstrap"
 import { Link, useHistory } from "react-router-dom"
-import { PostContext } from "../../providers/PostProvider";
+
 
 const Post = ({ post }) => {
     const history = useHistory()

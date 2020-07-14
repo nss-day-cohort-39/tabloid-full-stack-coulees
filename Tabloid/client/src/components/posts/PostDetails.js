@@ -2,7 +2,6 @@ import React, { useContext, useEffect, useState } from 'react';
 import { useParams, useHistory } from "react-router-dom";
 import { PostContext } from '../../providers/PostProvider';
 import { Button, Modal, ModalBody, ModalHeader, ModalFooter } from "reactstrap"
-import CommentList from '../comment/CommentList';
 import EditPostForm from './EditPostForm'
 
 const PostDetails = () => {
