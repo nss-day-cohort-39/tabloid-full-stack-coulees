@@ -25,7 +25,8 @@ const PostTagForm = ({ chosenTags, setChosenTags, postTags }) => {
 
     const updateChosenTags = () => {
         //check to see if the current tag has already been selected
-        if (selectedTagId !== 0) {
+        console.log(selectedTagId);
+        if (selectedTagId !== 0 && selectedTagId !== "") {
             if (!chosenTags.some(tag => tag.id === +selectedTagId)) {
                 //get the tag object to pass to the chosenTags array
                 const chosenTag = tags.find(tag => tag.id === +selectedTagId);
@@ -55,7 +56,7 @@ const PostTagForm = ({ chosenTags, setChosenTags, postTags }) => {
                 <Label for="postTitle">Tags</Label>
                 <InputGroup>
                     <select id="tags" className="form-control" onChange={e => setSelectedTagId(e.target.value)}>
-                        <option>Select...</option>
+                        <option value="">Select...</option>
                         {
                             tagOptions.map(tag => {
                                 return (<option key={"tag-" + tag.id} id={"opt-" + tag.name} value={tag.id}>{tag.name}</option>)
