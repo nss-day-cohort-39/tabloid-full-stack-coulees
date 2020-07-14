@@ -48,7 +48,6 @@ export const CommentProvider = (props) => {
         );
 
     const getCommentByPostId = (id) => {
-        console.log("HERE");
         getToken().then((token) =>
             fetch(`/api/comment/getcommentsbypost/${id}`, {
                 method: "GET",

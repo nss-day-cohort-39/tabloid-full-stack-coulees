@@ -34,7 +34,7 @@ namespace Tabloid.Repositories
             return _context.Comment
                             .Include(c => c.UserProfile)
                             .Include(c => c.Post)
-                            .OrderBy(c => c.CreateDateTime)
+                            .OrderByDescending(c => c.CreateDateTime)
                             .Where(c => c.PostId == id)
                             .ToList();
         }

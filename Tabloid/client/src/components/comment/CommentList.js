@@ -1,33 +1,23 @@
 import React, { useContext, useEffect, useState } from "react";
 import { CommentContext } from "../../providers/CommentProvider";
 import { Button, ModalBody, Modal, ModalHeader, ListGroup, ListGroupItem } from "reactstrap"
-import CommentEditModal from "./CommentEditModal";
 import CommentForm from "./CommentForm"
-import CommentDeleteModal from "./CommentDeleteModal";
-import { useParams } from "react-router-dom";
+import { useParams, Link } from "react-router-dom";
 import Comment from "./Comment"
+import { PostContext } from "../../providers/PostProvider";
 
 const CommentList = () => {
-    const { comments, getCommentByPostId, deleteComment } = useContext(CommentContext);
-
-
+    const { comments, getCommentByPostId } = useContext(CommentContext);
+    const { post, getPost } = useContext(PostContext);
 
     const [addModal, setAddModal] = useState(false)
     const addModalToggle = () => setAddModal(!addModal)
 
-
-
-
-
-
-
-    const [currentComment, setComments] = useState(null)
-
     const { id } = useParams();
-
 
     useEffect(() => {
         getCommentByPostId(id)
+        getPost(id)
     }, []);
 
     return (
@@ -36,6 +26,7 @@ const CommentList = () => {
                 <div className="row justify-content-center">
                     <div id="commentList" className="cards-column">
                         <Button color="secondary" onClick={addModalToggle} className="mb-4">Add Comment</Button>
+                        <h3>Comments for {post.title}</h3>
                         <ListGroup>
                             {
                                 (comments.length)
@@ -44,14 +35,15 @@ const CommentList = () => {
 
                                             <Comment comment={comment} />
                                             <div className="d-flex justify-content-end">
-
-
                                             </div>
                                         </ListGroupItem>
+
                                     ))
                                     : <div className="alert alert-secondary mt-1" role="alert">There were no comments found.</div>
                             }
                         </ListGroup>
+
+                        <strong><Link to={`/posts/${id}`}>Back to Post Details</Link></strong>
                     </div>
                 </div>
             </div>
