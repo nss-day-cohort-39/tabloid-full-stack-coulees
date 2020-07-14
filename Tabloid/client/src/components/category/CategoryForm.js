@@ -28,7 +28,7 @@ export const CategoryForm = ({toggle}) => {
                         ref={name}
                         required
                         autoFocus
-                        className="form-control"
+                        className="form-control categoryName"
                         placeholder="category name"
                     />
                 </div>

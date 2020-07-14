@@ -21,7 +21,8 @@ const CategoryList = () => {
         getAllCategory()       
     }, []);
     return (
-        <>            
+        <>
+            <Button onClick = {toggle} color = "info" size = "sm" className = "addNewCategory">Create Category</Button>
             <div>
                 {
                     (categories.length) 
