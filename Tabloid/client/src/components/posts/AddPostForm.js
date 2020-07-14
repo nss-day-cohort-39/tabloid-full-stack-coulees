@@ -5,24 +5,34 @@ import PostTagForm from './PostTagForm';
 
 const AddPostForm = () => {
     const { addPost } = useContext(PostContext)
+    const { categories, getAllCategory } = useContext(CategoryContext)
 
     const title = useRef()
     const imageUrl = useRef()
     const content = useRef()
     const publishDate = useRef()
+    const [categorySelect, setCategorySelection] = useState("");
 
     //state to store the tag array
     const [chosenTags, setChosenTags] = useState([]);
 
+    useEffect(() => {
+        getAllCategory()
+    }, [])
+    const handleCategorySelection = (e) => {
+        setCategorySelection(e.target.value)
+    }
     const handleSubmit = () => {
         const Post = {
             title: title.current.value,
             imageLocation: imageUrl.current.value,
             content: content.current.value,
             publishDateTime: (publishDate.current.value) ? publishDate.current.value : null,
-            categoryId: 1, //THIS NEEDS TO BE CHANGED ONCE THE CATEGORY REPO/PROVIDER IS CREATED
-            isApproved: true,
-            tags: chosenTags
+            categoryId: +categorySelect, //THIS NEEDS TO BE CHANGED ONCE THE CATEGORY REPO/PROVIDER IS CREATED
+            isApproved: true
+        }
+        if(categorySelect === ""){
+            Window.alert("You must choose category id")
         }
         if (!Post.title.length) {
             window.alert("Post must have a title.")
@@ -34,7 +44,6 @@ const AddPostForm = () => {
         }
         addPost(Post, chosenTags)
     }
-
     return (
         <>
             <div className="container border pl-5 pr-5 mt-2 pb-1">
@@ -57,6 +66,12 @@ const AddPostForm = () => {
                     <FormGroup className='text-center'>
                         <Label for='PublishDate'>Choose a Date to Publish Your Post</Label>
                         <Input type='date' name='PublishDate' id='publishDate' innerRef={publishDate} />
+                    </FormGroup>
+                    <FormGroup>
+                        <select onChange={handleCategorySelection} id="categoryId">
+                            <option>Please select category</option>
+                            {categories.map((category) => <option key={category.id} value={category.id}>{category.name}</option>)}
+                        </select>
                     </FormGroup>
                     <FormGroup>
                         <PostTagForm chosenTags={chosenTags} setChosenTags={setChosenTags} />
