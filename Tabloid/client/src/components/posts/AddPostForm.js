@@ -33,7 +33,7 @@ const AddPostForm = () => {
             isApproved: true
         }
         if (categorySelect === "") {
-            Window.alert("You must choose category id")
+            window.alert("You must choose category id")
         }
         if (!Post.title.length) {
             window.alert("Post must have a title.")
