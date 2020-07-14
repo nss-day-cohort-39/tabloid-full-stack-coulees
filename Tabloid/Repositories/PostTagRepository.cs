@@ -28,6 +28,11 @@ namespace Tabloid.Repositories
             return _context.PostTag.Include(pt => pt.Tag).ToList();
         }
 
+        public List<PostTag> GetByPostId(int id)
+        {
+            return _context.PostTag.Include(pt => pt.Tag).Where(pt => pt.PostId == id).ToList();
+        }
+
         public PostTag GetById(int id)
         {
             return _context.PostTag.Include(pt => pt.Tag).FirstOrDefault(p => p.Id == id);

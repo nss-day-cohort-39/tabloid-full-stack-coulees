@@ -55,7 +55,7 @@ export const PostProvider = (props) => {
                 .then(setPosts));
     };
 
-    const addPost = (post) => {
+    const addPost = (post, tags = []) => {
         getToken().then((token) =>
             fetch(apiUrl, {
                 method: "POST",
@@ -69,7 +69,26 @@ export const PostProvider = (props) => {
                     return resp.json();
                 }
                 throw new Error("Unauthorized");
-            }).then(resp => history.push(`/posts/${resp.id}`))
+            }).then(resp => {
+                if (tags.length > 0) {
+                    for (const tag of tags) {
+                        const postTag = {
+                            postid: resp.id,
+                            tagid: tag.id
+                        }
+                        getToken().then((token) =>
+                            fetch('api/posttag', {
+                                method: "POST",
+                                headers: {
+                                    Authorization: `Bearer ${token}`,
+                                    "Content-Type": "application/json"
+                                },
+                                body: JSON.stringify(postTag)
+                            }));
+                    }
+                }
+            })
+                .then(resp => history.push(`/posts/${resp.id}`))
                 .then(getAllPosts));
     };
 

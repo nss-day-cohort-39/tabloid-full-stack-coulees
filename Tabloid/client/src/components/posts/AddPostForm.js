@@ -11,15 +11,18 @@ const AddPostForm = () => {
     const content = useRef()
     const publishDate = useRef()
 
+    //state to store the tag array
+    const [chosenTags, setChosenTags] = useState([]);
+
     const handleSubmit = () => {
         const Post = {
-
             title: title.current.value,
             imageLocation: imageUrl.current.value,
             content: content.current.value,
             publishDateTime: (publishDate.current.value) ? publishDate.current.value : null,
             categoryId: 1, //THIS NEEDS TO BE CHANGED ONCE THE CATEGORY REPO/PROVIDER IS CREATED
-            isApproved: true
+            isApproved: true,
+            tags: chosenTags
         }
         if (!Post.title.length) {
             window.alert("Post must have a title.")
@@ -29,7 +32,7 @@ const AddPostForm = () => {
             window.alert("Post must have content.")
             return
         }
-        addPost(Post)
+        addPost(Post, chosenTags)
     }
 
     return (
@@ -56,7 +59,7 @@ const AddPostForm = () => {
                         <Input type='date' name='PublishDate' id='publishDate' innerRef={publishDate} />
                     </FormGroup>
                     <FormGroup>
-                        <PostTagForm />
+                        <PostTagForm chosenTags={chosenTags} setChosenTags={setChosenTags} />
                     </FormGroup>
                     <div className='d-flex flex-row-reverse'>
                         <Button size='sm mb-1' onClick={handleSubmit}>Save</Button>
