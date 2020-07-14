@@ -46,6 +46,13 @@ namespace Tabloid.Controllers
                 new { firebaseUserId = userProfile.FirebaseUserId },
                 userProfile);
         }
+        [HttpPut("{id}")]
+        public IActionResult Deactivate(int id, UserProfile user)
+        {
+            user.IsApproved = false;
+            _userProfileRepository.Deactivate(user);
+            return NoContent();
+        }
         private UserProfile GetCurrentUserProfile()
         {
             var firebaseUserId = User.FindFirst(ClaimTypes.NameIdentifier).Value;
