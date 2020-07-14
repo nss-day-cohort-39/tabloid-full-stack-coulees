@@ -21,8 +21,7 @@ const CategoryList = () => {
         getAllCategory()       
     }, []);
     return (
-        <>
-            <Button onClick = {toggle} color = "info" size = "sm" className = "addNewCategory">Create Category</Button>
+        <>            
             <div>
                 {
                     (categories.length) 
@@ -32,8 +31,8 @@ const CategoryList = () => {
                     : <div className="alert alert-secondary mt-1" role="alert"> No categories were found.</div>
                 }
             </div>
-            <Modal isOpen = {modal} toggle = {toggle} className = "modal-md">
-                <ModalHeader isOpen = {modal} toggle = {toggle}>Create New Category</ModalHeader>
+            <Modal isOpen={modal} toggle={toggle} className = "modal-md">
+                <ModalHeader toggle={toggle}>Create New Category</ModalHeader>
                 <ModalBody>
                     <CategoryForm toggle= {toggle} />
                 </ModalBody>
