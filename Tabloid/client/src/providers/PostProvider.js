@@ -109,21 +109,6 @@ export const PostProvider = (props) => {
                 .then(() => history.push(`/posts/${post.id}`)))
     }
 
-    // const searchPosts = (q) => {
-    //     if (!q) {
-    //         getAllPosts()
-    //         return
-    //     }
-    //     getToken().then((token) =>
-    //         fetch(apiUrl + `/search?q=${q}`, {
-    //             method: "GET",
-    //             headers: {
-    //                 Authorization: `Bearer ${token}`
-    //             }
-    //         }).then(resp => resp.json())
-    //             .then(setPosts));
-    // }
-
     return (
         <PostContext.Provider value={{
             posts, getAllPosts, addPost, getPost, deletePost, post,

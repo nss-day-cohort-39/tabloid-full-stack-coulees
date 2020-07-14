@@ -1,15 +1,24 @@
-import React, { useContext, useRef } from 'react'
+import React, { useContext, useRef, useEffect, useState } from 'react'
 import { Form, FormGroup, Input, Row, FormText, Button, Label } from 'reactstrap'
 import { PostContext } from "../../providers/PostProvider";
+import { CategoryContext } from '../../providers/CategoryProvider';
 
 const AddPostForm = () => {
     const { addPost } = useContext(PostContext)
+    const { categories, getAllCategory } = useContext(CategoryContext)
 
     const title = useRef()
     const imageUrl = useRef()
     const content = useRef()
     const publishDate = useRef()
+    const [categorySelect, setCategorySelection] = useState("");
 
+    useEffect(() => {
+        getAllCategory()
+    }, [])
+    const handleCategorySelection = (e) => {
+        setCategorySelection(e.target.value)
+    }
     const handleSubmit = () => {
         const Post = {
 
@@ -17,8 +26,11 @@ const AddPostForm = () => {
             imageLocation: imageUrl.current.value,
             content: content.current.value,
             publishDateTime: (publishDate.current.value) ? publishDate.current.value : null,
-            categoryId: 1, //THIS NEEDS TO BE CHANGED ONCE THE CATEGORY REPO/PROVIDER IS CREATED
+            categoryId: +categorySelect, //THIS NEEDS TO BE CHANGED ONCE THE CATEGORY REPO/PROVIDER IS CREATED
             isApproved: true
+        }
+        if(categorySelect === ""){
+            Window.alert("You must choose category id")
         }
         if (!Post.title.length) {
             window.alert("Post must have a title.")
@@ -30,7 +42,6 @@ const AddPostForm = () => {
         }
         addPost(Post)
     }
-
     return (
         <div className="container border pl-5 pr-5 mt-2 pb-1">
             <Form>
@@ -52,6 +63,12 @@ const AddPostForm = () => {
                 <FormGroup className='text-center'>
                     <Label for='PublishDate'>Choose a Date to Publish Your Post</Label>
                     <Input type='date' name='PublishDate' id='publishDate' innerRef={publishDate} />
+                </FormGroup>
+                <FormGroup>
+                    <select onChange = {handleCategorySelection} id= "categoryId">
+                        <option>Please select category</option>
+                        {categories.map((category) => <option key={category.id} value={category.id}>{category.name}</option>)}
+                    </select>
                 </FormGroup>
                 <div className='d-flex flex-row-reverse'>
                     <Button size='sm mb-1' onClick={handleSubmit}>Save</Button>
