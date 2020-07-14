@@ -24,6 +24,7 @@ const AddPostForm = () => {
         setCategorySelection(e.target.value)
     }
     const handleSubmit = () => {
+        console.log(categorySelect);
         const Post = {
             title: title.current.value,
             imageLocation: imageUrl.current.value,
@@ -34,6 +35,7 @@ const AddPostForm = () => {
         }
         if (categorySelect === "") {
             window.alert("You must choose category id")
+            return
         }
         if (!Post.title.length) {
             window.alert("Post must have a title.")
@@ -71,7 +73,7 @@ const AddPostForm = () => {
                     <FormGroup>
                         <Label for='categoryId'>Category</Label>
                         <Input type="select" onChange={handleCategorySelection} id="categoryId">
-                            <option>Please select...</option>
+                            <option value="">Please select...</option>
                             {categories.map((category) => <option key={category.id} value={category.id}>{category.name}</option>)}
                         </Input>
                     </FormGroup>

@@ -53,7 +53,10 @@ const EditPostForm = ({ showEdit }) => {
             publishDateTime: publishDate.current.value.length ? publishDate.current.value : null,
             categoryId: (categorySelect !== "" ? +categorySelect : post.categoryId)
         }
-
+        if (categorySelect === "") {
+            window.alert("You must choose category id")
+            return
+        }
         if (!Post.title.length) {
             window.alert("Post must have a title.")
             return
@@ -100,7 +103,7 @@ const EditPostForm = ({ showEdit }) => {
                     <FormGroup>
                         <Label for='categoryId'>Category</Label>
                         <Input type="select" onChange={handleCategorySelection} id="categoryId" defaultValue={post.categoryId}>
-                            <option>Please select...</option>
+                            <option value="">Please select...</option>
                             {categories.map((category) => <option key={category.id} value={category.id}>{category.name}</option>)}
                         </Input>
                     </FormGroup>
