@@ -1,6 +1,7 @@
 import React, { useState, useContext } from "react";
 import { UserProfileContext } from "../providers/UserProfileProvider";
 import { useHistory } from "react-router-dom";
+import { PostTagContext } from "./PostTagProvider";
 
 export const PostContext = React.createContext();
 
@@ -11,6 +12,8 @@ export const PostProvider = (props) => {
 
     const apiUrl = '/api/post'
     const history = useHistory();
+
+    const { postTags, getAllPostTags } = useContext(PostTagContext)
 
     const getAllPosts = () => {
         getToken().then((token) =>
@@ -147,7 +150,8 @@ export const PostProvider = (props) => {
                     }
                 })
                 .then(getPost(post.id))
-                .then(() => history.push(`/posts/${post.id}`)))
+                .then(() => history.push(`/posts/${post.id}`))
+                .then(() => { getAllPostTags(post.id); }))
     }
 
     // const searchPosts = (q) => {
