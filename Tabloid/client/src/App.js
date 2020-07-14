@@ -14,18 +14,18 @@ function App() {
   return (
     <Router>
       <UserProfileProvider>
-        <PostTagProvider>
-          <PostProvider>
-            <CategoryProvider>
-              <SubscriptionProvider>
-                <TagProvider>
-                  <Header />
-                  <ApplicationViews />
-                </TagProvider>
-              </SubscriptionProvider>
-            </CategoryProvider>
-          </PostProvider>
-        </PostTagProvider>
+        <PostProvider>
+          <CategoryProvider>     
+            <SubscriptionProvider>
+                <CommentProvider>
+                    <TagProvider>
+                        <Header />
+                        <ApplicationViews />              
+                    </TagProvider>
+                </CommentProvider>
+            </SubscriptionProvider>
+          </CategoryProvider>
+        </PostProvider>
       </UserProfileProvider>
     </Router>
   );

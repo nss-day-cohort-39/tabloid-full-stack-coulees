@@ -4,6 +4,7 @@ import { Link, useHistory } from "react-router-dom"
 import { PostContext } from "../../providers/PostProvider";
 import { PostTagContext } from '../../providers/PostTagProvider';
 
+
 const Post = ({ post }) => {
     // const { postTags, getAllPostTags } = useContext(PostTagContext);
     // const [currentPostTags, setCurrentPostTags] = useState([]);
