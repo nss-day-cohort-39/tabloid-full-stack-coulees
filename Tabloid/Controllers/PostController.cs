@@ -4,6 +4,7 @@ using Tabloid.Repositories;
 using Tabloid.Models;
 using Microsoft.AspNetCore.Authorization;
 using System.Security.Claims;
+using System.Collections.Generic;
 
 namespace Tabloid.Controllers
 {
@@ -14,12 +15,16 @@ namespace Tabloid.Controllers
     {
         private readonly PostRepository _postRepository;
         private readonly UserProfileRepository _userProfileRepository;
+        private readonly PostTagRepository _postTagRepository;
+        private readonly CommentRepository _commentRepository;
 
         //using context instead of config
         public PostController(ApplicationDbContext context)
         {
             _postRepository = new PostRepository(context);
             _userProfileRepository = new UserProfileRepository(context);
+            _postTagRepository = new PostTagRepository(context);
+            _commentRepository = new CommentRepository(context);
         }
 
         [HttpGet]
@@ -87,6 +92,12 @@ namespace Tabloid.Controllers
             {
                 return BadRequest();
             }
+            //delete the tags associated with the post
+            List<PostTag> postTags = _postTagRepository.GetByPostId(id);
+            foreach (PostTag postTag in postTags)
+            {
+                _postTagRepository.Delete(postTag.Id);
+            }
 
             _postRepository.Update(post);
             return NoContent();
@@ -98,7 +109,19 @@ namespace Tabloid.Controllers
             Post PostToDelete = _postRepository.GetById(id);
             if(userId == PostToDelete.UserProfileId)
             {
-                _postRepository.Delete(id);
+                //delete the tags and comments associated with the post
+                List<PostTag> postTags = _postTagRepository.GetByPostId(id);
+                foreach(PostTag postTag in postTags)
+                {
+                    _postTagRepository.Delete(postTag.Id);
+                }
+                List<Comment> CommentsToDelete = _commentRepository.GetCommentsByPostId(id);
+                foreach (Comment comment in CommentsToDelete)
+                {
+                    _commentRepository.Delete(comment.Id);
+                }
+
+                    _postRepository.Delete(id);
                 return NoContent();
             }
             return Unauthorized();
@@ -108,5 +131,7 @@ namespace Tabloid.Controllers
             var firebaseUserId = User.FindFirst(ClaimTypes.NameIdentifier).Value;
             return _userProfileRepository.GetByFirebaseUserId(firebaseUserId);
         }
+
+
     }
 }

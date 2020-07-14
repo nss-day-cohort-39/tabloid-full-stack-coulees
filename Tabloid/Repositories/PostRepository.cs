@@ -49,6 +49,13 @@ namespace Tabloid.Repositories
                             .Include(p => p.Category)
                             .FirstOrDefault(p => p.Id == id);
         }
+        public List<Post> GetByCategoryId(int id)
+        {
+            return _context.Post
+                            .Include(p => p.UserProfile)
+                            .Include(p => p.Category)
+                            .Where(p => p.CategoryId == id).ToList();
+        }
         public List<Post> GetByUserProfileId(int id)
         {
             return _context.Post.Include(p => p.UserProfile)
@@ -88,6 +95,8 @@ namespace Tabloid.Repositories
                             .OrderByDescending(p => p.PublishDateTime)
                             .ToList();
         }
+
+
        
     }
 }

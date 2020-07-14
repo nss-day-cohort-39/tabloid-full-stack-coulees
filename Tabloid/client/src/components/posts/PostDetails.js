@@ -1,8 +1,9 @@
 import React, { useContext, useEffect, useState } from 'react';
-import { useParams } from "react-router-dom";
+import { useParams, useHistory } from "react-router-dom";
 import { PostContext } from '../../providers/PostProvider';
-import { Button, Modal, ModalHeader, ModalFooter, ModalBody } from 'reactstrap';
+import { Button, Modal, ModalHeader, ModalFooter, ModalBody, Badge } from 'reactstrap';
 import EditPostForm from './EditPostForm';
+import { PostTagContext } from '../../providers/PostTagProvider';
 
 const PostDetails = () => {
     const [deleteModal, showDelete] = useState(false)
@@ -11,9 +12,14 @@ const PostDetails = () => {
     const { id } = useParams();
     const currentUserId = JSON.parse(sessionStorage.getItem("userProfile")).id
 
+    const { postTags, getAllPostTags } = useContext(PostTagContext);
+
     useEffect(() => {
         getPost(id);
+        getAllPostTags(id);
     }, []);
+
+    const history = useHistory();
 
     if (!post) {
         return null;
@@ -64,6 +70,7 @@ const PostDetails = () => {
         dateTimeFormat = new Intl.DateTimeFormat('en', { year: 'numeric', month: 'short', day: '2-digit' }).format(date);
     }
 
+
     return (
         <>
             <div className="container">
@@ -71,14 +78,29 @@ const PostDetails = () => {
                 <h3>{post.userProfile.displayName}</h3>
                 <h3>{dateTimeFormat ? dateTimeFormat : ''}</h3>
                 <h3>{post.category.name}</h3>
+                {
+                    postTags.length > 0
+                        ?
+                        <h5>
+                            {postTags.map(tag => {
+                                return (<Badge key={"tag-" + tag.id} color="info" className="mr-2 mb-2 px-2">{tag.tag.name}</Badge>)
+                            })}
+                        </h5>
+                        :
+                        ""
+                }
                 <hr />
                 <img src={post.imageLocation} alt={post.title} className="img-fluid" />
                 <p>{post.content}</p>
                 {renderButtons(post, currentUserId)}
             </div >
             {renderModals(post, currentUserId)}
+            <Button color="secondary" onClick={() => {
+                history.push(`/CommentList/${id}`)
+            }}>View Comments</Button>
         </>
     );
 };
+
 
 export default PostDetails;

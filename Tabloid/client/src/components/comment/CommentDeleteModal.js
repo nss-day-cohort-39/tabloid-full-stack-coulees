@@ -1,15 +1,20 @@
-import React, { useContext } from "react";
-import { TagContext } from "../../providers/TagProvider";
+import React, { useContext, useEffect } from "react";
 import { Button, Form } from 'reactstrap';
+import { CommentContext } from "../../providers/CommentProvider";
+import { useParams } from "react-router-dom";
 
-const TagDeleteModal = ({ toggle, tag }) => {
+const CommentDeleteModal = ({ toggle, comment }) => {
 
-    const { getAllTags, deleteTag } = useContext(TagContext);
+    const { getCommentByPostId, deleteComment } = useContext(CommentContext);
+
+
+
+    const { id } = useParams();
 
     const submitForm = (e) => {
         e.preventDefault();
-        deleteTag(tag.id)
-            .then(getAllTags)
+        deleteComment(comment.id)
+            .then(() => getCommentByPostId(id))
             .then(toggle)
             .catch((err) => alert(`An error ocurred: ${err.message}`));
     };
@@ -17,7 +22,7 @@ const TagDeleteModal = ({ toggle, tag }) => {
     return (
         <>
             <Form onSubmit={submitForm}>
-                <div className="lead mb-2">Are you sure you wish to delete the tag "{tag.name}"?</div>
+                <div className="lead mb-2">Are you sure you wish to delete this comment?</div>
                 <div className="text-right">
                     <Button
                         type="button"
@@ -35,4 +40,4 @@ const TagDeleteModal = ({ toggle, tag }) => {
     )
 }
 
-export default TagDeleteModal;
+export default CommentDeleteModal;

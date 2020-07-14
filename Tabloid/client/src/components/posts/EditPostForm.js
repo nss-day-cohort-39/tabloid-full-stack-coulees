@@ -2,8 +2,10 @@ import React, { useContext, useRef, useEffect, useState } from 'react'
 import { Form, FormGroup, Input, Row, FormText, Button, Label, Spinner } from 'reactstrap'
 import { PostContext } from "../../providers/PostProvider";
 import { useParams } from 'react-router-dom';
-import 'reactstrap-date-picker'
 import DatePicker from 'reactstrap-date-picker/lib/DatePicker';
+import { PostTagContext } from '../../providers/PostTagProvider';
+import PostTagForm from './PostTagForm';
+import { CategoryContext } from '../../providers/CategoryProvider';
 
 //There are two ways to access this form:
 //1) By the post list views; and 2) By the post details view
@@ -11,8 +13,13 @@ import DatePicker from 'reactstrap-date-picker/lib/DatePicker';
 const EditPostForm = ({ showEdit }) => {
     const [ready, set] = useState(false)
     const [publishDate, setPublishDate] = useState(null)
+    const [tagReady, tagSet] = useState(false)
     const { post, updatePost, getPost } = useContext(PostContext)
-    const { id } = useParams()
+    const { id } = useParams();
+    const { postTags, getAllPostTags } = useContext(PostTagContext);
+    const { categories, getAllCategory } = useContext(CategoryContext);
+
+    const [categorySelect, setCategorySelection] = useState("");
 
     const handleDateChange = (e) => {
         console.log(e)
@@ -22,11 +29,28 @@ const EditPostForm = ({ showEdit }) => {
     useEffect(() => {
         getPost(id).then(() => set(true))
         setPublishDate(post.publishDateTime)
+        getAllCategory()
+    }, [])
+    const handleCategorySelection = (e) => {
+        setCategorySelection(e.target.value)
+    }
+
+    useEffect(() => {
+        getPost(id)
+            .then(() => set(true))
+    }, [])
+
+    useEffect(() => {
+        getAllPostTags(id)
+            .then(() => tagSet(true))
     }, [])
 
     const title = useRef()
     const imageUrl = useRef()
     const content = useRef()
+
+    //state to store the tag array
+    const [chosenTags, setChosenTags] = useState([]);
 
     const handleSubmit = () => {
         const Post = {
@@ -35,9 +59,12 @@ const EditPostForm = ({ showEdit }) => {
             imageLocation: imageUrl.current.value,
             content: content.current.value,
             publishDateTime: publishDate,
-            categoryId: 1 //THIS NEEDS TO BE CHANGED ONCE THE CATEGORY REPO/PROVIDER IS CREATED
+            publishDateTime: publishDate,
+            categoryId: (categorySelect !== "" ? +categorySelect : post.categoryId)
         }
-
+        if (categorySelect === "") {
+            Post.categoryId = post.categoryId;
+        }
         if (!Post.title.length) {
             window.alert("Post must have a title.")
             return
@@ -50,16 +77,15 @@ const EditPostForm = ({ showEdit }) => {
         Post.id = post.id
         Post.createDateTime = post.createDateTime
         Post.userProfileId = post.userProfileId
-        Post.categoryId = post.categoryId
         Post.isApproved = post.isApproved
-        updatePost(Post)
+        updatePost(Post, chosenTags)
         if (showEdit) {
             showEdit(false)
         }
     }
 
     //setting default value for date
-    if (ready === true) {
+    if (ready === true && tagReady === true) {
         return (
             <div className="container border pl-5 pr-5 mt-2 pb-1">
                 <Form>
@@ -81,6 +107,16 @@ const EditPostForm = ({ showEdit }) => {
                     <FormGroup className='text-center'>
                         <Label for='PublishDate'>Choose a Date to Publish Your Post</Label>
                         <DatePicker value={publishDate} onChange={handleDateChange} />
+                    </FormGroup>
+                    <FormGroup>
+                        <Label for='categoryId'>Category</Label>
+                        <Input type="select" onChange={handleCategorySelection} id="categoryId" defaultValue={post.categoryId}>
+                            <option value="">Please select...</option>
+                            {categories.map((category) => <option key={category.id} value={category.id}>{category.name}</option>)}
+                        </Input>
+                    </FormGroup>
+                    <FormGroup>
+                        <PostTagForm postTags={postTags.map(pt => pt.tag)} chosenTags={chosenTags} setChosenTags={setChosenTags} />
                     </FormGroup>
                     <div className='d-flex flex-row-reverse'>
                         <Button size='sm mb-1' onClick={handleSubmit}>Save</Button>
