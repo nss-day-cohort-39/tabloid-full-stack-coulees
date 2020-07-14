@@ -11,18 +11,18 @@ const UserDetails = () => {
         getUserProfile(firebaseUserId)
     }, [])
     return (
-        <div>
-            <Media>
-                <Media left>
-                    <img href={user.imageLocation} alt=' ' />
-                </Media>
-                <Media body>
-                    <Media heading>
-                        <div>{user.fullName}</div>
-                    </Media>
-                </Media>
+        <Media>
+            <Media left href="#" className='pr-3'>
+                <Media object src={user.ImageLocation} style={{ width: '150px', height: '150px' }} />
             </Media>
-        </div>
+            <Media body>
+                <Media heading>
+                    {user.fullName}
+                </Media>
+                <div><strong>{user.displayName}</strong></div>
+                <div>{user.email}</div>
+            </Media>
+        </Media>
     )
 }
 
