@@ -46,7 +46,7 @@ namespace Tabloid.Controllers
                 new { firebaseUserId = userProfile.FirebaseUserId },
                 userProfile);
         }
-        [HttpPut("{id}")]
+        [HttpPut("deactivate/{id}")]
         public IActionResult Deactivate(int id, UserProfile user)
         {
             user.IsApproved = false;

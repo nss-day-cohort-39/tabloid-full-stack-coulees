@@ -2,6 +2,7 @@ import React, { useState, useEffect, createContext } from "react";
 import { Spinner } from "reactstrap";
 import * as firebase from "firebase/app";
 import "firebase/auth";
+import { useHistory } from "react-router-dom";
 
 export const UserProfileContext = createContext();
 
@@ -12,6 +13,7 @@ export function UserProfileProvider(props) {
   const [isLoggedIn, setIsLoggedIn] = useState(userProfile != null);
   const [isAdmin, setIsAdmin] = useState(false)
   const [isFirebaseReady, setIsFirebaseReady] = useState(false);
+  const history = useHistory()
   const [users, setUsers] = useState([])
   const [user, setUser] = useState({})
 
@@ -95,10 +97,28 @@ export function UserProfileProvider(props) {
         .then(setUsers));
   };
 
+  const deactivateUser = (user) => {
+    return getToken().then((token) =>
+      fetch(apiUrl + `/deactivate/${user.id}`, {
+        method: "PUT",
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify(user)
+      }).then(resp => {
+        if (resp.ok) {
+          return
+        }
+        throw new Error("Unauthorized")
+      }).then(getAllUsers)
+        .then(() => history.push("/users")))
+  }
+
   return (
     <UserProfileContext.Provider value={{
       isLoggedIn, login, logout, register, getUserProfile, user,
-      getToken, getAllUsers, users, isAdmin, setIsAdmin, setUser
+      getToken, getAllUsers, users, isAdmin, setIsAdmin, setUser, deactivateUser
     }}>
       {isFirebaseReady
         ? props.children
