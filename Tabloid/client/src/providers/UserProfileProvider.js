@@ -127,7 +127,7 @@ export function UserProfileProvider(props) {
           return
         }
         throw new Error("Unauthorized")
-      }).then(getAllUsers)
+      }).then(getActiveUsers)
         .then(() => history.push("/users")))
   }
 
