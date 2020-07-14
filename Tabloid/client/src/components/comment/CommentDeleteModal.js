@@ -22,7 +22,7 @@ const CommentDeleteModal = ({ toggle, comment }) => {
     return (
         <>
             <Form onSubmit={submitForm}>
-                <div class="lead mb-2">Are you sure you wish to delete this comment?</div>
+                <div className="lead mb-2">Are you sure you wish to delete this comment?</div>
                 <div className="text-right">
                     <Button
                         type="button"

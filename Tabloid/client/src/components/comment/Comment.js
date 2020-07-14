@@ -15,8 +15,7 @@ const Comment = ({ comment }) => {
     const date = new Date(comment.createDateTime);
     const dateTimeFormat = new Intl.DateTimeFormat('en', { year: 'numeric', month: 'short', day: '2-digit' }).format(date);
 
-    console.log(`Comment userProfileId: ${comment.post.userProfileId}`)
-    console.log(`currentUserId: ${currentUserId}`)
+
     return (
         <ListGroup>
             <div className="text-left px-2">Posted by {comment.userProfile.displayName} on {dateTimeFormat}</div>
