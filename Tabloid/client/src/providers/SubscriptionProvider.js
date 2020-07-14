@@ -9,8 +9,6 @@ export const SubscriptionProvider = (props) => {
 
     const apiUrl = '/api/subscription'
 
-
-    console.log('--->',subscription)
     const getAllSubscription = () => {
         getToken().then((token) =>
             fetch(apiUrl, {

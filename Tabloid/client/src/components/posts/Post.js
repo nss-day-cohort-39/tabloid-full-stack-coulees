@@ -25,13 +25,29 @@ const Post = ({ post }) => {
             )
         }
     }
+
     return (
         <Card className="m-4" id={`post-${post.id}`}>
             <CardImg top src={post.imageLocation} alt={post.title} />
             <CardBody>
                 <strong className="text-left px-2"><Link to={`/posts/${post.id}`}>{post.title}</Link></strong>
                 <div className="text-left px-2">{post.userProfile.fullName}</div>
-                <Badge className="text-left ml-1 p-2">{post.category.name}</Badge>
+                {
+
+                    post.categoryId !== 0
+                        ?
+                        <Badge className="text-left ml-1 p-2">{post.category.name}</Badge>
+                        :
+                        ""
+                }
+                {
+
+                    post.categoryId === 0 && currentUserId === post.userProfileId
+                        ?
+                        <Badge className="text-left ml-1 p-2">{post.category.name}</Badge>
+                        :
+                        ""
+                }
                 {/* {postTags.map(tag => {
                     return (<Badge key={"tag-" + tag.id} color="info" className="mr-2 mb-2 px-2">{tag.tag.name}</Badge>)
                 })} */}

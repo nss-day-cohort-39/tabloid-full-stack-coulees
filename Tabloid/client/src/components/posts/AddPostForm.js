@@ -1,7 +1,8 @@
-import React, { useContext, useRef, useState } from 'react'
+import React, { useContext, useRef, useState, useEffect } from 'react'
 import { Form, FormGroup, Input, Row, FormText, Button, Label, Badge, Modal, ModalHeader, ModalBody } from 'reactstrap'
 import { PostContext } from "../../providers/PostProvider";
 import PostTagForm from './PostTagForm';
+import { CategoryContext } from '../../providers/CategoryProvider';
 
 const AddPostForm = () => {
     const { addPost } = useContext(PostContext)
@@ -28,10 +29,10 @@ const AddPostForm = () => {
             imageLocation: imageUrl.current.value,
             content: content.current.value,
             publishDateTime: (publishDate.current.value) ? publishDate.current.value : null,
-            categoryId: +categorySelect, //THIS NEEDS TO BE CHANGED ONCE THE CATEGORY REPO/PROVIDER IS CREATED
+            categoryId: +categorySelect,
             isApproved: true
         }
-        if(categorySelect === ""){
+        if (categorySelect === "") {
             Window.alert("You must choose category id")
         }
         if (!Post.title.length) {
