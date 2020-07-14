@@ -1,26 +1,41 @@
-import React, { useContext, useRef } from "react";
-import { Form, FormGroup, Label, Input, Button, Card, CardBody, CardHeader } from "reactstrap";
+import React, { useContext, useRef, useEffect, useState } from "react";
+import { Form, FormGroup, Label, Input, Button, Alert } from "reactstrap";
 import { TagContext } from "../../providers/TagProvider";
 
 const TagForm = ({ toggle }) => {
 
-    const { getAllTags, addTag } = useContext(TagContext);
+    const { tags, getAllTags, addTag } = useContext(TagContext);
+
+    useEffect(() => {
+        getAllTags()
+    }, []);
 
     const name = useRef();
 
+    const [showError, setError] = useState(false);
+
     const submitForm = (e) => {
         e.preventDefault();
-        addTag({ name: name.current.value })
-            .then(getAllTags)
-            .then(toggle)
-            .catch((err) => alert(`An error ocurred: ${err.message}`));
+
+        const alreadyExists = tags.some(tag => tag.name === name.current.value);
+
+        console.log(alreadyExists);
+
+        if (alreadyExists) {
+            setError(true);
+        } else {
+            addTag({ name: name.current.value })
+                .then(getAllTags)
+                .then(toggle)
+                .catch((err) => alert(`An error ocurred: ${err.message}`));
+        }
     };
 
     return (
         <Form onSubmit={submitForm}>
             <FormGroup>
                 <Label for="postTitle">Name</Label>
-                <Input type="text" name="tagName" id="tagName" innerRef={name} placeholder="" />
+                <Input type="text" name="tagName" id="tagName" innerRef={name} placeholder="" onChange={() => setError(false)} />
             </FormGroup>
             <FormGroup className="text-right">
                 <Button
@@ -33,6 +48,9 @@ const TagForm = ({ toggle }) => {
                     color="primary"
                     className="ml-2"
                 >Save</Button>
+                <Alert color="danger" isOpen={showError} className="mt-2 text-center">
+                    This tag already exists!
+                </Alert>
             </FormGroup>
         </Form>
     )

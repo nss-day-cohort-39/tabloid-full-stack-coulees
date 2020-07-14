@@ -1,6 +1,7 @@
 import React, { useState, useContext } from "react";
 import { UserProfileContext } from "../providers/UserProfileProvider";
 import { useHistory } from "react-router-dom";
+import { PostTagContext } from "./PostTagProvider";
 
 export const PostContext = React.createContext();
 
@@ -11,6 +12,8 @@ export const PostProvider = (props) => {
 
     const apiUrl = '/api/post'
     const history = useHistory();
+
+    const { postTags, getAllPostTags } = useContext(PostTagContext)
 
     const getAllPosts = () => {
         getToken().then((token) =>
@@ -55,7 +58,7 @@ export const PostProvider = (props) => {
                 .then(setPosts));
     };
 
-    const addPost = (post) => {
+    const addPost = (post, tags = []) => {
         getToken().then((token) =>
             fetch(apiUrl, {
                 method: "POST",
@@ -69,7 +72,27 @@ export const PostProvider = (props) => {
                     return resp.json();
                 }
                 throw new Error("Unauthorized");
-            }).then(resp => history.push(`/posts/${resp.id}`))
+            }).then(resp => {
+                if (tags.length > 0) {
+                    for (const tag of tags) {
+                        const postTag = {
+                            postid: resp.id,
+                            tagid: tag.id
+                        }
+                        getToken().then((token) =>
+                            fetch('api/posttag', {
+                                method: "POST",
+                                headers: {
+                                    Authorization: `Bearer ${token}`,
+                                    "Content-Type": "application/json"
+                                },
+                                body: JSON.stringify(postTag)
+                            }));
+                    }
+                }
+                return resp;
+            })
+                .then(resp => history.push(`/posts/${resp.id}`))
                 .then(getAllPosts));
     };
 
@@ -91,8 +114,8 @@ export const PostProvider = (props) => {
             }).then(() => history.push('/posts')))
     }
 
-    const updatePost = (post) => {
-        getToken().then((token) =>
+    const updatePost = (post, tags) => {
+        return getToken().then((token) =>
             fetch(apiUrl + `/${post.id}`, {
                 method: "PUT",
                 headers: {
@@ -105,8 +128,30 @@ export const PostProvider = (props) => {
                     return;
                 }
                 throw new Error("Unauthorized");
-            }).then(getPost(post.id))
-                .then(() => history.push(`/posts/${post.id}`)))
+            })
+                .then(resp => { //add the updated tags, old tags are deleted in the controller
+                    if (tags.length > 0) {
+                        for (const tag of tags) {
+                            const postTag = {
+                                postid: post.id,
+                                tagid: tag.id
+                            }
+                            getToken().then((token) =>
+                                fetch('/api/posttag', {
+                                    method: "POST",
+                                    headers: {
+                                        Authorization: `Bearer ${token}`,
+                                        "Content-Type": "application/json"
+                                    },
+                                    body: JSON.stringify(postTag)
+                                }));
+                        }
+                        return resp;
+                    }
+                })
+                .then(getPost(post.id))
+                .then(() => history.push(`/posts/${post.id}`))
+                .then(() => { getAllPostTags(post.id); }))
     }
 
     return (

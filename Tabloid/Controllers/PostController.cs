@@ -15,6 +15,7 @@ namespace Tabloid.Controllers
     {
         private readonly PostRepository _postRepository;
         private readonly UserProfileRepository _userProfileRepository;
+        private readonly PostTagRepository _postTagRepository;
         private readonly CommentRepository _commentRepository;
 
         //using context instead of config
@@ -22,6 +23,7 @@ namespace Tabloid.Controllers
         {
             _postRepository = new PostRepository(context);
             _userProfileRepository = new UserProfileRepository(context);
+            _postTagRepository = new PostTagRepository(context);
             _commentRepository = new CommentRepository(context);
         }
 
@@ -90,6 +92,12 @@ namespace Tabloid.Controllers
             {
                 return BadRequest();
             }
+            //delete the tags associated with the post
+            List<PostTag> postTags = _postTagRepository.GetByPostId(id);
+            foreach (PostTag postTag in postTags)
+            {
+                _postTagRepository.Delete(postTag.Id);
+            }
 
             _postRepository.Update(post);
             return NoContent();
@@ -99,14 +107,21 @@ namespace Tabloid.Controllers
         {
             int userId = GetCurrentUserProfile().Id;
             Post PostToDelete = _postRepository.GetById(id);
-            List<Comment> CommentsToDelete = _commentRepository.GetCommentsByPostId(id);
-            if (userId == PostToDelete.UserProfileId)
+            if(userId == PostToDelete.UserProfileId)
             {
+                //delete the tags and comments associated with the post
+                List<PostTag> postTags = _postTagRepository.GetByPostId(id);
+                foreach(PostTag postTag in postTags)
+                {
+                    _postTagRepository.Delete(postTag.Id);
+                }
+                List<Comment> CommentsToDelete = _commentRepository.GetCommentsByPostId(id);
                 foreach (Comment comment in CommentsToDelete)
                 {
                     _commentRepository.Delete(comment.Id);
                 }
-                _postRepository.Delete(id);
+
+                    _postRepository.Delete(id);
                 return NoContent();
             }
             return Unauthorized();
