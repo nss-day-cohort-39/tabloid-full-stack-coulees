@@ -1,5 +1,5 @@
 import React, { useContext, useEffect, useState } from "react";
-import { Form, FormGroup, Label, Button, Badge, InputGroup, InputGroupAddon } from "reactstrap";
+import { FormGroup, Label, Button, Badge, InputGroup, InputGroupAddon } from "reactstrap";
 import { TagContext } from "../../providers/TagProvider";
 import xIcon from "../tags/x.svg"
 

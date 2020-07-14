@@ -24,7 +24,6 @@ const AddPostForm = () => {
         setCategorySelection(e.target.value)
     }
     const handleSubmit = () => {
-        console.log(categorySelect);
         const Post = {
             title: title.current.value,
             imageLocation: imageUrl.current.value,
