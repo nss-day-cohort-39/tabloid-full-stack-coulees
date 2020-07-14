@@ -27,8 +27,9 @@ const EditPostForm = ({ showEdit }) => {
     }
 
     useEffect(() => {
-        getPost(id).then(() => set(true))
-        setPublishDate(post.publishDateTime)
+        getPost(id)
+            .then((post) => setPublishDate(post.publishDateTime))
+            .then(() => set(true))
         getAllCategory()
     }, [])
     const handleCategorySelection = (e) => {
