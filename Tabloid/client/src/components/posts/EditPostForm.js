@@ -4,6 +4,7 @@ import { PostContext } from "../../providers/PostProvider";
 import { useParams } from 'react-router-dom';
 import { PostTagContext } from '../../providers/PostTagProvider';
 import PostTagForm from './PostTagForm';
+import { CategoryContext } from '../../providers/CategoryProvider';
 
 //There are two ways to access this form:
 //1) By the post list views; and 2) By the post details view
@@ -14,6 +15,16 @@ const EditPostForm = ({ showEdit }) => {
     const { post, updatePost, getPost } = useContext(PostContext)
     const { id } = useParams();
     const { postTags, getAllPostTags } = useContext(PostTagContext);
+    const { categories, getAllCategory } = useContext(CategoryContext);
+
+    const [categorySelect, setCategorySelection] = useState("");
+
+    useEffect(() => {
+        getAllCategory()
+    }, [])
+    const handleCategorySelection = (e) => {
+        setCategorySelection(e.target.value)
+    }
 
     useEffect(() => {
         getPost(id)
@@ -40,7 +51,7 @@ const EditPostForm = ({ showEdit }) => {
             imageLocation: imageUrl.current.value,
             content: content.current.value,
             publishDateTime: publishDate.current.value.length ? publishDate.current.value : null,
-            categoryId: 1 //THIS NEEDS TO BE CHANGED ONCE THE CATEGORY REPO/PROVIDER IS CREATED
+            categoryId: +categorySelect
         }
 
         if (!Post.title.length) {
@@ -55,7 +66,6 @@ const EditPostForm = ({ showEdit }) => {
         Post.id = post.id
         Post.createDateTime = post.createDateTime
         Post.userProfileId = post.userProfileId
-        Post.categoryId = post.categoryId
         Post.isApproved = post.isApproved
         updatePost(Post, chosenTags)
         if (showEdit) {
@@ -86,6 +96,13 @@ const EditPostForm = ({ showEdit }) => {
                     <FormGroup className='text-center'>
                         <Label for='PublishDate'>Choose a Date to Publish Your Post</Label>
                         <Input type='text' name='PublishDate' id='publishDate' innerRef={publishDate} defaultValue={post.publishDateTime ? post.publishDateTime : ""} />
+                    </FormGroup>
+                    <FormGroup>
+                        <Label for='categoryId'>Category</Label>
+                        <Input type="select" onChange={handleCategorySelection} id="categoryId" defaultValue={post.categoryId}>
+                            <option>Please select...</option>
+                            {categories.map((category) => <option key={category.id} value={category.id}>{category.name}</option>)}
+                        </Input>
                     </FormGroup>
                     <FormGroup>
                         <PostTagForm postTags={postTags.map(pt => pt.tag)} chosenTags={chosenTags} setChosenTags={setChosenTags} />

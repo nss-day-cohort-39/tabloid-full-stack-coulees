@@ -69,10 +69,11 @@ const AddPostForm = () => {
                         <Input type='date' name='PublishDate' id='publishDate' innerRef={publishDate} />
                     </FormGroup>
                     <FormGroup>
-                        <select onChange={handleCategorySelection} id="categoryId">
-                            <option>Please select category</option>
+                        <Label for='categoryId'>Category</Label>
+                        <Input type="select" onChange={handleCategorySelection} id="categoryId">
+                            <option>Please select...</option>
                             {categories.map((category) => <option key={category.id} value={category.id}>{category.name}</option>)}
-                        </select>
+                        </Input>
                     </FormGroup>
                     <FormGroup>
                         <PostTagForm chosenTags={chosenTags} setChosenTags={setChosenTags} />
