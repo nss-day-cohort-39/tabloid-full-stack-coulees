@@ -15,7 +15,6 @@ export const EditCategory = ({ selectedCategory, toggleEdit }) => {
         // Set the copy as the new state
         setCategory(newCategory)
     }
-    console.log('id and name is ', updatedCategory.id, updatedCategory.name)
     const editCategory = () => {
         if(updatedCategory.name !== "")
         {

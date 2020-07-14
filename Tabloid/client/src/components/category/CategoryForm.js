@@ -17,7 +17,6 @@ export const CategoryForm = ({toggle}) => {
     
     return (
         <Form className="categoryForm">
-            <h2 className="categoryForm__title">New Category</h2>
             <fieldset>
                 <div className="form-group">
                     <input

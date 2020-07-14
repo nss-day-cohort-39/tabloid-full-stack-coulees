@@ -1,5 +1,4 @@
 import React, { useState } from "react"
-import { Link } from "react-router-dom"
 import {Modal, Button, ModalHeader, ModalBody} from 'reactstrap'
 import DeleteCategory from "./DeleteCategory";
 import { EditCategory } from "./EditCategory";

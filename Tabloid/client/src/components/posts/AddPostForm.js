@@ -18,7 +18,6 @@ const AddPostForm = () => {
     }, [])
     const handleCategorySelection = (e) => {
         setCategorySelection(e.target.value)
-        console.log('e------------->',e.target.value)
     }
     const handleSubmit = () => {
         const Post = {

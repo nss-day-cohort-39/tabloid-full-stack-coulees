@@ -1,5 +1,4 @@
 import React, { useContext, useEffect, useState } from 'react'
-import {Link} from 'react-router-dom'
 import Category from './Category';
 import { CategoryContext } from '../../providers/CategoryProvider';
 import { Button, Modal, ModalHeader, ModalBody, ListGroup } from 'reactstrap';
@@ -13,7 +12,7 @@ const CategoryList = () => {
     const renderListItem = (category) => {
         if(category.id > 0){
             return (<div className = "container fluid categoryContainer">
-                     <Category Key = {category.id} category={category} />
+                     <Category Key={category.id} category={category} />
                     </div>)
         }
     }
@@ -21,10 +20,8 @@ const CategoryList = () => {
     useEffect(() => {
         getAllCategory()       
     }, []);
-    console.log('-->',categories)
     return (
         <>
-            {/* <Link to={`/addCategory`}>Add New Category</Link> */}
             <Button onClick = {toggle} color = "info" size = "sm" className = "addNewCategory">Create Category</Button>
             <div>
                 {
@@ -36,6 +33,7 @@ const CategoryList = () => {
                 }
             </div>
             <Modal isOpen = {modal} toggle = {toggle} className = "modal-md">
+                <ModalHeader isOpen = {modal} toggle = {toggle}>Create New Category</ModalHeader>
                 <ModalBody>
                     <CategoryForm toggle= {toggle} />
                 </ModalBody>
