@@ -8,7 +8,7 @@ const PostTagForm = ({ chosenTags, setChosenTags, postTags }) => {
     const { tags, getAllTags } = useContext(TagContext);
 
     //state for the tag select drop-down value
-    const [selectedTagId, setSelectedTagId] = useState({});
+    const [selectedTagId, setSelectedTagId] = useState(0);
 
     useEffect(() => {
         getAllTags()
@@ -25,14 +25,16 @@ const PostTagForm = ({ chosenTags, setChosenTags, postTags }) => {
 
     const updateChosenTags = () => {
         //check to see if the current tag has already been selected
-        if (!chosenTags.some(tag => tag.id === +selectedTagId)) {
-            //get the tag object to pass to the chosenTags array
-            const chosenTag = tags.find(tag => tag.id === +selectedTagId);
+        if (selectedTagId !== 0) {
+            if (!chosenTags.some(tag => tag.id === +selectedTagId)) {
+                //get the tag object to pass to the chosenTags array
+                const chosenTag = tags.find(tag => tag.id === +selectedTagId);
 
-            setChosenTags(chosenTags.concat(chosenTag));
+                setChosenTags(chosenTags.concat(chosenTag));
 
-            //remove chosen option from the drop-down
-            setTagOptions(tagOptions.filter(tag => tag.id !== +selectedTagId));
+                //remove chosen option from the drop-down
+                setTagOptions(tagOptions.filter(tag => tag.id !== +selectedTagId));
+            }
         }
     };
 

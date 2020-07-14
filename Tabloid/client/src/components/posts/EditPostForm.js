@@ -51,7 +51,7 @@ const EditPostForm = ({ showEdit }) => {
             imageLocation: imageUrl.current.value,
             content: content.current.value,
             publishDateTime: publishDate.current.value.length ? publishDate.current.value : null,
-            categoryId: +categorySelect
+            categoryId: (categorySelect !== "" ? +categorySelect : post.categoryId)
         }
 
         if (!Post.title.length) {
