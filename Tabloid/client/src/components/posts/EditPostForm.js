@@ -2,8 +2,6 @@ import React, { useContext, useRef, useEffect, useState } from 'react'
 import { Form, FormGroup, Input, Row, FormText, Button, Label, Spinner } from 'reactstrap'
 import { PostContext } from "../../providers/PostProvider";
 import { useParams } from 'react-router-dom';
-import { TagContext } from "../../providers/TagProvider";
-import xIcon from "../tags/x.svg"
 import { PostTagContext } from '../../providers/PostTagProvider';
 import PostTagForm from './PostTagForm';
 

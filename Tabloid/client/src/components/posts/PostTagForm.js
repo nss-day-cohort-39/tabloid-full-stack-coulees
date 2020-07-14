@@ -47,16 +47,6 @@ const PostTagForm = ({ chosenTags, setChosenTags, postTags }) => {
         }
     }
 
-    //console.log(postTags);
-    //console.log(chosenTags);
-
-    // if (postTags !== null) {
-    //     postTags.forEach(pt => {
-    //         setSelectedTagId(pt.tagid);
-    //         updateChosenTags();
-    //     })
-    // }
-
     return (
         <>
             <FormGroup>
