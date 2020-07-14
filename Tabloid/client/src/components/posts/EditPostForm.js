@@ -54,8 +54,7 @@ const EditPostForm = ({ showEdit }) => {
             categoryId: (categorySelect !== "" ? +categorySelect : post.categoryId)
         }
         if (categorySelect === "") {
-            window.alert("You must choose category id")
-            return
+            Post.categoryId = post.categoryId;
         }
         if (!Post.title.length) {
             window.alert("Post must have a title.")

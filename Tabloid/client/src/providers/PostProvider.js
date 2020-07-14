@@ -89,8 +89,8 @@ export const PostProvider = (props) => {
                                 body: JSON.stringify(postTag)
                             }));
                     }
-                    return resp;
                 }
+                return resp;
             })
                 .then(resp => history.push(`/posts/${resp.id}`))
                 .then(getAllPosts));
