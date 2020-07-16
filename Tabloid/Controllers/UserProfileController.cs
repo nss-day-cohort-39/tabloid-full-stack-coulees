@@ -39,6 +39,16 @@ namespace Tabloid.Controllers
             }
             return Unauthorized();
         }
+        [HttpGet("deactivated")]
+        public IActionResult GetDeactivatedUsers()
+        {
+            var currentUser = GetCurrentUserProfile();
+            if (currentUser.UserType.Name == "Admin")
+            {
+                return Ok(_userProfileRepository.GetDeactivated());
+            }
+            return Unauthorized();
+        }
         [HttpGet("{firebaseUserId}")]
         public IActionResult GetUserProfile(string firebaseUserId)
         {
@@ -59,9 +69,28 @@ namespace Tabloid.Controllers
         [HttpPut("deactivate/{id}")]
         public IActionResult Deactivate(int id, UserProfile user)
         {
-            user.IsApproved = false;
-            _userProfileRepository.Deactivate(user);
-            return NoContent();
+            var currentUser = GetCurrentUserProfile();
+            if(currentUser.UserType.Name == "Admin")
+            {
+                user.IsApproved = false;
+                _userProfileRepository.Update(user);
+                return NoContent();
+            }
+
+            return Unauthorized();
+        }
+        [HttpPut("reactivate/{id}")]
+        public IActionResult reactivate(int id, UserProfile user)
+        {
+            var currentUser = GetCurrentUserProfile();
+            if (currentUser.UserType.Name == "Admin")
+            {
+                user.IsApproved = true;
+                _userProfileRepository.Update(user);
+                return NoContent();
+            }
+
+            return Unauthorized();
         }
         private UserProfile GetCurrentUserProfile()
         {

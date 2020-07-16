@@ -16,6 +16,7 @@ export function UserProfileProvider(props) {
   const history = useHistory()
   const [users, setUsers] = useState([])
   const [user, setUser] = useState({})
+  const [deactivated, setDeactivated] = useState([])
 
   useEffect(() => {
     firebase.auth().onAuthStateChanged((u) => {
@@ -28,6 +29,11 @@ export function UserProfileProvider(props) {
       .then((signInResponse) => getUserProfile(signInResponse.user.uid))
       .then((userProfile) => {
         sessionStorage.setItem("userProfile", JSON.stringify(userProfile));
+        if (userProfile.isApproved === false) {
+          alert("Your account has been deactivated by an administrator")
+          logout()
+          return
+        }
         setIsLoggedIn(true);
         if (userProfile.userType.name === 'Admin') {
           setIsAdmin(true)
@@ -113,6 +119,22 @@ export function UserProfileProvider(props) {
         .then(setUsers));
   };
 
+  const getDeactivatedUsers = () => {
+    return getToken().then((token) =>
+      fetch(apiUrl + "/deactivated", {
+        method: "GET",
+        headers: {
+          Authorization: `Bearer ${token}`
+        }
+      }).then(resp => {
+        if (resp.ok) {
+          return resp.json();
+        }
+        throw new Error("Unauthorized");
+      })
+        .then(setDeactivated));
+  };
+
   const deactivateUser = (user) => {
     return getToken().then((token) =>
       fetch(apiUrl + `/deactivate/${user.id}`, {
@@ -128,13 +150,34 @@ export function UserProfileProvider(props) {
         }
         throw new Error("Unauthorized")
       }).then(getActiveUsers)
+        .then(getDeactivatedUsers)
+        .then(() => history.push("/users")))
+  }
+
+  const reactivateUser = (user) => {
+    return getToken().then((token) =>
+      fetch(apiUrl + `/reactivate/${user.id}`, {
+        method: "PUT",
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify(user)
+      }).then(resp => {
+        if (resp.ok) {
+          return
+        }
+        throw new Error("Unauthorized")
+      }).then(getActiveUsers)
+        .then(getDeactivatedUsers)
         .then(() => history.push("/users")))
   }
 
   return (
     <UserProfileContext.Provider value={{
       isLoggedIn, login, logout, register, getUserProfile, user, getActiveUsers,
-      getToken, getAllUsers, users, isAdmin, setIsAdmin, setUser, deactivateUser
+      getToken, getAllUsers, users, isAdmin, setIsAdmin, setUser, deactivateUser,
+      reactivateUser, getDeactivatedUsers, deactivated
     }}>
       {isFirebaseReady
         ? props.children

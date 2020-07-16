@@ -29,6 +29,14 @@ namespace Tabloid.Repositories
                     .OrderBy(up => up.DisplayName)
                     .ToList();
         }
+        public List<UserProfile> GetDeactivated()
+        {
+            return _context.UserProfile
+                    .Include(up => up.UserType)
+                    .Where(up => up.IsApproved == false)
+                    .OrderBy(up => up.DisplayName)
+                    .ToList();
+        }
 
         public UserProfile GetByFirebaseUserId(string firebaseUserId)
         {
@@ -42,7 +50,7 @@ namespace Tabloid.Repositories
             _context.Add(userProfile);
             _context.SaveChanges();
         }
-        public void Deactivate(UserProfile user)
+        public void Update(UserProfile user)
         {
             _context.Entry(user).State = EntityState.Modified;
             _context.SaveChanges();
