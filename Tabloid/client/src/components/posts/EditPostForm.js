@@ -10,12 +10,12 @@ import { CategoryContext } from '../../providers/CategoryProvider';
 //There are two ways to access this form:
 //1) By the post list views; and 2) By the post details view
 //The post details view passes in a showEdit function that toggles a modal. Otherwise, showEdit is ignored.
-const EditPostForm = ({ showEdit }) => {
+const EditPostForm = ({ showEdit, postId }) => {
     const [ready, set] = useState(false)
     const [publishDate, setPublishDate] = useState(null)
     const [tagReady, tagSet] = useState(false)
     const { post, updatePost, getPost } = useContext(PostContext)
-    const { id } = useParams();
+    const id = postId;
     const { postTags, getAllPostTags } = useContext(PostTagContext);
     const { categories, getAllCategory } = useContext(CategoryContext);
 
@@ -88,9 +88,8 @@ const EditPostForm = ({ showEdit }) => {
     //setting default value for date
     if (ready === true && tagReady === true) {
         return (
-            <div className="container border pl-5 pr-5 mt-2 pb-1">
+            <div className="container">
                 <Form>
-                    <FormText className='h4 text-center'>Edit Post</FormText>
                     <Row>
                         <FormGroup className='row col mr-1'>
                             <Input type='text' name='Title' id='postTitle' innerRef={title} defaultValue={post ? post.title : ''}
@@ -105,8 +104,8 @@ const EditPostForm = ({ showEdit }) => {
                         <Input type='textarea' name='Content' id='postContent' innerRef={content} defaultValue={post ? post.content : ''}
                             placeholder='Add your content...' className='form-control form-control-sm' rows="10"></Input>
                     </FormGroup>
-                    <FormGroup className='text-center'>
-                        <Label for='PublishDate'>Choose a Date to Publish Your Post</Label>
+                    <FormGroup>
+                        <Label for='PublishDate'>Publish Date</Label>
                         <DatePicker value={publishDate} onChange={handleDateChange} />
                     </FormGroup>
                     <FormGroup>
