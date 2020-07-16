@@ -28,7 +28,7 @@ const Post = ({ post }) => {
     }
 
     return (
-        <Card className="m-4" id={`post-${post.id}`}>
+        <Card className="m-2" id={`post-${post.id}`}>
             <CardImg top src={post.imageLocation} alt={post.title} />
             <CardBody>
                 <strong className="text-left px-2"><Link to={`/posts/${post.id}`}>{post.title}</Link></strong>

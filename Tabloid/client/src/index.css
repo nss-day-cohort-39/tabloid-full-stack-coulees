@@ -31,3 +31,23 @@ p {
 .fake-link:hover {
   text-decoration: underline;
 }
+
+.postList {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+.postList .card {
+  flex-basis: 300px;
+  flex-grow: 1;
+}
+
+.postList .card-img-top {
+  object-fit: cover;
+  height: 200px;
+}
+
+.invisible {
+  visibility: hidden;
+}
