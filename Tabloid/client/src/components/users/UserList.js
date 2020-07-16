@@ -21,9 +21,9 @@ const UserList = () => {
     const renderDeactivatedUsers = () => {
         return (
             <Collapse isOpen={show}>
+                <h3 className='text-center'>Deactivated Users</h3>
                 <Table>
                     <thead className='thead-dark'>
-                        <h3>Deactivated Users</h3>
                         <tr>
                             <th>Display Name</th>
                             <th>Full Name</th>
@@ -46,9 +46,9 @@ const UserList = () => {
             <div className='container'>
                 <Button className='mb-3' onClick={() => toggle(!show)}>View Deactivated</Button>
                 {renderDeactivatedUsers()}
+                <h3 className='text-center'>Active Users</h3>
                 <Table>
                     <thead className='thead-dark'>
-                        <h3>Active Users</h3>
                         <tr>
                             <th>Display Name</th>
                             <th>Full Name</th>
