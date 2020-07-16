@@ -43,7 +43,7 @@ const CommentList = () => {
                             }
                         </ListGroup>
 
-                        <strong><Link to={`/posts/${id}`}>Back to Post Details</Link></strong>
+
                     </div>
                 </div>
             </div>
