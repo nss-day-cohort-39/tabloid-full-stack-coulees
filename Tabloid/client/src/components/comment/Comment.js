@@ -20,7 +20,7 @@ const Comment = ({ comment }) => {
         <ListGroup>
             <div className="text-left px-2">Posted by {comment.userProfile.displayName} on {dateTimeFormat}</div>
             <div className="text-left px-2"><strong>Subject:</strong>  {comment.subject}</div>
-            <div className="text-left px-2"><strong>Content:</strong> {comment.content}</div>
+            <div className="text-left px-2 content"><strong>Content:</strong> {comment.content}</div>
 
             {
 

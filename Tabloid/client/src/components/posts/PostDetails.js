@@ -91,7 +91,7 @@ const PostDetails = () => {
                 }
                 <hr />
                 <img src={post.imageLocation} alt={post.title} className="img-fluid" />
-                <p>{post.content}</p>
+                <p className="content">{post.content}</p>
                 {renderButtons(post, currentUserId)}
             </div >
             {renderModals(post, currentUserId)}
