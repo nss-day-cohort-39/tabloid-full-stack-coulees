@@ -67,7 +67,7 @@ const AddPostForm = () => {
                     </Row>
                     <FormGroup className='row'>
                         <Input type='textarea' name='Content' id='postContent' innerRef={content}
-                            placeholder='Add your content...' className='form-control form-control-sm'></Input>
+                            placeholder='Add your content...' className='form-control form-control-sm' rows="10"></Input>
                     </FormGroup>
                     <FormGroup className='text-center'>
                         <Label for='PublishDate'>Choose a Date to Publish Your Post</Label>
