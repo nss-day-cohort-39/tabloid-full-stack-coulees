@@ -18,6 +18,8 @@ p {
   white-space: pre-wrap;
 }
 
+/* use this class for areas that should reflect saved line breaks */
+
 .content {
   white-space: pre-line;
 }
@@ -31,6 +33,12 @@ p {
 .fake-link:hover {
   text-decoration: underline;
 }
+
+.invisible {
+  visibility: hidden;
+}
+
+/* classes posts lists (all posts, my posts, etc.) */
 
 .postList {
   display: flex;
@@ -48,6 +56,8 @@ p {
   height: 200px;
 }
 
-.invisible {
-  visibility: hidden;
+.largeImage {
+  width: 100%;
+  object-fit: cover;
+  max-height: 40vh;
 }

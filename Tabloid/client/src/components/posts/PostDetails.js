@@ -90,7 +90,7 @@ const PostDetails = () => {
                         ""
                 }
                 <hr />
-                <img src={post.imageLocation} alt={post.title} className="img-fluid" />
+                <img src={post.imageLocation} alt={post.title} className="largeImage" />
                 <p className="content">{post.content}</p>
                 {renderButtons(post, currentUserId)}
             </div >
