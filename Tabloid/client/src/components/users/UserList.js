@@ -7,6 +7,7 @@ const UserList = () => {
     const [ready, set] = useState(false)
     const [show, toggle] = useState(false)
     const { getActiveUsers, users, getDeactivatedUsers, deactivated } = useContext(UserProfileContext)
+    const currentUser = JSON.parse(sessionStorage.getItem('userProfile'))
 
     useEffect(() => {
         getActiveUsers().then(() => set(true))
@@ -43,26 +44,28 @@ const UserList = () => {
 
     if (ready) {
         return (
-            <div className='container'>
-                <Button className='mb-3' onClick={() => toggle(!show)}>View Deactivated</Button>
-                {renderDeactivatedUsers()}
-                <h3 className='text-center'>Active Users</h3>
-                <Table>
-                    <thead className='thead-dark'>
-                        <tr>
-                            <th>Display Name</th>
-                            <th>Full Name</th>
-                            <th></th>
-                            <th>User Type</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {users.map(u => {
-                            return <User key={u.id} user={u} active={true} />
-                        })}
-                    </tbody>
-                </Table>
-            </div>
+            <>
+                <div className='container'>
+                    <Button className='mb-3' onClick={() => toggle(!show)}>View Deactivated</Button>
+                    {renderDeactivatedUsers()}
+                    <h3 className='text-center'>Active Users</h3>
+                    <Table>
+                        <thead className='thead-dark'>
+                            <tr>
+                                <th>Display Name</th>
+                                <th>Full Name</th>
+                                <th></th>
+                                <th>User Type</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {users.map(u => {
+                                return <User key={u.id} user={u} active={true} currentUser={currentUser} />
+                            })}
+                        </tbody>
+                    </Table>
+                </div>
+            </>
         )
     }
     else {
