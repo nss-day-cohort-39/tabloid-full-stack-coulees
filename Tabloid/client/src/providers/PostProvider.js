@@ -28,7 +28,7 @@ export const PostProvider = (props) => {
     };
 
     const getPublishedPosts = () => {
-        getToken().then((token) =>
+        return getToken().then((token) =>
             fetch(apiUrl + '/getpublished', {
                 method: "GET",
                 headers: {

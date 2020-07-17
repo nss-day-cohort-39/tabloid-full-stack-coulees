@@ -71,7 +71,6 @@ const PostDetails = () => {
         dateTimeFormat = new Intl.DateTimeFormat('en', { year: 'numeric', month: 'short', day: '2-digit' }).format(date);
     }
 
-
     return (
         <>
             <div className="container">

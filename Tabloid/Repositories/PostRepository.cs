@@ -101,6 +101,7 @@ namespace Tabloid.Repositories
                             .Include(p => p.Category)
                             .Where(p => p.IsApproved == true)
                             .Where(p => p.PublishDateTime <= DateAndTime.Now)
+                            .Where(p => p.UserProfile.IsApproved == true)
                             .OrderByDescending(p => p.PublishDateTime)
                             .ToList();
         }

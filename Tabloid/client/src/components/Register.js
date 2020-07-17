@@ -22,9 +22,9 @@ export default function Register() {
     } else {
       const userProfile = { firstName, lastName, displayName, imageLocation, email };
       register(userProfile, password)
-        .then(() => history.push("/"));
+        .then(() => history.push("/"))
     }
- };
+  };
 
   return (
     <Form onSubmit={registerClick}>
