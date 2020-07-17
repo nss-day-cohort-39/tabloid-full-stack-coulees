@@ -47,6 +47,7 @@ namespace Tabloid.Repositories
 
         public void Add(UserProfile userProfile)
         {
+            userProfile.IsApproved = true;
             _context.Add(userProfile);
             _context.SaveChanges();
         }
