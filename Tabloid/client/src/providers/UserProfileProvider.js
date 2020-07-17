@@ -30,7 +30,7 @@ export function UserProfileProvider(props) {
       .then((userProfile) => {
         sessionStorage.setItem("userProfile", JSON.stringify(userProfile));
         if (userProfile.isApproved === false) {
-          alert("Your account has been deactivated by an administrator")
+          alert("Invalid email or password")
           logout()
           return
         }
@@ -56,6 +56,10 @@ export function UserProfileProvider(props) {
       .then((savedUserProfile) => {
         sessionStorage.setItem("userProfile", JSON.stringify(savedUserProfile))
         setIsLoggedIn(true);
+      })
+      .catch((err) => {
+        console.log(err)
+        alert("Unable to register account")
       });
   };
 

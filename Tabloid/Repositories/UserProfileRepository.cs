@@ -41,7 +41,7 @@ namespace Tabloid.Repositories
         public UserProfile GetByFirebaseUserId(string firebaseUserId)
         {
             return _context.UserProfile
-                       .Include(up => up.UserType) 
+                       .Include(up => up.UserType).AsNoTracking() 
                        .FirstOrDefault(up => up.FirebaseUserId == firebaseUserId);
         }
 

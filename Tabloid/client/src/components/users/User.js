@@ -3,16 +3,26 @@ import { Button, ModalBody, ModalHeader, Modal } from 'reactstrap'
 import { UserProfileContext } from '../../providers/UserProfileProvider'
 
 const User = ({ user, active, currentUser }) => {
-    const { deactivateUser, reactivateUser } = useContext(UserProfileContext)
+    const { deactivateUser, reactivateUser, logout } = useContext(UserProfileContext)
     const [confirm, toggle] = useState(false)
     const handleDeactivate = () => {
-        deactivateUser(user)
+        deactivateUser(user).then(() => {
+            if (currentUser.id === user.id) {
+                logout()
+            }
+        })
     }
     const handleReactivate = () => {
         reactivateUser(user)
     }
 
-    console.log(currentUser)
+    const showModal = () => {
+        toggle(true)
+        if (currentUser.id === user.id) {
+            alert("You are about to deactivate your account.")
+        }
+    }
+
     if (active) {
         return (
             <>
@@ -20,10 +30,7 @@ const User = ({ user, active, currentUser }) => {
                     <td className='flex-fill'><a href={`/users/${user.firebaseUserId}`}>{user.displayName}</a></td>
                     <td className='flex-fill'>{user.fullName}</td>
                     <td className='flex-fill'>
-                        {currentUser.id === user.id
-                            ? ""
-                            : <Button className='btn btn-warning' onClick={toggle}>Deactivate</Button>
-                        }
+                        <Button className='btn btn-warning' onClick={showModal}>Deactivate</Button>
                     </td>
                     {user.userType.name == 'Admin'
                         ? <td className='flex-fill'><span className='border border-success p-1'>{user.userType.name}</span></td>
@@ -32,7 +39,8 @@ const User = ({ user, active, currentUser }) => {
                 <Modal isOpen={confirm}>
                     <ModalHeader>Are you sure you want to deactivate this user?</ModalHeader>
                     <ModalBody>
-                        <Button onClick={handleDeactivate}>Deactivate</Button>
+                        <Button onClick={handleDeactivate} className='btn btn-warning'>Deactivate</Button>
+                        <Button onClick={() => toggle(false)} className='ml-2'>Cancel</Button>
                     </ModalBody>
                 </Modal>
             </>

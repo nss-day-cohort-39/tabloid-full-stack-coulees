@@ -44,7 +44,7 @@ export default function Header() {
                 <NavItem>
                   <NavLink tag={RRNavLink} to="/myposts">My Posts</NavLink>
                 </NavItem>
-                <NavItem>               
+                <NavItem>
                   <NavLink tag={RRNavLink} to="/newpost">New Post</NavLink>
                 </NavItem>
                 <NavItem>
@@ -58,7 +58,7 @@ export default function Header() {
             {isLoggedIn && isAdmin &&
               <>
                 <NavItem>
-                  <NavLink tag={RRNavLink} to="/users">Users</NavLink>
+                  <NavLink tag={RRNavLink} to="/users">User Profiles</NavLink>
                 </NavItem>
               </>
             }

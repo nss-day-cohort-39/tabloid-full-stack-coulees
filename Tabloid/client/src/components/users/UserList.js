@@ -10,6 +10,7 @@ const UserList = () => {
     const currentUser = JSON.parse(sessionStorage.getItem('userProfile'))
 
     useEffect(() => {
+        set(false)
         getActiveUsers().then(() => set(true))
     }, [])
 
