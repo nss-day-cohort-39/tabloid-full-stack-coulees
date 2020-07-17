@@ -10,6 +10,11 @@ main {
   margin-left: -16px;
 }
 
+.navbar {
+  background-color: #bde0df;
+  color: #2b3431;
+}
+
 p {
   line-height: 2rem;
 }
