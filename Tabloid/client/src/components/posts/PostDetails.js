@@ -4,6 +4,7 @@ import { PostContext } from '../../providers/PostProvider';
 import { Button, Modal, ModalHeader, ModalFooter, ModalBody, Badge } from 'reactstrap';
 import EditPostForm from './EditPostForm';
 import { PostTagContext } from '../../providers/PostTagProvider';
+import CommentList from '../comment/CommentList';
 
 const PostDetails = () => {
     const [deleteModal, showDelete] = useState(false)
@@ -95,9 +96,10 @@ const PostDetails = () => {
                 {renderButtons(post, currentUserId)}
             </div >
             {renderModals(post, currentUserId)}
-            <Button color="secondary" onClick={() => {
+            {/* <Button color="secondary" onClick={() => {
                 history.push(`/CommentList/${id}`)
-            }}>View Comments</Button>
+            }}>View Comments</Button> */}
+            <CommentList />
         </>
     );
 };
