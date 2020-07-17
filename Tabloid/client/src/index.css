@@ -79,6 +79,13 @@ p {
 
 .content {
   white-space: pre-line;
+  font-size: 1.25em;
+  line-height: 1.5;
+}
+
+.content.article::first-letter {
+  font-size: 150%;
+  color: #627d93;
 }
 
 .fake-link {

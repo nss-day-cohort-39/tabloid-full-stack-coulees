@@ -1,5 +1,5 @@
 import React, { useContext, useEffect, useState } from 'react';
-import { useParams, useHistory } from "react-router-dom";
+import { Link, useParams, useHistory } from "react-router-dom";
 import { PostContext } from '../../providers/PostProvider';
 import { Button, Modal, ModalHeader, ModalFooter, ModalBody, Badge } from 'reactstrap';
 import EditPostForm from './EditPostForm';
@@ -36,6 +36,7 @@ const PostDetails = () => {
         if (post.userProfileId === currentUserId) {
             return (
                 <>
+                    <hr />
                     <Button onClick={() => showEdit(true)}>Edit</Button>
                     <Button className='btn btn-danger ml-2' onClick={() => showDelete(true)}>Delete</Button>
                 </>
@@ -75,25 +76,44 @@ const PostDetails = () => {
     return (
         <>
             <div className="container">
-                <h2>{post.title}</h2>
-                <h3>{post.userProfile.displayName}</h3>
+                <h2 className="d-flex justify-content-between">
+                    {post.title}
+                    {
+                        post.categoryId !== 0
+                            ?
+                            <h4><Badge className="text-left ml-1 p-2 badge-secondary badge-outlined">{post.category.name}</Badge></h4>
+                            :
+                            ""
+                    }
+                    {
+
+                        post.categoryId === 0 && currentUserId === post.userProfileId
+                            ?
+                            <h4><Badge className="text-left ml-1 p-2 badge-secondary badge-outlined">{post.category.name}</Badge></h4>
+                            :
+                            ""
+                    }
+                </h2>
+                <h4 className="font-weight-normal">by <Link>{post.userProfile.fullName}</Link></h4>
                 <h3>{dateTimeFormat ? dateTimeFormat : ''}</h3>
-                <h3>{post.category.name}</h3>
                 {
                     postTags.length > 0
                         ?
-                        <h5>
+                        <h5 className="mt-3">
+                            {/* <Badge color="light" className="mb-2 ml-n2 badge-outlined">Tags </Badge> */}
                             {postTags.map(tag => {
-                                return (<Badge key={"tag-" + tag.id} color="info" className="mr-2 mb-2 px-2">{tag.tag.name}</Badge>)
+                                return (<Badge key={"tag-" + tag.id} className="mr-2 mb-2 px-2 badge-outlined badge-info">{tag.tag.name}</Badge>)
                             })}
                         </h5>
                         :
                         ""
                 }
+                {renderButtons(post, currentUserId)}
                 <hr />
                 <img src={post.imageLocation} alt={post.title} className="largeImage" />
-                <p className="content">{post.content}</p>
-                {renderButtons(post, currentUserId)}
+                <hr />
+                <p className="content article">{post.content}</p>
+                <hr className="mt-4" />
             </div >
             {renderModals(post, currentUserId)}
             {/* <Button color="secondary" onClick={() => {
