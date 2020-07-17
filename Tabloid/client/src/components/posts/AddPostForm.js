@@ -55,23 +55,26 @@ const AddPostForm = () => {
             <div className="smallContainer border rounded p-4">
                 <Form>
                     <h4>Create a new Post</h4>
-                    <Row>
-                        <FormGroup className='row col mr-1'>
-                            <Input type='text' name='Title' id='postTitle' innerRef={title}
-                                placeholder='Title' className='form-control form-control-sm'></Input>
-                        </FormGroup>
-                        <FormGroup className='row col'>
-                            <Input type='text' name='ImageUrl' id='postImageUrl' innerRef={imageUrl}
-                                placeholder='Image URL' className='form-control form-control-sm'></Input>
-                        </FormGroup>
-                    </Row>
-                    <FormGroup className='row'>
+                    <hr />
+                    <FormGroup>
+                        <Label for="title">Post Title</Label>
+                        <Input type='text' name='Title' id='postTitle' innerRef={title}
+                            placeholder='Something New and Amazing' className='form-control'></Input>
+                    </FormGroup>
+                    <FormGroup>
+                        <Label for="ImageUrl">Post Image URL <small class="text-muted font-italic">(Optional)</small></Label>
+                        <Input type='text' name='ImageUrl' id='postImageUrl' innerRef={imageUrl}
+                            placeholder='http://example.com/image.jpg' className='form-control'></Input>
+                    </FormGroup>
+                    <FormGroup>
+                        <Label for="Content">Post Content</Label>
                         <Input type='textarea' name='Content' id='postContent' innerRef={content}
-                            placeholder='Add your content...' className='form-control form-control-sm' rows="10"></Input>
+                            placeholder='Add your content...' className='form-control' rows="10"></Input>
                     </FormGroup>
                     <FormGroup>
                         <Label for='PublishDate'>Publish Date</Label>
                         <Input type='date' name='PublishDate' id='publishDate' onChange={handleDateChange} />
+                        <small class="text-muted font-italic">You can leave this blank to keep your post unpublished.</small>
                     </FormGroup>
                     <FormGroup>
                         <Label for='categoryId'>Category</Label>
@@ -84,7 +87,7 @@ const AddPostForm = () => {
                         <PostTagForm chosenTags={chosenTags} setChosenTags={setChosenTags} />
                     </FormGroup>
                     <div className='d-flex flex-row-reverse'>
-                        <Button color="primary" size='mb-1' onClick={handleSubmit}>Save</Button>
+                        <Button color="primary" size='mb-1' onClick={handleSubmit}>Save Post</Button>
                     </div>
                 </Form>
             </div>

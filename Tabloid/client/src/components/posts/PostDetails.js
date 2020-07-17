@@ -9,6 +9,7 @@ import CommentList from '../comment/CommentList';
 const PostDetails = () => {
     const [deleteModal, showDelete] = useState(false)
     const [editModal, showEdit] = useState(false)
+    const editModalToggle = () => showEdit(!editModal)
     const { post, getPost, deletePost } = useContext(PostContext);
     const { id } = useParams();
     const currentUserId = JSON.parse(sessionStorage.getItem("userProfile")).id
@@ -61,10 +62,12 @@ const PostDetails = () => {
                             </div>
                         </ModalBody>
                     </Modal >
-                    <Modal isOpen={editModal}>
+                    <Modal isOpen={editModal} scrollable={true} toggle={editModalToggle}>
+                        <ModalHeader toggle={editModalToggle}>
+                            Edit Post
+                    </ModalHeader>
                         <ModalBody>
                             <EditPostForm postId={post.id} showEdit={showEdit} />
-                            <Button className='btn mt-1' size='small' outline={true} onClick={() => showEdit(false)}>cancel</Button>
                         </ModalBody>
                     </Modal>
                 </>
@@ -99,13 +102,12 @@ const PostDetails = () => {
                             ""
                     }
                 </h2>
-                <h4 className="font-weight-normal">by <Link>{post.userProfile.fullName}</Link></h4>
+                <h4 className="font-weight-normal">by <Link to={`/users/${post.userProfile.firebaseUserId}`}>{post.userProfile.fullName}</Link></h4>
                 <h4 className="font-weight-normal">Posted {dateTimeFormat ? dateTimeFormat : ''}</h4>
                 {
                     postTags.length > 0
                         ?
                         <h5 className="mt-3">
-                            {/* <Badge color="light" className="mb-2 ml-n2 badge-outlined">Tags </Badge> */}
                             {postTags.map(tag => {
                                 return (<Badge key={"tag-" + tag.id} className="mr-2 mb-2 px-2 badge-outlined badge-info">{tag.tag.name}</Badge>)
                             })}

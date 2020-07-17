@@ -89,23 +89,25 @@ const EditPostForm = ({ showEdit, postId }) => {
         return (
             <div className="container">
                 <Form>
-                    <Row>
-                        <FormGroup className='row col mr-1'>
-                            <Input type='text' name='Title' id='postTitle' innerRef={title} defaultValue={post ? post.title : ''}
-                                placeholder='Title' className='form-control form-control-sm'></Input>
-                        </FormGroup>
-                        <FormGroup className='row col'>
-                            <Input type='text' name='ImageUrl' id='postImageUrl' innerRef={imageUrl} defaultValue={post ? post.imageLocation : ''}
-                                placeholder='Image URL' className='form-control form-control-sm'></Input>
-                        </FormGroup>
-                    </Row>
-                    <FormGroup className='row'>
+                    <FormGroup>
+                        <Label for="title">Post Title</Label>
+                        <Input type='text' name='Title' id='postTitle' innerRef={title} defaultValue={post ? post.title : ''}
+                            placeholder='Title' className='form-control'></Input>
+                    </FormGroup>
+                    <FormGroup>
+                        <Label for="ImageUrl">Post Image URL <small class="text-muted font-italic">(Optional)</small></Label>
+                        <Input type='text' name='ImageUrl' id='postImageUrl' innerRef={imageUrl} defaultValue={post ? post.imageLocation : ''}
+                            placeholder='Image URL' className='form-control'></Input>
+                    </FormGroup>
+                    <FormGroup>
+                        <Label for="Content">Post Content</Label>
                         <Input type='textarea' name='Content' id='postContent' innerRef={content} defaultValue={post ? post.content : ''}
-                            placeholder='Add your content...' className='form-control form-control-sm' rows="10"></Input>
+                            placeholder='Add your content...' className='form-control' rows="7"></Input>
                     </FormGroup>
                     <FormGroup>
                         <Label for='PublishDate'>Publish Date</Label>
                         <DatePicker value={publishDate} onChange={handleDateChange} />
+                        <small class="text-muted font-italic">You can leave this blank to keep your post unpublished.</small>
                     </FormGroup>
                     <FormGroup>
                         <Label for='categoryId'>Category</Label>
@@ -117,11 +119,12 @@ const EditPostForm = ({ showEdit, postId }) => {
                     <FormGroup>
                         <PostTagForm postTags={postTags.map(pt => pt.tag)} chosenTags={chosenTags} setChosenTags={setChosenTags} />
                     </FormGroup>
-                    <div className='d-flex flex-row-reverse'>
-                        <Button size='sm mb-1' onClick={handleSubmit}>Save</Button>
+                    <div className='text-right'>
+                        <Button type="button" color="secondary" onClick={() => showEdit(false)} className="mx-2">Cancel</Button>
+                        <Button color="primary" onClick={handleSubmit}>Save</Button>
                     </div>
                 </Form>
-            </div>
+            </div >
         )
     }
     else return <Spinner />

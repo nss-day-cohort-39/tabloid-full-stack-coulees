@@ -30,7 +30,7 @@ const Comment = ({ comment }) => {
             </h4>
             <div className="content">{comment.content}</div>
             <hr className="dotted" />
-            <div class="font-italic">Posted by <Link>{comment.userProfile.displayName}</Link> on {dateTimeFormat}</div>
+            <div class="font-italic">Posted by <Link to={`/users/${comment.userProfile.firebaseUserId}`}>{comment.userProfile.displayName}</Link> on {dateTimeFormat}</div>
 
             {
                 (comment.userProfileId === currentUserId) ? (

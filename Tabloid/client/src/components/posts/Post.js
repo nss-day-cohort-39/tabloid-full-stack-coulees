@@ -62,7 +62,7 @@ const Post = ({ post }) => {
                                 ""
                         }
                     </div>
-                    <div className="text-left px-2 lead">by <Link>{post.userProfile.fullName}</Link></div>
+                    <div className="text-left px-2 lead">by <Link to={`/users/${post.userProfile.firebaseUserId}`}>{post.userProfile.fullName}</Link></div>
 
                     {/* {postTags.map(tag => {
                     return (<Badge key={"tag-" + tag.id} color="info" className="mr-2 mb-2 px-2">{tag.tag.name}</Badge>)
@@ -73,13 +73,12 @@ const Post = ({ post }) => {
             {
                 post.userProfileId === currentUserId
                     ?
-                    (<Modal isOpen={editModal} toggle={editModalToggle}>
+                    (<Modal isOpen={editModal} toggle={editModalToggle} scrollable={true}>
                         <ModalHeader toggle={editModalToggle}>
                             Edit Post
                     </ModalHeader>
                         <ModalBody>
                             <EditPostForm postId={post.id} showEdit={showEdit} />
-                            <Button className='btn mt-1' size='small' outline={true} onClick={() => showEdit(false)}>cancel</Button>
                         </ModalBody>
                     </Modal>)
                     :
