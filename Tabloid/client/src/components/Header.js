@@ -1,4 +1,4 @@
-import React, { useState, useContext } from 'react';
+import React, { useState, useContext, useEffect } from 'react';
 import { NavLink as RRNavLink } from "react-router-dom";
 import {
   Collapse,
@@ -18,9 +18,18 @@ import { UserProfileContext } from "../providers/UserProfileProvider";
 import logo from "../logo.svg"
 
 export default function Header() {
-  const { isLoggedIn, logout } = useContext(UserProfileContext);
+  const { isLoggedIn, logout, isAdmin, setIsAdmin } = useContext(UserProfileContext);
   const [isOpen, setIsOpen] = useState(false);
   const toggle = () => setIsOpen(!isOpen);
+
+  useEffect(() => {
+    if (sessionStorage.getItem("userProfile")) {
+      const currentUserType = JSON.parse(sessionStorage.getItem("userProfile")).userType.name
+      if (currentUserType === 'Admin') {
+        setIsAdmin(true)
+      }
+    }
+  }, [])
 
   return (
     <div>
@@ -45,21 +54,28 @@ export default function Header() {
                   <NavLink tag={RRNavLink} to="/newpost">New Post</NavLink>
                 </NavItem>
 
-                <UncontrolledDropdown nav inNavbar>
-                  <DropdownToggle nav caret>
-                    Admin Functions
+                          {isLoggedIn && isAdmin &&
+                              <UncontrolledDropdown nav inNavbar>
+                                  <DropdownToggle nav caret>
+                                      Admin Functions
                     </DropdownToggle>
-                  <DropdownMenu right>
-                    <DropdownItem>
-                      <NavLink tag={RRNavLink} to="/category">Category Management</NavLink>
-                    </DropdownItem>
-                    <DropdownItem>
-                      <NavLink tag={RRNavLink} to="/tags">Tag Management</NavLink>
-                    </DropdownItem>
-                  </DropdownMenu>
-                </UncontrolledDropdown>
+                                  <DropdownMenu right>
+                                      <DropdownItem>
+                                          <NavLink tag={RRNavLink} to="/category">Category Management</NavLink>
+                                      </DropdownItem>
+                                      <DropdownItem>
+                                          <NavLink tag={RRNavLink} to="/tags">Tag Management</NavLink>
+                                  </DropdownItem>
+                                  <DropdownItem>
+                                      <NavLink tag={RRNavLink} to="/users">User Profiles</NavLink>
+                                  </DropdownItem>
+                                  </DropdownMenu>
+                              </UncontrolledDropdown>
+                          }
               </>
             }
+            
+              
           </Nav>
           <Nav navbar>
             {isLoggedIn &&

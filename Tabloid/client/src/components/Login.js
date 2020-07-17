@@ -14,7 +14,10 @@ export default function Login() {
     e.preventDefault();
     login(email, password)
       .then(() => history.push("/"))
-      .catch(() => alert("Invalid email or password"));
+      .catch((err) => {
+        console.log(err)
+        alert("Invalid email or password")
+      });
   };
 
   return (

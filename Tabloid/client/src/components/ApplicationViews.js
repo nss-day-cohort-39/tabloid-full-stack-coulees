@@ -8,11 +8,13 @@ import PostList from "./posts/PostList";
 import MyPosts from "./posts/MyPosts";
 import PostDetails from "./posts/PostDetails";
 import CategoryList from "./category/CategoryList";
-import {CategoryForm} from "./category/CategoryForm";
+import { CategoryForm } from "./category/CategoryForm";
 import AddPostForm from "./posts/AddPostForm";
 import EditPostForm from "./posts/EditPostForm";
 import TagList from "./tags/TagList";
 import TagForm from "./tags/TagForm";
+import UserList from "./users/UserList";
+import UserDetails from "./users/UserDetails";
 import CommentList from "./comment/CommentList";
 
 export default function ApplicationViews() {
@@ -58,12 +60,19 @@ export default function ApplicationViews() {
           {isLoggedIn ? <TagForm /> : <Redirect to="/login" />}
         </Route>
 
+        <Route path="/users" exact>
+          {isLoggedIn ? <UserList /> : <Redirect to="/login" />}
+        </Route>
+
+        <Route path="/users/:firebaseUserId" exact>
+          {isLoggedIn ? <UserDetails /> : <Redirect to="/login" />}
+        </Route>
         <Route path="/CommentList/:id">
           {isLoggedIn ? <CommentList /> : <Redirect to="/login" />}
         </Route>
 
         <Route path="/login">
-          <Login />
+          {isLoggedIn ? <Redirect to="/" /> : <Login />}
         </Route>
 
         <Route path="/register">
