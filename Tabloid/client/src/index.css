@@ -10,6 +10,12 @@ main {
   margin-left: -16px;
 }
 
+.smallContainer {
+  width: 100%;
+  max-width: 500px;
+  min-width: 250px;
+}
+
 .navbar {
   background-color: #a2dae2;
   color: #2b3034;
