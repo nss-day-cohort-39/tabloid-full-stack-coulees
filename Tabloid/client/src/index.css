@@ -65,6 +65,16 @@ p {
   color: #ef1c1c;
 }
 
+/* class that sticks the edit button in the upper right */
+
+.upperRight {
+  position: absolute;
+  top: 0;
+  right: 0;
+}
+
+.upperRight div {}
+
 /* use this class for areas that should reflect saved line breaks */
 
 .content {

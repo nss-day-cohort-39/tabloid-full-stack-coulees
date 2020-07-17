@@ -26,9 +26,9 @@ const Post = ({ post }) => {
 
         if (post.userProfileId === currentUser) {
             return (
-                <CardFooter>
-                    <Button onClick={editModalToggle}>Edit</Button>
-                </CardFooter>
+                <div className="upperRight p-2"><div>
+                    <Button onClick={editModalToggle} color="info" size="sm">Edit</Button>
+                </div></div>
             )
         }
     }
