@@ -23,6 +23,10 @@ p {
   white-space: pre-wrap;
 }
 
+hr.dotted {
+  border-top: 1px dashed #e5e5e5e5;
+}
+
 /* outline badge styles */
 
 .badge-outlined {
@@ -72,8 +76,6 @@ p {
   top: 0;
   right: 0;
 }
-
-.upperRight div {}
 
 /* use this class for areas that should reflect saved line breaks */
 

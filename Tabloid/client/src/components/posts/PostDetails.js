@@ -37,8 +37,11 @@ const PostDetails = () => {
             return (
                 <>
                     <hr />
-                    <Button onClick={() => showEdit(true)}>Edit</Button>
-                    <Button className='btn btn-danger ml-2' onClick={() => showDelete(true)}>Delete</Button>
+                    <h5>
+                        Author Options
+                        <Badge href="#" color="info" className="ml-2 p-2" onClick={() => showEdit(true)} size="sm">Edit Post</Badge>
+                        <Badge href="#" color="danger" className="ml-2 p-2" onClick={() => showDelete(true)} size="sm">Delete</Badge>
+                    </h5>
                 </>
             )
         }
@@ -95,7 +98,7 @@ const PostDetails = () => {
                     }
                 </h2>
                 <h4 className="font-weight-normal">by <Link>{post.userProfile.fullName}</Link></h4>
-                <h3>{dateTimeFormat ? dateTimeFormat : ''}</h3>
+                <h4 className="font-weight-normal">Posted {dateTimeFormat ? dateTimeFormat : ''}</h4>
                 {
                     postTags.length > 0
                         ?
@@ -114,12 +117,13 @@ const PostDetails = () => {
                 <hr />
                 <p className="content article">{post.content}</p>
                 <hr className="mt-4" />
+                <CommentList />
             </div >
             {renderModals(post, currentUserId)}
             {/* <Button color="secondary" onClick={() => {
                 history.push(`/CommentList/${id}`)
             }}>View Comments</Button> */}
-            <CommentList />
+
         </>
     );
 };

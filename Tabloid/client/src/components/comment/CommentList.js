@@ -22,31 +22,21 @@ const CommentList = () => {
 
     return (
         <>
-            <div className="container flex">
-                <div className="row justify-content-center">
-                    <div id="commentList" className="cards-column">
-                        <Button color="secondary" onClick={addModalToggle} className="mb-4">Add Comment</Button>
-                        {post ? (<h3>Comments for {post.title}</h3>) : (<h3>Comments for post</h3>)}
-                        <ListGroup>
-                            {
-                                (comments.length)
-                                    ? comments.map((comment) => (
-                                        <ListGroupItem key={comment.id} className="d-flex justify-content-between">
 
-                                            <Comment comment={comment} />
-                                            <div className="d-flex justify-content-end">
-                                            </div>
-                                        </ListGroupItem>
+            <Button color="primary" className="mb-3" onClick={addModalToggle}>Add Comment</Button>
+            {/*post ? (<h3>Comments for {post.title}</h3>) : (<h3>Comments for post</h3>)*/}
+            <ListGroup>
+                {
+                    (comments.length)
+                        ? comments.map((comment, index) => (
+                            <ListGroupItem key={comment.id} className={index % 2 === 0 ? "" : "bg-light"}>
+                                <Comment comment={comment} />
+                            </ListGroupItem>
 
-                                    ))
-                                    : <div className="alert alert-secondary mt-1" role="alert">There were no comments found.</div>
-                            }
-                        </ListGroup>
-
-
-                    </div>
-                </div>
-            </div>
+                        ))
+                        : <div className="alert alert-secondary mt-1" role="alert">There were no comments found.</div>
+                }
+            </ListGroup>
 
             <Modal isOpen={addModal} toggle={addModalToggle}>
                 <ModalHeader toggle={addModalToggle}>
