@@ -51,10 +51,10 @@ const AddPostForm = () => {
         addPost(Post, chosenTags)
     }
     return (
-        <>
-            <div className="container border pl-5 pr-5 mt-2 pb-1">
+        <div className="d-flex justify-content-center">
+            <div className="smallContainer border rounded p-4">
                 <Form>
-                    <FormText className='h4 text-center'>Create a new Post</FormText>
+                    <h4>Create a new Post</h4>
                     <Row>
                         <FormGroup className='row col mr-1'>
                             <Input type='text' name='Title' id='postTitle' innerRef={title}
@@ -69,8 +69,8 @@ const AddPostForm = () => {
                         <Input type='textarea' name='Content' id='postContent' innerRef={content}
                             placeholder='Add your content...' className='form-control form-control-sm' rows="10"></Input>
                     </FormGroup>
-                    <FormGroup className='text-center'>
-                        <Label for='PublishDate'>Choose a Date to Publish Your Post</Label>
+                    <FormGroup>
+                        <Label for='PublishDate'>Publish Date</Label>
                         <Input type='date' name='PublishDate' id='publishDate' onChange={handleDateChange} />
                     </FormGroup>
                     <FormGroup>
@@ -84,11 +84,11 @@ const AddPostForm = () => {
                         <PostTagForm chosenTags={chosenTags} setChosenTags={setChosenTags} />
                     </FormGroup>
                     <div className='d-flex flex-row-reverse'>
-                        <Button size='sm mb-1' onClick={handleSubmit}>Save</Button>
+                        <Button color="primary" size='mb-1' onClick={handleSubmit}>Save</Button>
                     </div>
                 </Form>
             </div>
-        </>
+        </div>
     )
 }
 
