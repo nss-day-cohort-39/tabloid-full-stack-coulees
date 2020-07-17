@@ -29,7 +29,7 @@ const UserDetails = () => {
                 <CardBody>
                     <div><strong>{user.displayName}</strong></div>
                     <div>{user.email}</div>
-                    <div>{formattedDate}</div>
+                    <div>created on {formattedDate}</div>
                     <div>{user.userType.name}</div>
                 </CardBody>
             </Card>
