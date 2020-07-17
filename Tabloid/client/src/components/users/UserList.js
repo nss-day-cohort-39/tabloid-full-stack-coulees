@@ -2,6 +2,7 @@ import React, { useContext, useEffect, useState } from 'react'
 import { Table, Spinner, Button, Collapse } from 'reactstrap'
 import { UserProfileContext } from '../../providers/UserProfileProvider'
 import User from './User'
+import './Users.css'
 
 const UserList = () => {
     const [ready, set] = useState(false)
@@ -23,14 +24,14 @@ const UserList = () => {
     const renderDeactivatedUsers = () => {
         return (
             <Collapse isOpen={show}>
-                <h3 className='text-center'>Deactivated Users</h3>
-                <Table>
-                    <thead className='thead-dark'>
+                <h3 className='mb-2'>Deactivated Users</h3>
+                <Table className="table-striped">
+                    <thead className='bg-info text-light'>
                         <tr>
-                            <th>Display Name</th>
+                            <th className="w-25">Display Name</th>
                             <th>Full Name</th>
-                            <th></th>
-                            <th>User Type</th>
+                            <th className="w-10"></th>
+                            <th className="w-10 text-right">User Type</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -47,16 +48,17 @@ const UserList = () => {
         return (
             <>
                 <div className='container'>
-                    <Button className='mb-3' onClick={() => toggle(!show)}>View Deactivated</Button>
+                    <Button className='mb-3' onClick={() => toggle(!show)} color="primary">View Deactivated</Button>
+                    <hr />
                     {renderDeactivatedUsers()}
-                    <h3 className='text-center'>Active Users</h3>
-                    <Table>
-                        <thead className='thead-dark'>
+                    <h3 className='mb-2'>Active Users</h3>
+                    <Table className="table-striped">
+                        <thead className='bg-info text-light'>
                             <tr>
-                                <th>Display Name</th>
+                                <th className="w-25">Display Name</th>
                                 <th>Full Name</th>
-                                <th></th>
-                                <th>User Type</th>
+                                <th className="w-10"></th>
+                                <th className="w-10 text-right">User Type</th>
                             </tr>
                         </thead>
                         <tbody>
