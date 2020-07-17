@@ -23,14 +23,14 @@ const Category = ({ category }) => {
             </ListGroupItem>
 
             <Modal isOpen={modal} toggle={toggle} size="md">
-                <ModalHeader toggle={toggle}>{category.name}</ModalHeader>
+                <ModalHeader toggle={toggle}>Delete Category</ModalHeader>
                 <ModalBody>
                     <DeleteCategory category={category} toggleDelete={toggle} />
                 </ModalBody>
             </Modal>
 
             <Modal isOpen={editModal} toggle={toggleEdit} className="modal-md">
-                <ModalHeader toggle={toggleEdit}>{category.name}</ModalHeader>
+                <ModalHeader toggle={toggleEdit}>Edit Category</ModalHeader>
                 <ModalBody>
                     <EditCategory selectedCategory={category} toggleEdit={toggleEdit} />
                 </ModalBody>

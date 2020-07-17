@@ -52,11 +52,14 @@ const PostDetails = () => {
             return (
                 <>
                     <Modal isOpen={deleteModal} >
-                        <ModalHeader>Are you sure you want to delete this post?</ModalHeader>
-                        <ModalFooter>
-                            <Button className='btn btn-danger' onClick={confirmDelete}>Delete</Button>
-                            <Button onClick={() => showDelete(false)}>Cancel</Button>
-                        </ModalFooter>
+                        <ModalHeader>Delete a Post</ModalHeader>
+                        <ModalBody class="lead">
+                            <div className="lead mb-2">Are you sure you want to delete the post "{post.title}"?</div>
+                            <div className="text-right">
+                                <Button onClick={() => showDelete(false)}>Cancel</Button>
+                                <Button className="btn btn-danger ml-2" onClick={confirmDelete}>Delete</Button>
+                            </div>
+                        </ModalBody>
                     </Modal >
                     <Modal isOpen={editModal}>
                         <ModalBody>
