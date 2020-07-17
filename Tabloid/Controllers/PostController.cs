@@ -5,6 +5,7 @@ using Tabloid.Models;
 using Microsoft.AspNetCore.Authorization;
 using System.Security.Claims;
 using System.Collections.Generic;
+using System;
 
 namespace Tabloid.Controllers
 {
@@ -62,20 +63,20 @@ namespace Tabloid.Controllers
             return Ok(_postRepository.GetPublished());
         }
 
-        [HttpGet("search")]
-        public IActionResult Search(string q, bool sortDesc)
-        {
-            if (q == null)
-            {
-                return Ok(_postRepository.GetAll());
-            }
-            else
-            {
-                return Ok(_postRepository.Search(q, sortDesc));
+        //[HttpGet("search")]
+        //public IActionResult Search(string q, bool sortDesc)
+        //{
+        //    if (q == null)
+        //    {
+        //        return Ok(_postRepository.GetAll());
+        //    }
+        //    else
+        //    {
+        //        return Ok(_postRepository.Search(q, sortDesc));
 
-            }
+        //    }
 
-        }
+        //}
         [HttpPost]
         public IActionResult Post(Post post)
         {
@@ -125,6 +126,20 @@ namespace Tabloid.Controllers
                 return NoContent();
             }
             return Unauthorized();
+        }
+
+        [HttpGet("search")]
+        public IActionResult Search(string searchString)
+        {
+            if (!String.IsNullOrEmpty(searchString))
+            {
+                return Ok(_postRepository.GetAll());
+            }
+            else
+            {
+                return Ok(_postRepository.Search());
+
+            }
         }
         private UserProfile GetCurrentUserProfile()
         {

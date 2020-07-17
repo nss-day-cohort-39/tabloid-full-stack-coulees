@@ -5,10 +5,10 @@ using Tabloid.Data;
 using Tabloid.Models;
 using Microsoft.VisualBasic;
 using System.Security.Claims;
-
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Data.SqlClient;
 
 namespace Tabloid.Repositories
 {
@@ -17,12 +17,22 @@ namespace Tabloid.Repositories
     {
         //saving an instance of our app db context
         private readonly ApplicationDbContext _context;
+        private readonly string _connectionString;
 
         public PostRepository(ApplicationDbContext context)
         {
             _context = context;
+
+        }
+        public PostRepository(IConfiguration configuration)
+        {
+            _connectionString = configuration.GetConnectionString("DefaultConnection");
         }
 
+        public SqlConnection Connection
+        {
+            get { return new SqlConnection(_connectionString); }
+        }
         public List<Post> GetAll()
         {
             return _context.Post
@@ -30,17 +40,16 @@ namespace Tabloid.Repositories
                             .Include(p => p.Category)
                             .ToList();
         }
+        //public List<Post> Search(string criterion, bool sortDescending)
+        //{
+        //    var query = _context.Post
+        //                        .Include(p => p.UserProfile)
+        //                        .Where(p => p.Title.Contains(criterion));
 
-        public List<Post> Search(string criterion, bool sortDescending)
-        {
-            var query = _context.Post
-                                .Include(p => p.UserProfile)
-                                .Where(p => p.Title.Contains(criterion));
-
-            return sortDescending
-                ? query.OrderByDescending(p => p.CreateDateTime).ToList()
-                : query.OrderBy(p => p.CreateDateTime).ToList();
-        }
+        //    return sortDescending
+        //        ? query.OrderByDescending(p => p.CreateDateTime).ToList()
+        //        : query.OrderBy(p => p.CreateDateTime).ToList();
+        //}
 
         public Post GetById(int id)
         {
@@ -96,7 +105,38 @@ namespace Tabloid.Repositories
                             .ToList();
         }
 
+        public List<Post> Search()
+        {
+            using (var conn = Connection)
+            {
+                conn.Open();
+                using (var cmd = conn.CreateCommand())
+                {
+                    cmd.CommandText = "SELECT Id, Title FROM Post;";
+                    var reader = cmd.ExecuteReader();
+                    var posts = new List<Post>();
+                    while (reader.Read())
+                    {
+                        var post = new Post()
+                        {
+                            Id = reader.GetInt32(reader.GetOrdinal("Id")),
+                            Title = reader.GetString(reader.GetOrdinal("Title"))
+                        };
+                        
+                    }
 
-       
+                    reader.Close();
+
+                    return posts;
+                }
+            }
+        }
+
+
+
+
+
+
+
     }
 }
