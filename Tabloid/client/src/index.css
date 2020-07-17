@@ -23,6 +23,48 @@ p {
   white-space: pre-wrap;
 }
 
+/* outline badge styles */
+
+.badge-outlined {
+  border: 1px solid transparent;
+  background-color: transparent;
+}
+
+.badge-outlined.badge-default {
+  border-color: #B0BEC5;
+  color: #B0BEC5;
+}
+
+.badge-outlined.badge-primary {
+  border-color: #2196F3;
+  color: #2196F3;
+}
+
+.badge-outlined.badge-secondary {
+  border-color: #4d5868;
+  color: #4d5868;
+}
+
+.badge-outlined.badge-success {
+  border-color: #64DD17;
+  color: #64DD17;
+}
+
+.badge-outlined.badge-warning {
+  border-color: #FFD600;
+  color: #FFD600;
+}
+
+.badge-outlined.badge-info {
+  border-color: #29B6F6;
+  color: #29B6F6;
+}
+
+.badge-outlined.badge-danger {
+  border-color: #ef1c1c;
+  color: #ef1c1c;
+}
+
 /* use this class for areas that should reflect saved line breaks */
 
 .content {
