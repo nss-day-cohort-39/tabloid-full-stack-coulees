@@ -36,7 +36,13 @@ const Post = ({ post }) => {
     return (
         <>
             <Card className="m-2" id={`post-${post.id}`}>
-                <CardImg top src={post.imageLocation} alt={post.title} />
+                {
+                    post.imageLocation === ""
+                        ?
+                        <CardImg top />
+                        :
+                        <CardImg top src={post.imageLocation} alt={post.title} />
+                }
                 <CardBody>
                     <div className="d-flex justify-content-between">
                         <h4 className="text-left px-2"><Link to={`/posts/${post.id}`}>{post.title}</Link></h4>

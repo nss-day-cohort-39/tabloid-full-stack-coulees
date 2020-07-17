@@ -112,8 +112,18 @@ const PostDetails = () => {
                         ""
                 }
                 {renderButtons(post, currentUserId)}
-                <hr />
-                <img src={post.imageLocation} alt={post.title} className="largeImage" />
+                {
+                    post.imageLocation === ""
+                        ?
+                        ""
+                        :
+                        <>
+                            <hr />
+                            <img src={post.imageLocation} alt={post.title} className="largeImage" />
+                        </>
+
+                }
+
                 <hr />
                 <p className="content article">{post.content}</p>
                 <hr className="mt-4" />

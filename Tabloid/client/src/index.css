@@ -120,6 +120,7 @@ hr.dotted {
 .postList .card-img-top {
   object-fit: cover;
   height: 200px;
+  background-color: #C0C0C0;
 }
 
 .largeImage {
