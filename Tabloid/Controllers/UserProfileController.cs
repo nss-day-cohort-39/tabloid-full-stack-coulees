@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Infrastructure;
 using System;
+using System.Security.Claims;
 using Tabloid.Data;
 using Tabloid.Models;
 using Tabloid.Repositories;
@@ -18,7 +19,36 @@ namespace Tabloid.Controllers
         {
             _userProfileRepository = new UserProfileRepository(context);
         }
-
+        [HttpGet]
+        public IActionResult Get()
+        {
+            var currentUser = GetCurrentUserProfile();
+            if (currentUser.UserType.Name == "Admin")
+            {
+                return Ok(_userProfileRepository.GetAll());
+            }
+            return Unauthorized();
+        }
+        [HttpGet("active")]
+        public IActionResult GetActiveUsers()
+        {
+            var currentUser = GetCurrentUserProfile();
+            if (currentUser.UserType.Name == "Admin")
+            {
+                return Ok(_userProfileRepository.GetAllActive());
+            }
+            return Unauthorized();
+        }
+        [HttpGet("deactivated")]
+        public IActionResult GetDeactivatedUsers()
+        {
+            var currentUser = GetCurrentUserProfile();
+            if (currentUser.UserType.Name == "Admin")
+            {
+                return Ok(_userProfileRepository.GetDeactivated());
+            }
+            return Unauthorized();
+        }
         [HttpGet("{firebaseUserId}")]
         public IActionResult GetUserProfile(string firebaseUserId)
         {
@@ -35,6 +65,37 @@ namespace Tabloid.Controllers
                 nameof(GetUserProfile),
                 new { firebaseUserId = userProfile.FirebaseUserId },
                 userProfile);
+        }
+        [HttpPut("deactivate/{id}")]
+        public IActionResult Deactivate(int id, UserProfile user)
+        {
+            var currentUser = GetCurrentUserProfile();
+            if(currentUser.UserType.Name == "Admin")
+            {
+                user.IsApproved = false;
+                _userProfileRepository.Update(user);
+                return NoContent();
+            }
+
+            return Unauthorized();
+        }
+        [HttpPut("reactivate/{id}")]
+        public IActionResult reactivate(int id, UserProfile user)
+        {
+            var currentUser = GetCurrentUserProfile();
+            if (currentUser.UserType.Name == "Admin")
+            {
+                user.IsApproved = true;
+                _userProfileRepository.Update(user);
+                return NoContent();
+            }
+
+            return Unauthorized();
+        }
+        private UserProfile GetCurrentUserProfile()
+        {
+            var firebaseUserId = User.FindFirst(ClaimTypes.NameIdentifier).Value;
+            return _userProfileRepository.GetByFirebaseUserId(firebaseUserId);
         }
     }
 }

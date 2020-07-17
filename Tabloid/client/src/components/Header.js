@@ -1,4 +1,4 @@
-import React, { useState, useContext } from 'react';
+import React, { useState, useContext, useEffect } from 'react';
 import { NavLink as RRNavLink } from "react-router-dom";
 import {
   Collapse,
@@ -12,9 +12,18 @@ import {
 import { UserProfileContext } from "../providers/UserProfileProvider";
 
 export default function Header() {
-  const { isLoggedIn, logout } = useContext(UserProfileContext);
+  const { isLoggedIn, logout, isAdmin, setIsAdmin } = useContext(UserProfileContext);
   const [isOpen, setIsOpen] = useState(false);
   const toggle = () => setIsOpen(!isOpen);
+
+  useEffect(() => {
+    if (sessionStorage.getItem("userProfile")) {
+      const currentUserType = JSON.parse(sessionStorage.getItem("userProfile")).userType.name
+      if (currentUserType === 'Admin') {
+        setIsAdmin(true)
+      }
+    }
+  }, [])
 
   return (
     <div>
@@ -35,7 +44,7 @@ export default function Header() {
                 <NavItem>
                   <NavLink tag={RRNavLink} to="/myposts">My Posts</NavLink>
                 </NavItem>
-                <NavItem>               
+                <NavItem>
                   <NavLink tag={RRNavLink} to="/newpost">New Post</NavLink>
                 </NavItem>
                 <NavItem>
@@ -43,6 +52,13 @@ export default function Header() {
                 </NavItem>
                 <NavItem>
                   <NavLink tag={RRNavLink} to="/tags">Tag Management</NavLink>
+                </NavItem>
+              </>
+            }
+            {isLoggedIn && isAdmin &&
+              <>
+                <NavItem>
+                  <NavLink tag={RRNavLink} to="/users">User Profiles</NavLink>
                 </NavItem>
               </>
             }
