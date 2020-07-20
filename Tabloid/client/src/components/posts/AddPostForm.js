@@ -62,9 +62,8 @@ const AddPostForm = () => {
                             placeholder='Something New and Amazing' className='form-control'></Input>
                     </FormGroup>
                     <FormGroup>
-                        <Label for="ImageUrl">Post Image URL <small class="text-muted font-italic">(Optional)</small></Label>
-                        <Input type='text' name='ImageUrl' id='postImageUrl' innerRef={imageUrl}
-                            placeholder='http://example.com/image.jpg' className='form-control'></Input>
+                        <Label for="imageUpload">Header Image <small class="text-muted font-italic">(Optional)</small></Label>
+                        <Input type="file" name="file" id="imageUpload" />
                     </FormGroup>
                     <FormGroup>
                         <Label for="Content">Post Content</Label>
