@@ -51,27 +51,30 @@ const AddPostForm = () => {
         addPost(Post, chosenTags)
     }
     return (
-        <>
-            <div className="container border pl-5 pr-5 mt-2 pb-1">
+        <div className="d-flex justify-content-center">
+            <div className="smallContainer border rounded p-4">
                 <Form>
-                    <FormText className='h4 text-center'>Create a new Post</FormText>
-                    <Row>
-                        <FormGroup className='row col mr-1'>
-                            <Input type='text' name='Title' id='postTitle' innerRef={title}
-                                placeholder='Title' className='form-control form-control-sm'></Input>
-                        </FormGroup>
-                        <FormGroup className='row col'>
-                            <Input type='text' name='ImageUrl' id='postImageUrl' innerRef={imageUrl}
-                                placeholder='Image URL' className='form-control form-control-sm'></Input>
-                        </FormGroup>
-                    </Row>
-                    <FormGroup className='row'>
-                        <Input type='textarea' name='Content' id='postContent' innerRef={content}
-                            placeholder='Add your content...' className='form-control form-control-sm'></Input>
+                    <h4>Create a new Post</h4>
+                    <hr />
+                    <FormGroup>
+                        <Label for="title">Post Title</Label>
+                        <Input type='text' name='Title' id='postTitle' innerRef={title}
+                            placeholder='Something New and Amazing' className='form-control'></Input>
                     </FormGroup>
-                    <FormGroup className='text-center'>
-                        <Label for='PublishDate'>Choose a Date to Publish Your Post</Label>
+                    <FormGroup>
+                        <Label for="ImageUrl">Post Image URL <small class="text-muted font-italic">(Optional)</small></Label>
+                        <Input type='text' name='ImageUrl' id='postImageUrl' innerRef={imageUrl}
+                            placeholder='http://example.com/image.jpg' className='form-control'></Input>
+                    </FormGroup>
+                    <FormGroup>
+                        <Label for="Content">Post Content</Label>
+                        <Input type='textarea' name='Content' id='postContent' innerRef={content}
+                            placeholder='Add your content...' className='form-control' rows="10"></Input>
+                    </FormGroup>
+                    <FormGroup>
+                        <Label for='PublishDate'>Publish Date</Label>
                         <Input type='date' name='PublishDate' id='publishDate' onChange={handleDateChange} />
+                        <small class="text-muted font-italic">You can leave this blank to keep your post unpublished.</small>
                     </FormGroup>
                     <FormGroup>
                         <Label for='categoryId'>Category</Label>
@@ -84,11 +87,11 @@ const AddPostForm = () => {
                         <PostTagForm chosenTags={chosenTags} setChosenTags={setChosenTags} />
                     </FormGroup>
                     <div className='d-flex flex-row-reverse'>
-                        <Button size='sm mb-1' onClick={handleSubmit}>Save</Button>
+                        <Button color="primary" size='mb-1' onClick={handleSubmit}>Save Post</Button>
                     </div>
                 </Form>
             </div>
-        </>
+        </div>
     )
 }
 

@@ -1,5 +1,5 @@
 import React, { useState } from "react"
-import {Modal, Button, ModalHeader, ModalBody} from 'reactstrap'
+import { Modal, Button, ModalHeader, ModalBody, ListGroupItem } from 'reactstrap'
 import DeleteCategory from "./DeleteCategory";
 import { EditCategory } from "./EditCategory";
 import "./Category.css";
@@ -14,27 +14,27 @@ const Category = ({ category }) => {
     const toggleEdit = () => setEditModal(!editModal)
     return (
         <>
-            <div className = "category">     
-                <div className = "row category"> 
-                    <div className = "col-sm-3 my-auto">{category.name} </div>
-                    <div className = "col-sm-1 my-auto"><Button color = "info" size="sm" onClick = {toggleEdit}>Edit</Button></div>
-                    <div className = "col-sm-1 my-auto"><span><Button color="danger" size="sm" onClick = {toggle}>Delete</Button></span></div>
-                </div> 
-            </div>
-            
-            <Modal isOpen = {modal} toggle = {toggle} size = "md">
-                <ModalHeader toggle = {toggle}>{category.name}</ModalHeader>
-                <ModalBody>
-                    <DeleteCategory category = {category} toggleDelete = {toggle} />
-                </ModalBody>
-            </Modal>   
+            <ListGroupItem key={category.id} className="d-flex justify-content-between">
+                {category.name}
+                <div className="d-flex justify-content-end">
+                    <Button color="info" outline size="sm" className="ml-2" onClick={toggleEdit}>Edit</Button>
+                    <Button color="danger" outline size="sm" className="ml-2" onClick={toggle}>Delete</Button>
+                </div>
+            </ListGroupItem>
 
-            <Modal isOpen = {editModal} toggle = {toggleEdit} className = "modal-md">
-                <ModalHeader toggle = {toggleEdit}>{category.name}</ModalHeader>
+            <Modal isOpen={modal} toggle={toggle} size="md">
+                <ModalHeader toggle={toggle}>Delete Category</ModalHeader>
                 <ModalBody>
-                    <EditCategory selectedCategory = {category} toggleEdit = {toggleEdit} />
+                    <DeleteCategory category={category} toggleDelete={toggle} />
                 </ModalBody>
-            </Modal>  
+            </Modal>
+
+            <Modal isOpen={editModal} toggle={toggleEdit} className="modal-md">
+                <ModalHeader toggle={toggleEdit}>Edit Category</ModalHeader>
+                <ModalBody>
+                    <EditCategory selectedCategory={category} toggleEdit={toggleEdit} />
+                </ModalBody>
+            </Modal>
         </>
     );
 };

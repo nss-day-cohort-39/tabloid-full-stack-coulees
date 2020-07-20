@@ -7,9 +7,15 @@ import {
   NavbarBrand,
   Nav,
   NavItem,
-  NavLink
+  NavLink,
+  UncontrolledDropdown,
+  DropdownToggle,
+  DropdownMenu,
+  DropdownItem
+
 } from 'reactstrap';
 import { UserProfileContext } from "../providers/UserProfileProvider";
+import logo from "../logo.svg"
 
 export default function Header() {
   const { isLoggedIn, logout, isAdmin, setIsAdmin } = useContext(UserProfileContext);
@@ -27,8 +33,8 @@ export default function Header() {
 
   return (
     <div>
-      <Navbar color="light" light expand="md">
-        <NavbarBrand tag={RRNavLink} to="/">Tabloid</NavbarBrand>
+      <Navbar light expand="md">
+        <NavbarBrand tag={RRNavLink} to="/"><img src={logo} className="mt-n1 mr-1" />Tabloid</NavbarBrand>
         <NavbarToggler onClick={toggle} />
         <Collapse isOpen={isOpen} navbar>
           <Nav className="mr-auto" navbar>
@@ -47,21 +53,29 @@ export default function Header() {
                 <NavItem>
                   <NavLink tag={RRNavLink} to="/newpost">New Post</NavLink>
                 </NavItem>
-                <NavItem>
-                  <NavLink tag={RRNavLink} to="/category">Category Management</NavLink>
-                </NavItem>
-                <NavItem>
-                  <NavLink tag={RRNavLink} to="/tags">Tag Management</NavLink>
-                </NavItem>
+
+                          {isLoggedIn && isAdmin &&
+                              <UncontrolledDropdown nav inNavbar>
+                                  <DropdownToggle nav caret>
+                                      Admin Functions
+                    </DropdownToggle>
+                                  <DropdownMenu right>
+                                      <DropdownItem>
+                                          <NavLink tag={RRNavLink} to="/category">Category Management</NavLink>
+                                      </DropdownItem>
+                                      <DropdownItem>
+                                          <NavLink tag={RRNavLink} to="/tags">Tag Management</NavLink>
+                                  </DropdownItem>
+                                  <DropdownItem>
+                                      <NavLink tag={RRNavLink} to="/users">User Profiles</NavLink>
+                                  </DropdownItem>
+                                  </DropdownMenu>
+                              </UncontrolledDropdown>
+                          }
               </>
             }
-            {isLoggedIn && isAdmin &&
-              <>
-                <NavItem>
-                  <NavLink tag={RRNavLink} to="/users">User Profiles</NavLink>
-                </NavItem>
-              </>
-            }
+            
+              
           </Nav>
           <Nav navbar>
             {isLoggedIn &&

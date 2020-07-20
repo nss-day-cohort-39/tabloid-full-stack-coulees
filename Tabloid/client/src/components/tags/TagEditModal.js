@@ -32,7 +32,7 @@ const TagEditModal = ({ toggle, tag }) => {
                     type="submit"
                     color="primary"
                     className="ml-2"
-                >Save</Button>
+                >Save Changes</Button>
             </FormGroup>
         </Form>
     )
