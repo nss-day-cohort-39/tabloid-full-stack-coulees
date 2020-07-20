@@ -38,8 +38,9 @@ namespace Tabloid.Repositories
         public Subscription GetByPost(Post post)
         {
             return _context.Subscription
-                            .Include(p => p.SubscriberUserProfile)
-                            .Include(p => p.ProviderUserProfile)
+                            .Include(s => s.SubscriberUserProfile)
+                            .Include(s => s.ProviderUserProfile)
+                            .Where(s => s.EndDateTime == null)
                             .FirstOrDefault(p => p.ProviderUserProfileId == post.UserProfileId);
         }
         public List<Subscription> GetByUserProfileId(int id)

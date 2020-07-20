@@ -1,5 +1,5 @@
-import React, { useContext, useEffect, useState } from 'react';
-import { Link, useParams, useHistory } from "react-router-dom";
+import React, { useContext, useEffect, useState, useReducer } from 'react';
+import { Link, useParams } from "react-router-dom";
 import { PostContext } from '../../providers/PostProvider';
 import { Button, Modal, ModalHeader, ModalBody, Badge, Spinner } from 'reactstrap';
 import EditPostForm from './EditPostForm';
@@ -29,30 +29,35 @@ const PostDetails = () => {
         //2. Get the post for the Details Page
         getPost(id)
             .then((post) => {
-                //3. Check to see if
+                //3. Check to see if the user is subscribed to this author
                 checkSubscription(post.id)
                     .then((resp) => {
+                        //4. Set the local state variable "subscribed" to the response of the check (true/false)
                         setSubcribed(resp.isSubscribed)
                         return resp.isSubscribed
                     })
                     .then((resp) => {
+                        //5. If the response to the subscription check is true, get and store the subscription
                         if (resp) {
                             getSubByPost(post.id)
                                 .then(setSub)
                         }
                     })
+                //6. Store the post for the details page in the local state variable
                 setPost(post)
                 return post
             })
+            //7. Get the Post Tags
             .then(() => getAllPostTags(id))
+            //8. Store the Post Tags
             .then(setTags)
+            //9. Turn off the spinner and display the content
             .then(() => setReady(true))
     }, []);
 
     if (!post) {
         return null;
     }
-
 
     //Event Handler Functions
     const confirmDelete = () => {
@@ -61,6 +66,7 @@ const PostDetails = () => {
     }
     const handleUnsubscribe = () => {
         unsubscribe(subscription.id)
+            .then(() => setSubcribed(false))
     }
     const handleSubscription = (post, currentUserId) => {
         const sub = {
