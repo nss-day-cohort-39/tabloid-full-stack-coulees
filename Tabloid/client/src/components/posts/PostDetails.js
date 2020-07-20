@@ -1,16 +1,18 @@
 import React, { useContext, useEffect, useState } from 'react';
 import { Link, useParams, useHistory } from "react-router-dom";
 import { PostContext } from '../../providers/PostProvider';
-import { Button, Modal, ModalHeader, ModalFooter, ModalBody, Badge } from 'reactstrap';
+import { Button, Modal, ModalHeader, ModalBody, Badge } from 'reactstrap';
 import EditPostForm from './EditPostForm';
 import { PostTagContext } from '../../providers/PostTagProvider';
 import CommentList from '../comment/CommentList';
+import { SubscriptionContext } from '../../providers/SubscriptionProvider';
 
 const PostDetails = () => {
     const [deleteModal, showDelete] = useState(false)
     const [editModal, showEdit] = useState(false)
     const editModalToggle = () => showEdit(!editModal)
     const { post, getPost, deletePost } = useContext(PostContext);
+    const { addSubscription } = useContext(SubscriptionContext)
     const { id } = useParams();
     const currentUserId = JSON.parse(sessionStorage.getItem("userProfile")).id
 
@@ -46,6 +48,17 @@ const PostDetails = () => {
                 </>
             )
         }
+        else {
+            return (
+                <>
+                    <hr />
+                    <h5>
+                        Subscribe to Author
+                        <Button color='info' size='sm' className='ml-2' onClick={() => handleSubscription(post, currentUserId)}>Subscribe</Button>
+                    </h5>
+                </>
+            )
+        }
     }
 
     const renderModals = (post, currentUserId) => {
@@ -73,6 +86,15 @@ const PostDetails = () => {
                 </>
             )
         }
+    }
+
+    const handleSubscription = (post, currentUserId) => {
+        const sub = {
+            subscriberUserProfileId: currentUserId,
+            providerUserProfileId: post.userProfileId
+        }
+
+        addSubscription(sub)
     }
 
     let dateTimeFormat
@@ -134,10 +156,6 @@ const PostDetails = () => {
                 <CommentList />
             </div >
             {renderModals(post, currentUserId)}
-            {/* <Button color="secondary" onClick={() => {
-                history.push(`/CommentList/${id}`)
-            }}>View Comments</Button> */}
-
         </>
     );
 };

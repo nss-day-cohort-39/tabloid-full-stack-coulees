@@ -18,18 +18,41 @@ namespace Tabloid.Controllers
     {
         private readonly SubscriptionRepository _subscriptionRepository;
         private readonly UserProfileRepository _userProfileRepository;
+        private readonly PostRepository _postRepostiory;
 
         //using context instead of config
         public SubscriptionController(ApplicationDbContext context)
         {
             _subscriptionRepository = new SubscriptionRepository(context);
             _userProfileRepository = new UserProfileRepository(context);
+            _postRepostiory = new PostRepository(context);
         }
 
         [HttpGet]
         public IActionResult Get()
         {
             return Ok(_subscriptionRepository.GetAll());
+        }
+        [HttpGet("currentUser")]
+        public IActionResult GetSubscribedAuthorPostsForCurrentUser()
+        {
+            var currentUserId = GetCurrentUserProfile().Id;
+            var currentUserSubs = _subscriptionRepository.GetByUserProfileId(currentUserId);
+            List<Post> CurrentUserSubPosts = new List<Post>();
+            foreach (var sub in currentUserSubs)
+            {
+                var PostList = _postRepostiory.GetByUserProfileId(sub.ProviderUserProfileId);
+                foreach(var post in PostList)
+                {
+                    CurrentUserSubPosts.Add(post);
+                }
+            }
+
+            if (currentUserSubs == null)
+            {
+                return NotFound();
+            }
+            return Ok(CurrentUserSubPosts);
         }
 
         [HttpGet("{id}")]
@@ -56,6 +79,11 @@ namespace Tabloid.Controllers
         {
             _subscriptionRepository.Delete(id);
             return NoContent();
+        }
+        private UserProfile GetCurrentUserProfile()
+        {
+            var firebaseUserId = User.FindFirst(ClaimTypes.NameIdentifier).Value;
+            return _userProfileRepository.GetByFirebaseUserId(firebaseUserId);
         }
     }
 }

@@ -37,8 +37,9 @@ namespace Tabloid.Repositories
         }
         public List<Subscription> GetByUserProfileId(int id)
         {
-            return _context.Subscription.Include(p => p.SubscriberUserProfile)
-                            .Where(p => p.Id== id)
+            return _context.Subscription
+                            .Where(s => s.SubscriberUserProfileId == id)
+                            .Where(s => s.EndDateTime == null)
                             .ToList();
         }
 

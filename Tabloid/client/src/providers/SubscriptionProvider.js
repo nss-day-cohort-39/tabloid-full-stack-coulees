@@ -1,29 +1,31 @@
 import React, { useState, useContext } from "react";
 import { UserProfileContext } from "../providers/UserProfileProvider";
+import { useHistory } from "react-router-dom";
 
 export const SubscriptionContext = React.createContext();
 
 export const SubscriptionProvider = (props) => {
     const { getToken } = useContext(UserProfileContext)
-    const [subscription, setSubscription] = useState([]);
+    const [subPosts, set] = useState([]);
+    const history = useHistory()
 
     const apiUrl = '/api/subscription'
 
-    const getAllSubscription = () => {
-        getToken().then((token) =>
-            fetch(apiUrl, {
+    const getSubscribedAuthorPostsForCurrentUser = () => {
+        return getToken().then((token) =>
+            fetch(apiUrl + '/currentUser', {
                 method: "GET",
                 headers: {
                     Authorization: `Bearer ${token}`
                 }
             }).then(resp => resp.json())
-                .then(setSubscription));
-    };
+                .then(set));
+    }
 
     const addSubscription = (subscription) => {
         getToken().then((token) =>
             fetch(apiUrl, {
-                method: "Subscription",
+                method: "POST",
                 headers: {
                     Authorization: `Bearer ${token}`,
                     "Content-Type": "application/json"
@@ -34,22 +36,13 @@ export const SubscriptionProvider = (props) => {
                     return resp.json();
                 }
                 throw new Error("Unauthorized");
-            }));
+            })
+                .then(() => history.push('/')));
     };
-
-    const getSubscription = (id) =>
-        getToken().then((token) =>
-            fetch(`/api/subscription/${id}`, {
-                method: "GET",
-                headers: {
-                    Authorization: `Bearer ${token}`,
-                },
-            }).then((res) => res.json())
-        );
 
     return (
         <SubscriptionContext.Provider value={{
-            subscription, getAllSubscription, addSubscription, getSubscription
+            subPosts, getSubscribedAuthorPostsForCurrentUser, addSubscription
         }}>
             {props.children}
         </SubscriptionContext.Provider>
