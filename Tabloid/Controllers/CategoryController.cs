@@ -5,6 +5,7 @@ using System.Security.Claims;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Configuration;
 using Tabloid.Data;
 using Tabloid.Models;
 using Tabloid.Repositories;
@@ -18,11 +19,12 @@ namespace Tabloid.Controllers
     {
         private readonly CategoryRepository _categoryRepository;
         private readonly PostRepository _postRepository;
+  
         //using context instead of config
-        public CategoryController(ApplicationDbContext context)
+        public CategoryController(ApplicationDbContext context, IConfiguration configuration)
         {
             _categoryRepository = new CategoryRepository(context);
-            _postRepository = new PostRepository(context);
+            _postRepository = new PostRepository(context, configuration);
         }
 
         [HttpGet]

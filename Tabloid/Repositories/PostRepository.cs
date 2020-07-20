@@ -9,6 +9,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Data.SqlClient;
+using System.Collections;
 
 namespace Tabloid.Repositories
 {
@@ -19,14 +20,11 @@ namespace Tabloid.Repositories
         private readonly ApplicationDbContext _context;
         private readonly string _connectionString;
 
-        public PostRepository(ApplicationDbContext context)
+        public PostRepository(ApplicationDbContext context, IConfiguration configuration)
         {
             _context = context;
-
-        }
-        public PostRepository(IConfiguration configuration)
-        {
             _connectionString = configuration.GetConnectionString("DefaultConnection");
+
         }
 
         public SqlConnection Connection
@@ -106,24 +104,44 @@ namespace Tabloid.Repositories
                             .ToList();
         }
 
-        public List<Post> Search()
+        public List<Post> Search(string searchString)
         {
-            using (var conn = Connection)
+            using (var conn = new SqlConnection(_connectionString))
             {
                 conn.Open();
                 using (var cmd = conn.CreateCommand())
                 {
-                    cmd.CommandText = "SELECT Id, Title FROM Post;";
+                    cmd.CommandText = "SELECT p.Id, p.Title, p.Content, p.CreateDateTime, p.PublishDateTime, p.IsApproved, p.CategoryId, p.UserProfileId, p.ImageLocation " +
+                    "FROM Post p WHERE LOWER(p.Title) LIKE @searchString OR LOWER(cast(p.Content as varchar(max))) LIKE @searchString";
+                    string[] searchWordsArray = searchString.Split(' ');
+                    IEnumerable<string> newWordsArray = searchWordsArray.Select(word => $"%{word}%");
+                    string searchWords = string.Join("|", newWordsArray);
+
+                    cmd.Parameters.AddWithValue("@searchString", searchWords.ToLower());
                     var reader = cmd.ExecuteReader();
                     var posts = new List<Post>();
                     while (reader.Read())
                     {
-                        var post = new Post()
+                        Post post = new Post()
                         {
                             Id = reader.GetInt32(reader.GetOrdinal("Id")),
-                            Title = reader.GetString(reader.GetOrdinal("Title"))
+                            Title = reader.GetString(reader.GetOrdinal("Title")),
+                            Content = reader.GetString(reader.GetOrdinal("Content")),
+                            CreateDateTime = reader.GetDateTime(reader.GetOrdinal("CreateDateTime")),
+                            PublishDateTime = reader.GetDateTime(reader.GetOrdinal("PublishDateTime")),
+                            IsApproved = reader.GetBoolean(reader.GetOrdinal("IsApproved")),
+                            CategoryId = reader.GetInt32(reader.GetOrdinal("CategoryId")),
+                            UserProfileId = reader.GetInt32(reader.GetOrdinal("UserProfileId"))
                         };
-                        
+
+                        if (!reader.IsDBNull(reader.GetOrdinal("ImageLocation")))
+
+                        {
+                            post.ImageLocation = reader.GetString(reader.GetOrdinal("ImageLocation"));
+                        }
+
+                        posts.Add(post);
+
                     }
 
                     reader.Close();
