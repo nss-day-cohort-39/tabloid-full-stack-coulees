@@ -8,53 +8,78 @@ import CommentList from '../comment/CommentList';
 import { SubscriptionContext } from '../../providers/SubscriptionProvider';
 
 const PostDetails = () => {
+    //State Variables And Context
+    const { id } = useParams();
+    const currentUserId = JSON.parse(sessionStorage.getItem("userProfile")).id
+    const { getPost, deletePost } = useContext(PostContext);
+    const { addSubscription, checkSubscription, unsubscribe, getSubByPost } = useContext(SubscriptionContext)
+    const { getAllPostTags } = useContext(PostTagContext);
     const [deleteModal, showDelete] = useState(false)
     const [editModal, showEdit] = useState(false)
     const [subscribed, setSubcribed] = useState(false)
-    const [ready, setReady] = useState(false)
-    const editModalToggle = () => showEdit(!editModal)
-    const { getPost, deletePost } = useContext(PostContext);
-    const { addSubscription, checkSubscription } = useContext(SubscriptionContext)
-    const { id } = useParams();
-    const currentUserId = JSON.parse(sessionStorage.getItem("userProfile")).id
-    const { getAllPostTags } = useContext(PostTagContext);
     const [post, setPost] = useState({})
     const [postTags, setTags] = useState([])
+    const [subscription, setSub] = useState([])
+    const [ready, setReady] = useState(false)
 
     useEffect(() => {
+        //On render:
+        //1. Reset loader
         setReady(false)
+        //2. Get the post for the Details Page
         getPost(id)
             .then((post) => {
+                //3. Check to see if
+                checkSubscription(post.id)
+                    .then((resp) => {
+                        setSubcribed(resp.isSubscribed)
+                        return resp.isSubscribed
+                    })
+                    .then((resp) => {
+                        if (resp) {
+                            getSubByPost(post.id)
+                                .then(setSub)
+                        }
+                    })
                 setPost(post)
                 return post
             })
-            .then((post) => checkSubscription(post.id))
-            .then((resp) => setSubcribed(resp.isSubscribed))
             .then(() => getAllPostTags(id))
             .then(setTags)
             .then(() => setReady(true))
     }, []);
 
-    useEffect(() => {
-
-    }, [post])
-
     if (!post) {
         return null;
     }
 
+
+    //Event Handler Functions
     const confirmDelete = () => {
         showDelete(false)
         deletePost(post.id)
     }
+    const handleUnsubscribe = () => {
+        unsubscribe(subscription.id)
+    }
+    const handleSubscription = (post, currentUserId) => {
+        const sub = {
+            subscriberUserProfileId: currentUserId,
+            providerUserProfileId: post.userProfileId
+        }
 
+        addSubscription(sub)
+    }
+    const editModalToggle = () => showEdit(!editModal)
+
+    //Render Functions
     const renderSubscribedButton = () => {
         if (subscribed) {
             return (
                 <>
                     <hr />
                     <h5>
-                        <Badge color='info' size='sm' className='ml-2 badge-outlined'>Subscribed</Badge>
+                        <Button color='info' size='sm' outline className='ml-2' onClick={handleUnsubscribe}>Unsubscribe</Button>
                     </h5>
                 </>
             )
@@ -71,9 +96,7 @@ const PostDetails = () => {
             )
         }
     }
-
     const renderButtons = (post, currentUserId) => {
-
         if (post.userProfileId === currentUserId) {
             return (
                 <>
@@ -90,7 +113,6 @@ const PostDetails = () => {
             return renderSubscribedButton()
         }
     }
-
     const renderModals = (post, currentUserId) => {
         if (post.userProfileId === currentUserId) {
             return (
@@ -118,21 +140,14 @@ const PostDetails = () => {
         }
     }
 
-    const handleSubscription = (post, currentUserId) => {
-        const sub = {
-            subscriberUserProfileId: currentUserId,
-            providerUserProfileId: post.userProfileId
-        }
-
-        addSubscription(sub)
-    }
-
+    //Date Formatter
     let dateTimeFormat
     if (post.publishDateTime) {
         const date = new Date(post.publishDateTime);
         dateTimeFormat = new Intl.DateTimeFormat('en', { year: 'numeric', month: 'short', day: '2-digit' }).format(date);
     }
 
+    //Component Return Statements
     if (ready) {
         return (
             <>

@@ -66,13 +66,24 @@ namespace Tabloid.Controllers
             }
             return Ok(subscriptions);
         }
+        [HttpGet("sub/{id}")]
+        public IActionResult GetSubByPost(int id)
+        {
+            var post = _postRepostiory.GetById(id);
+            var subscription = _subscriptionRepository.GetByPost(post);
+            if (subscription == null)
+            {
+                return NotFound();
+            }
+            return Ok(subscription);
+        }
         [HttpGet("isSub/{id}")]
         public IActionResult IsSubscribed(int id)
         {
             var currentUser = GetCurrentUserProfile();
             var subscriptions = _subscriptionRepository.GetByUserProfileId(currentUser.Id);
             var post = _postRepostiory.GetById(id);
-            if(subscriptions.Exists(s => s.ProviderUserProfileId == post.UserProfileId))
+            if(subscriptions.Exists(s => s.ProviderUserProfileId == post.UserProfileId && s.EndDateTime == null))
             {
                 return Ok(new {IsSubscribed = true});
             }
@@ -99,6 +110,15 @@ namespace Tabloid.Controllers
         public IActionResult Delete(int id)
         {
             _subscriptionRepository.Delete(id);
+            return NoContent();
+        }
+        [HttpPut("unsubscribe/{id}")]
+        public IActionResult Put(int id)
+        {
+            var sub = _subscriptionRepository.GetById(id);
+            sub.EndDateTime = DateTime.Now;
+
+            _subscriptionRepository.Update(sub);
             return NoContent();
         }
         private UserProfile GetCurrentUserProfile()

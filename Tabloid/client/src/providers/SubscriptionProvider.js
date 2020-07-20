@@ -23,6 +23,16 @@ export const SubscriptionProvider = (props) => {
                 .then(set));
     }
 
+    const getSubByPost = (id) => {
+        return getToken().then((token) =>
+            fetch(apiUrl + `/sub/${id}`, {
+                method: "GET",
+                headers: {
+                    Authorization: `Bearer ${token}`
+                }
+            }).then(resp => resp.json()));
+    }
+
     const getSubscriptionsForCurrentUser = () => {
         return getToken().then((token) =>
             fetch(apiUrl + '/subs', {
@@ -31,9 +41,8 @@ export const SubscriptionProvider = (props) => {
                     Authorization: `Bearer ${token}`
                 }
             }).then(resp => resp.json())
-                .then((subs) => {
-                    setSubs(subs)
-                    return subs
+                .then((sub) => {
+                    return sub
                 }));
     }
 
@@ -65,10 +74,27 @@ export const SubscriptionProvider = (props) => {
             }).then(resp => resp.json()));
     }
 
+    const unsubscribe = (id) => {
+        return getToken().then((token) =>
+            fetch(apiUrl + `/unsubscribe/${id}`, {
+                method: "PUT",
+                headers: {
+                    Authorization: `Bearer ${token}`,
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify(id)
+            }).then(resp => {
+                if (resp.ok) {
+                    return;
+                }
+                throw new Error("Unauthorized");
+            }))
+    }
+
     return (
         <SubscriptionContext.Provider value={{
-            subPosts, getSubscribedAuthorPostsForCurrentUser, addSubscription,
-            getSubscriptionsForCurrentUser, subs, checkSubscription
+            subPosts, getSubscribedAuthorPostsForCurrentUser, addSubscription, getSubByPost,
+            getSubscriptionsForCurrentUser, subs, checkSubscription, unsubscribe
         }}>
             {props.children}
         </SubscriptionContext.Provider>
