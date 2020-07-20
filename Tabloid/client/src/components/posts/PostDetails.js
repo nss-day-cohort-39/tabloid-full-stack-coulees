@@ -54,7 +54,7 @@ const PostDetails = () => {
                 <>
                     <Modal isOpen={deleteModal} >
                         <ModalHeader>Delete a Post</ModalHeader>
-                        <ModalBody class="lead">
+                        <ModalBody className="lead">
                             <div className="lead mb-2">Are you sure you want to delete the post "{post.title}"?</div>
                             <div className="text-right">
                                 <Button onClick={() => showDelete(false)}>Cancel</Button>
@@ -84,8 +84,8 @@ const PostDetails = () => {
     return (
         <>
             <div className="container">
-                <h2 className="d-flex justify-content-between">
-                    {post.title}
+                <div className="d-flex justify-content-between">
+                    <h2>{post.title}</h2>
                     {
                         post.categoryId !== 0
                             ?
@@ -101,7 +101,7 @@ const PostDetails = () => {
                             :
                             ""
                     }
-                </h2>
+                </div>
                 <h4 className="font-weight-normal">by <Link to={`/users/${post.userProfile.firebaseUserId}`}>{post.userProfile.fullName}</Link></h4>
                 <h4 className="font-weight-normal">Posted {dateTimeFormat ? dateTimeFormat : ''}</h4>
                 {

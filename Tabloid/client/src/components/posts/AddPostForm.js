@@ -1,13 +1,15 @@
 import { PostContext } from "../../providers/PostProvider";
 import DatePicker from 'reactstrap-date-picker/lib/DatePicker';
 import React, { useContext, useRef, useState, useEffect } from 'react'
-import { Form, FormGroup, Input, Row, FormText, Button, Label, Badge, Modal, ModalHeader, ModalBody } from 'reactstrap'
+import { Form, FormGroup, Input, Button, Label } from 'reactstrap'
 import PostTagForm from './PostTagForm';
 import { CategoryContext } from '../../providers/CategoryProvider';
+import { ImageContext } from "../../providers/ImageProvider";
 
 const AddPostForm = () => {
     const { addPost } = useContext(PostContext)
     const { categories, getAllCategory } = useContext(CategoryContext)
+    const { uploadImage } = useContext(ImageContext)
     const [publishDate, set] = useState()
     const [categorySelect, setCategorySelection] = useState("");
     const [chosenTags, setChosenTags] = useState([]);
@@ -17,7 +19,6 @@ const AddPostForm = () => {
     }
 
     const title = useRef()
-    const imageUrl = useRef()
     const content = useRef()
 
     useEffect(() => {
@@ -27,10 +28,14 @@ const AddPostForm = () => {
     const handleCategorySelection = (e) => {
         setCategorySelection(e.target.value)
     }
-    const handleSubmit = () => {
+
+    const handleSubmit = (event) => {
+        const formData = new FormData();
+        formData.append('file', document.querySelector('input[type="file"]').files[0]);
+        console.log(formData.getAll('file'))
+
         const Post = {
             title: title.current.value,
-            imageLocation: imageUrl.current.value,
             content: content.current.value,
             publishDateTime: publishDate,
             categoryId: +categorySelect,
@@ -48,12 +53,13 @@ const AddPostForm = () => {
             window.alert("Post must have content.")
             return
         }
-        addPost(Post, chosenTags)
+        uploadImage(formData)
+        //addPost(Post, chosenTags)
     }
     return (
         <div className="d-flex justify-content-center">
             <div className="smallContainer border rounded p-4">
-                <Form>
+                <Form encType="multipart/form-data">
                     <h4>Create a new Post</h4>
                     <hr />
                     <FormGroup>
@@ -62,7 +68,7 @@ const AddPostForm = () => {
                             placeholder='Something New and Amazing' className='form-control'></Input>
                     </FormGroup>
                     <FormGroup>
-                        <Label for="imageUpload">Header Image <small class="text-muted font-italic">(Optional)</small></Label>
+                        <Label for="imageUpload">Header Image <small className="text-muted font-italic">(Optional)</small></Label>
                         <Input type="file" name="file" id="imageUpload" />
                     </FormGroup>
                     <FormGroup>
@@ -73,7 +79,7 @@ const AddPostForm = () => {
                     <FormGroup>
                         <Label for='PublishDate'>Publish Date</Label>
                         <Input type='date' name='PublishDate' id='publishDate' onChange={handleDateChange} />
-                        <small class="text-muted font-italic">You can leave this blank to keep your post unpublished.</small>
+                        <small className="text-muted font-italic">You can leave this blank to keep your post unpublished.</small>
                     </FormGroup>
                     <FormGroup>
                         <Label for='categoryId'>Category</Label>

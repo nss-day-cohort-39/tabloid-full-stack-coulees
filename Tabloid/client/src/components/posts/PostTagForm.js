@@ -53,7 +53,7 @@ const PostTagForm = ({ chosenTags, setChosenTags, postTags }) => {
     return (
         <>
             <FormGroup>
-                <Label for="postTitle">Tags <small class="text-muted font-italic">(Optional)</small></Label>
+                <Label for="postTitle">Tags <small className="text-muted font-italic">(Optional)</small></Label>
                 <InputGroup>
                     <select id="tags" className="form-control" onChange={e => setSelectedTagId(e.target.value)}>
                         <option value="">Select...</option>

@@ -95,7 +95,7 @@ const EditPostForm = ({ showEdit, postId }) => {
                             placeholder='Title' className='form-control'></Input>
                     </FormGroup>
                     <FormGroup>
-                        <Label for="ImageUrl">Post Image URL <small class="text-muted font-italic">(Optional)</small></Label>
+                        <Label for="ImageUrl">Post Image URL <small className="text-muted font-italic">(Optional)</small></Label>
                         <Input type='text' name='ImageUrl' id='postImageUrl' innerRef={imageUrl} defaultValue={post ? post.imageLocation : ''}
                             placeholder='Image URL' className='form-control'></Input>
                     </FormGroup>
@@ -107,7 +107,7 @@ const EditPostForm = ({ showEdit, postId }) => {
                     <FormGroup>
                         <Label for='PublishDate'>Publish Date</Label>
                         <DatePicker value={publishDate} onChange={handleDateChange} />
-                        <small class="text-muted font-italic">You can leave this blank to keep your post unpublished.</small>
+                        <small className="text-muted font-italic">You can leave this blank to keep your post unpublished.</small>
                     </FormGroup>
                     <FormGroup>
                         <Label for='categoryId'>Category</Label>
