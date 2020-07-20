@@ -33,7 +33,7 @@ namespace Tabloid.Controllers
         {
             return Ok(_subscriptionRepository.GetAll());
         }
-        [HttpGet("currentUser")]
+        [HttpGet("subposts")]
         public IActionResult GetSubscribedAuthorPostsForCurrentUser()
         {
             var currentUserId = GetCurrentUserProfile().Id;
@@ -41,7 +41,7 @@ namespace Tabloid.Controllers
             List<Post> CurrentUserSubPosts = new List<Post>();
             foreach (var sub in currentUserSubs)
             {
-                var PostList = _postRepostiory.GetByUserProfileId(sub.ProviderUserProfileId);
+                var PostList = _postRepostiory.GetPublishedByUserProfileId(sub.ProviderUserProfileId);
                 foreach(var post in PostList)
                 {
                     CurrentUserSubPosts.Add(post);
@@ -55,20 +55,41 @@ namespace Tabloid.Controllers
             return Ok(CurrentUserSubPosts);
         }
 
-        [HttpGet("{id}")]
-        public IActionResult Get(int id)
+        [HttpGet("subs")]
+        public IActionResult GetCurrentUserSubs()
         {
-            var subscription = _subscriptionRepository.GetById(id);
-            if (subscription == null)
+            var currentUserId = GetCurrentUserProfile().Id;
+            var subscriptions = _subscriptionRepository.GetByUserProfileId(currentUserId);
+            if (subscriptions == null)
             {
                 return NotFound();
             }
-            return Ok(subscription);
-        }         
-
+            return Ok(subscriptions);
+        }
+        [HttpGet("isSub/{id}")]
+        public IActionResult IsSubscribed(int id)
+        {
+            var currentUser = GetCurrentUserProfile();
+            var subscriptions = _subscriptionRepository.GetByUserProfileId(currentUser.Id);
+            var post = _postRepostiory.GetById(id);
+            if(subscriptions.Exists(s => s.ProviderUserProfileId == post.UserProfileId))
+            {
+                return Ok(new {IsSubscribed = true});
+            }
+            else
+            {
+                return Ok(new { IsSubscribed = false });
+            }
+        }
         [HttpPost]
         public IActionResult Post(Subscription subscription)
         {
+            var CurrentUserId = GetCurrentUserProfile().Id;
+            var CurrentUserSubs = _subscriptionRepository.GetByUserProfileId(CurrentUserId);
+            if(CurrentUserSubs.Exists(s => s.ProviderUserProfileId == subscription.ProviderUserProfileId))
+            {
+                return Unauthorized();
+            }
             _subscriptionRepository.Add(subscription);
             return CreatedAtAction("Get", new { id = subscription.Id }, subscription);
         }

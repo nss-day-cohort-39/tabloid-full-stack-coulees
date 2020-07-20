@@ -7,19 +7,34 @@ export const SubscriptionContext = React.createContext();
 export const SubscriptionProvider = (props) => {
     const { getToken } = useContext(UserProfileContext)
     const [subPosts, set] = useState([]);
+    const [subs, setSubs] = useState([])
     const history = useHistory()
 
     const apiUrl = '/api/subscription'
 
     const getSubscribedAuthorPostsForCurrentUser = () => {
         return getToken().then((token) =>
-            fetch(apiUrl + '/currentUser', {
+            fetch(apiUrl + '/subposts', {
                 method: "GET",
                 headers: {
                     Authorization: `Bearer ${token}`
                 }
             }).then(resp => resp.json())
                 .then(set));
+    }
+
+    const getSubscriptionsForCurrentUser = () => {
+        return getToken().then((token) =>
+            fetch(apiUrl + '/subs', {
+                method: "GET",
+                headers: {
+                    Authorization: `Bearer ${token}`
+                }
+            }).then(resp => resp.json())
+                .then((subs) => {
+                    setSubs(subs)
+                    return subs
+                }));
     }
 
     const addSubscription = (subscription) => {
@@ -40,9 +55,20 @@ export const SubscriptionProvider = (props) => {
                 .then(() => history.push('/')));
     };
 
+    const checkSubscription = (id) => {
+        return getToken().then((token) =>
+            fetch(apiUrl + `/isSub/${id}`, {
+                method: "GET",
+                headers: {
+                    Authorization: `Bearer ${token}`,
+                }
+            }).then(resp => resp.json()));
+    }
+
     return (
         <SubscriptionContext.Provider value={{
-            subPosts, getSubscribedAuthorPostsForCurrentUser, addSubscription
+            subPosts, getSubscribedAuthorPostsForCurrentUser, addSubscription,
+            getSubscriptionsForCurrentUser, subs, checkSubscription
         }}>
             {props.children}
         </SubscriptionContext.Provider>

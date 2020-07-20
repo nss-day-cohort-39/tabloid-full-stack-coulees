@@ -9,7 +9,6 @@ export const PostProvider = (props) => {
     const { postTags, getAllPostTags } = useContext(PostTagContext)
     const { getToken } = useContext(UserProfileContext)
     const [posts, setPosts] = useState([]);
-    const [post, setPost] = useState();
 
     const apiUrl = '/api/post'
     const history = useHistory();
@@ -38,19 +37,16 @@ export const PostProvider = (props) => {
                 .then(setPosts));
     };
 
-    const getPost = (id) =>
-        getToken().then((token) =>
+    const getPost = (id) => {
+        return getToken().then((token) =>
             fetch(`/api/post/${id}`, {
                 method: "GET",
                 headers: {
                     Authorization: `Bearer ${token}`,
                 },
             }).then((res) => res.json())
-                .then((post) => {
-                    setPost(post)
-                    return post
-                })
         );
+    }
 
     const getPostsByCurrentUser = () => {
         getToken().then((token) =>
@@ -161,7 +157,7 @@ export const PostProvider = (props) => {
 
     return (
         <PostContext.Provider value={{
-            posts, getAllPosts, addPost, getPost, deletePost, post,
+            posts, getAllPosts, addPost, getPost, deletePost,
             getPostsByCurrentUser, getPublishedPosts, updatePost
         }}>
             {props.children}
