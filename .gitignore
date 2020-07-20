@@ -4,7 +4,7 @@
 ## Get latest from https://github.com/github/gitignore/blob/master/VisualStudio.gitignore
 
 ## Leave out user uploaded images
-Tabloid/wwwroot/images/headers/
+client/public/images/headers/
 
 # User-specific files
 *.rsuser
