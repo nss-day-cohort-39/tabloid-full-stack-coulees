@@ -1,7 +1,7 @@
 import { PostContext } from "../../providers/PostProvider";
 import DatePicker from 'reactstrap-date-picker/lib/DatePicker';
 import React, { useContext, useRef, useState, useEffect } from 'react'
-import { Form, FormGroup, Input, Button, Label } from 'reactstrap'
+import { Form, FormGroup, Input, Button, Label, Alert } from 'reactstrap'
 import PostTagForm from './PostTagForm';
 import { CategoryContext } from '../../providers/CategoryProvider';
 import { ImageContext } from "../../providers/ImageProvider";
@@ -29,6 +29,14 @@ const AddPostForm = () => {
         setCategorySelection(e.target.value)
     }
 
+    const [preview, setPreview] = useState(null);
+
+    const previewImage = e => {
+        if (e.target.files.length) {
+            setPreview(URL.createObjectURL(e.target.files[0]));
+        }
+    };
+
     const handleSubmit = (event) => {
         const file = document.querySelector('input[type="file"]').files[0];
 
@@ -55,17 +63,29 @@ const AddPostForm = () => {
         if (file !== "") {
             //get file extension
             const extension = file.name.split('.').pop();
-            const newImageName = `${new Date().getTime()}.${extension}`;
 
-            const formData = new FormData();
-            formData.append('file', file, newImageName);
+            const allowedExstensions = [
+                'png',
+                'bmp',
+                'gif',
+                'jpg',
+                'jpeg'
+            ];
 
-            try {
+            if (!allowedExstensions.includes(extension)) {
+                window.alert("Your file must be a .jpg, .gif, .png, or .bmp.");
+                return;
+            } else {
+
+                const newImageName = `${new Date().getTime()}.${extension}`;
+
+                const formData = new FormData();
+                formData.append('file', file, newImageName);
+
                 uploadImage(formData, newImageName);
-            } catch {
-                window.alert("Image could not be uploaded.")
+
+                Post.imageLocation = newImageName;
             }
-            Post.imageLocation = newImageName;
         } else {
             Post.imageLocation = null;
         }
@@ -85,7 +105,16 @@ const AddPostForm = () => {
                     </FormGroup>
                     <FormGroup>
                         <Label for="imageUpload">Header Image <small className="text-muted font-italic">(Optional)</small></Label>
-                        <Input type="file" name="file" id="imageUpload" />
+                        <Input type="file" name="file" id="imageUpload" onChange={previewImage} />
+                    </FormGroup>
+                    <FormGroup>
+                        {
+                            preview === null
+                                ?
+                                <Alert color="light">No image selected</Alert>
+                                :
+                                <img src={preview} alt="image preview" className="img-thumbnail" />
+                        }
                     </FormGroup>
                     <FormGroup>
                         <Label for="Content">Post Content</Label>

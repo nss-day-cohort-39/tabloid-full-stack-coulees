@@ -20,7 +20,7 @@ export const ImageProvider = (props) => {
                     console.log(data);
                     return;
                 }
-                throw new Error("Something didn't work");
+                throw new Error("The image could not be uploaded.");
             }));
     };
 

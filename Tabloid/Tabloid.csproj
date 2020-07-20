@@ -36,9 +36,5 @@
     <PackageReference Include="SixLabors.ImageSharp.Web" Version="1.0.0-rc0003" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="wwwroot\images\headers\" />
-  </ItemGroup>
-
 
 </Project>
