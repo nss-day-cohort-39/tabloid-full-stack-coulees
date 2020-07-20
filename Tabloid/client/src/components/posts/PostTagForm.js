@@ -53,7 +53,7 @@ const PostTagForm = ({ chosenTags, setChosenTags, postTags }) => {
     return (
         <>
             <FormGroup>
-                <Label for="postTitle">Tags</Label>
+                <Label for="postTitle">Tags <small class="text-muted font-italic">(Optional)</small></Label>
                 <InputGroup>
                     <select id="tags" className="form-control" onChange={e => setSelectedTagId(e.target.value)}>
                         <option value="">Select...</option>
@@ -64,7 +64,7 @@ const PostTagForm = ({ chosenTags, setChosenTags, postTags }) => {
                         }
                     </select>
                     <InputGroupAddon addonType="append">
-                        <Button id="addTagButton" type="button" color="secondary" onClick={e => { e.preventDefault(); updateChosenTags(); }}>Add</Button>
+                        <Button id="addTagButton" type="button" color="info" onClick={e => { e.preventDefault(); updateChosenTags(); }}>Add Tag</Button>
                     </InputGroupAddon>
                 </InputGroup>
             </FormGroup>

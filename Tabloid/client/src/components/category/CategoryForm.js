@@ -1,9 +1,9 @@
 import React, { useContext, useRef } from "react"
 import { Form } from "reactstrap"
 import { CategoryContext } from "../../providers/CategoryProvider"
-import {useHistory} from 'react-router-dom'
+import { useHistory } from 'react-router-dom'
 
-export const CategoryForm = ({toggle}) => {
+export const CategoryForm = ({ toggle }) => {
     const { getAllCategory, addCategory } = useContext(CategoryContext)
     const name = useRef("name")
     const history = useHistory();
@@ -11,17 +11,18 @@ export const CategoryForm = ({toggle}) => {
         return addCategory({
             name: name.current.value
         })
-        .then(toggle)
-        .then(getAllCategory)
-        .then(() => {
-            history.push("/category")
-        })
+            .then(toggle)
+            .then(getAllCategory)
+            .then(() => {
+                history.push("/category")
+            })
     }
-    
+
     return (
         <Form className="categoryForm">
             <fieldset>
                 <div className="form-group">
+                    <label for="name">Name</label>
                     <input
                         type="text"
                         id="name"
@@ -29,20 +30,23 @@ export const CategoryForm = ({toggle}) => {
                         required
                         autoFocus
                         className="form-control categoryName"
-                        placeholder="category name"
+                        placeholder=""
                     />
                 </div>
-            </fieldset>      
-            <button type="submit"
-                onClick={
-                    evt => {
-                        evt.preventDefault() // Prevent browser from submitting the form
-                        addNewCategory()
+            </fieldset>
+            <fieldset className="text-right">
+                <button type="button" onClick={toggle} className="btn btn-secondary">Cancel</button>
+                <button type="submit"
+                    onClick={
+                        evt => {
+                            evt.preventDefault() // Prevent browser from submitting the form
+                            addNewCategory()
+                        }
                     }
-                }
-                className="btn btn-primary">
-                Save Category
+                    className="btn btn-primary ml-2">
+                    Save
             </button>
+            </fieldset>
         </Form>
     )
 }

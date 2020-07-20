@@ -1,6 +1,7 @@
 main {
   margin: 2em;
 }
+
 .app-spinner {
   position: fixed;
   top: 50%;
@@ -8,16 +9,94 @@ main {
   margin-top: -16px;
   margin-left: -16px;
 }
- 
+
+.smallContainer {
+  width: 100%;
+  max-width: 600px;
+  min-width: 250px;
+}
+
+.navbar {
+  background-color: #a2dae2;
+  color: #2b3034;
+}
+
 p {
-    line-height: 2rem;
+  line-height: 2rem;
 }
 
 .post p {
-    white-space: pre-wrap;
+  white-space: pre-wrap;
 }
 
-.fake-link{
+hr.dotted {
+  border-top: 1px dashed #e5e5e5e5;
+}
+
+/* outline badge styles */
+
+.badge-outlined {
+  border: 1px solid transparent;
+  background-color: transparent;
+}
+
+.badge-outlined.badge-default {
+  border-color: #B0BEC5;
+  color: #B0BEC5;
+}
+
+.badge-outlined.badge-primary {
+  border-color: #2196F3;
+  color: #2196F3;
+}
+
+.badge-outlined.badge-secondary {
+  border-color: #4d5868;
+  color: #4d5868;
+}
+
+.badge-outlined.badge-success {
+  border-color: #64DD17;
+  color: #64DD17;
+}
+
+.badge-outlined.badge-warning {
+  border-color: #FFD600;
+  color: #FFD600;
+}
+
+.badge-outlined.badge-info {
+  border-color: #29B6F6;
+  color: #29B6F6;
+}
+
+.badge-outlined.badge-danger {
+  border-color: #ef1c1c;
+  color: #ef1c1c;
+}
+
+/* class that sticks the edit button in the upper right */
+
+.upperRight {
+  position: absolute;
+  top: 0;
+  right: 0;
+}
+
+/* use this class for areas that should reflect saved line breaks */
+
+.content {
+  white-space: pre-line;
+  font-size: 1.25em;
+  line-height: 1.5;
+}
+
+.content.article::first-letter {
+  font-size: 150%;
+  color: #627d93;
+}
+
+.fake-link {
   color: blue;
   font-family: helvetica;
   text-decoration: none;
@@ -25,4 +104,33 @@ p {
 
 .fake-link:hover {
   text-decoration: underline;
+}
+
+.invisible {
+  visibility: hidden;
+}
+
+/* classes posts lists (all posts, my posts, etc.) */
+
+.postList {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+.postList .card {
+  flex-basis: 300px;
+  flex-grow: 1;
+}
+
+.postList .card-img-top {
+  object-fit: cover;
+  height: 200px;
+  background-color: #C0C0C0;
+}
+
+.largeImage {
+  width: 100%;
+  object-fit: cover;
+  max-height: 40vh;
 }

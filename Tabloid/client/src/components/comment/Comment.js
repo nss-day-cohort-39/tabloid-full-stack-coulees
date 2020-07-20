@@ -1,6 +1,7 @@
 
-import React, { useContext, useState } from "react";
-import { ListGroup, Button, Modal, ModalBody, ModalHeader } from "reactstrap"
+import React, { useState } from "react";
+import { Button, Modal, ModalBody, ModalHeader } from "reactstrap"
+import { Link } from "react-router-dom"
 import CommentEditModal from './CommentEditModal'
 import CommentDeleteModal from './CommentDeleteModal'
 
@@ -17,41 +18,46 @@ const Comment = ({ comment }) => {
 
 
     return (
-        <ListGroup>
-            <div className="text-left px-2">Posted by {comment.userProfile.displayName} on {dateTimeFormat}</div>
-            <div className="text-left px-2"><strong>Subject:</strong>  {comment.subject}</div>
-            <div className="text-left px-2"><strong>Content:</strong> {comment.content}</div>
+        <>
+            <h4 className="d-flex justify-content-between">
+                {comment.subject}
+                {comment.userProfileId === currentUserId ? (
+                    <div>
+                        <Button color="info" size="sm" className="ml-2" outline onClick={() => { editModalToggle() }}>Edit</Button>
+                        <Button color="danger" size="sm" className="ml-2" outline onClick={() => { deleteModalToggle() }}>Delete</Button>
+                    </div>
+                ) : ""}
+            </h4>
+            <div className="content">{comment.content}</div>
+            <hr className="dotted" />
+            <div class="font-italic">Posted by <Link to={`/users/${comment.userProfile.firebaseUserId}`}>{comment.userProfile.displayName}</Link> on {dateTimeFormat}</div>
 
             {
-
-
-                (comment.userProfileId === currentUserId) ? (<>
-                    <Button color="info" className="ml-2" onClick={() => { editModalToggle() }}>Edit</Button>
-
-                    <Button color="danger" className="ml-2" onClick={() => { deleteModalToggle() }}>Delete</Button>
-                    <Modal isOpen={editModal} toggle={editModalToggle}>
-                        <ModalHeader toggle={editModalToggle}>
-                            Edit Comment
+                (comment.userProfileId === currentUserId) ? (
+                    <>
+                        <Modal isOpen={editModal} toggle={editModalToggle}>
+                            <ModalHeader toggle={editModalToggle}>
+                                Edit Comment
                 </ModalHeader>
-                        <ModalBody>
-                            <CommentEditModal toggle={editModalToggle} comment={comment} />
-                        </ModalBody>
-                    </Modal>
+                            <ModalBody>
+                                <CommentEditModal toggle={editModalToggle} comment={comment} />
+                            </ModalBody>
+                        </Modal>
 
-                    <Modal isOpen={deleteModal} toggle={deleteModalToggle}>
-                        <ModalHeader toggle={deleteModalToggle}>
-                            Delete Comment
+                        <Modal isOpen={deleteModal} toggle={deleteModalToggle}>
+                            <ModalHeader toggle={deleteModalToggle}>
+                                Delete Comment
                 </ModalHeader>
-                        <ModalBody>
-                            <CommentDeleteModal toggle={deleteModalToggle} comment={comment} />
-                        </ModalBody>
-                    </Modal>
-                </>) : (<></>)
+                            <ModalBody>
+                                <CommentDeleteModal toggle={deleteModalToggle} comment={comment} />
+                            </ModalBody>
+                        </Modal>
+                    </>) : (<></>)
 
             }
 
 
-        </ListGroup>
+        </>
 
     );
 };

@@ -41,8 +41,8 @@ const TagList = () => {
                                         <ListGroupItem key={tag.id} className="d-flex justify-content-between">
                                             {tag.name}
                                             <div className="d-flex justify-content-end">
-                                                <Button color="secondary" outline size="sm" className="ml-2" onClick={() => { setChosenTag(tag); editModalToggle(); }}>Edit</Button>
-                                                <Button color="secondary" outline size="sm" className="ml-2" onClick={() => { setChosenTag(tag); deleteModalToggle(); }}>Delete</Button>
+                                                <Button color="info" outline size="sm" className="ml-2" onClick={() => { setChosenTag(tag); editModalToggle(); }}>Edit</Button>
+                                                <Button color="danger" outline size="sm" className="ml-2" onClick={() => { setChosenTag(tag); deleteModalToggle(); }}>Delete</Button>
                                             </div>
                                         </ListGroupItem>
                                     ))

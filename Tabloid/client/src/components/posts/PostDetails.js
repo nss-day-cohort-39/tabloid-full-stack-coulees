@@ -1,5 +1,5 @@
 import React, { useContext, useEffect, useState } from 'react';
-import { useParams, useHistory } from "react-router-dom";
+import { Link, useParams, useHistory } from "react-router-dom";
 import { PostContext } from '../../providers/PostProvider';
 import { Button, Modal, ModalHeader, ModalFooter, ModalBody, Badge } from 'reactstrap';
 import EditPostForm from './EditPostForm';
@@ -9,6 +9,7 @@ import CommentList from '../comment/CommentList';
 const PostDetails = () => {
     const [deleteModal, showDelete] = useState(false)
     const [editModal, showEdit] = useState(false)
+    const editModalToggle = () => showEdit(!editModal)
     const { post, getPost, deletePost } = useContext(PostContext);
     const { id } = useParams();
     const currentUserId = JSON.parse(sessionStorage.getItem("userProfile")).id
@@ -36,8 +37,12 @@ const PostDetails = () => {
         if (post.userProfileId === currentUserId) {
             return (
                 <>
-                    <Button onClick={() => showEdit(true)}>Edit</Button>
-                    <Button className='btn btn-danger ml-2' onClick={() => showDelete(true)}>Delete</Button>
+                    <hr />
+                    <h5>
+                        Author Options
+                        <Badge href="#" color="info" className="ml-2 p-2" onClick={() => showEdit(true)} size="sm">Edit Post</Badge>
+                        <Badge href="#" color="danger" className="ml-2 p-2" onClick={() => showDelete(true)} size="sm">Delete</Badge>
+                    </h5>
                 </>
             )
         }
@@ -48,16 +53,21 @@ const PostDetails = () => {
             return (
                 <>
                     <Modal isOpen={deleteModal} >
-                        <ModalHeader>Are you sure you want to delete this post?</ModalHeader>
-                        <ModalFooter>
-                            <Button className='btn btn-danger' onClick={confirmDelete}>Delete</Button>
-                            <Button onClick={() => showDelete(false)}>Cancel</Button>
-                        </ModalFooter>
+                        <ModalHeader>Delete a Post</ModalHeader>
+                        <ModalBody class="lead">
+                            <div className="lead mb-2">Are you sure you want to delete the post "{post.title}"?</div>
+                            <div className="text-right">
+                                <Button onClick={() => showDelete(false)}>Cancel</Button>
+                                <Button className="btn btn-danger ml-2" onClick={confirmDelete}>Delete</Button>
+                            </div>
+                        </ModalBody>
                     </Modal >
-                    <Modal isOpen={editModal}>
+                    <Modal isOpen={editModal} scrollable={true} toggle={editModalToggle}>
+                        <ModalHeader toggle={editModalToggle}>
+                            Edit Post
+                    </ModalHeader>
                         <ModalBody>
                             <EditPostForm postId={post.id} showEdit={showEdit} />
-                            <Button className='btn mt-1' size='small' outline={true} onClick={() => showEdit(false)}>cancel</Button>
                         </ModalBody>
                     </Modal>
                 </>
@@ -74,31 +84,60 @@ const PostDetails = () => {
     return (
         <>
             <div className="container">
-                <h2>{post.title}</h2>
-                <h3>{post.userProfile.displayName}</h3>
-                <h3>{dateTimeFormat ? dateTimeFormat : ''}</h3>
-                <h3>{post.category.name}</h3>
+                <h2 className="d-flex justify-content-between">
+                    {post.title}
+                    {
+                        post.categoryId !== 0
+                            ?
+                            <h4><Badge className="text-left ml-1 p-2 badge-secondary badge-outlined">{post.category.name}</Badge></h4>
+                            :
+                            ""
+                    }
+                    {
+
+                        post.categoryId === 0 && currentUserId === post.userProfileId
+                            ?
+                            <h4><Badge className="text-left ml-1 p-2 badge-secondary badge-outlined">{post.category.name}</Badge></h4>
+                            :
+                            ""
+                    }
+                </h2>
+                <h4 className="font-weight-normal">by <Link to={`/users/${post.userProfile.firebaseUserId}`}>{post.userProfile.fullName}</Link></h4>
+                <h4 className="font-weight-normal">Posted {dateTimeFormat ? dateTimeFormat : ''}</h4>
                 {
                     postTags.length > 0
                         ?
-                        <h5>
+                        <h5 className="mt-3">
                             {postTags.map(tag => {
-                                return (<Badge key={"tag-" + tag.id} color="info" className="mr-2 mb-2 px-2">{tag.tag.name}</Badge>)
+                                return (<Badge key={"tag-" + tag.id} className="mr-2 mb-2 px-2 badge-outlined badge-info">{tag.tag.name}</Badge>)
                             })}
                         </h5>
                         :
                         ""
                 }
-                <hr />
-                <img src={post.imageLocation} alt={post.title} className="img-fluid" />
-                <p>{post.content}</p>
                 {renderButtons(post, currentUserId)}
+                {
+                    post.imageLocation === ""
+                        ?
+                        ""
+                        :
+                        <>
+                            <hr />
+                            <img src={post.imageLocation} alt={post.title} className="largeImage" />
+                        </>
+
+                }
+
+                <hr />
+                <p className="content article">{post.content}</p>
+                <hr className="mt-4" />
+                <CommentList />
             </div >
             {renderModals(post, currentUserId)}
             {/* <Button color="secondary" onClick={() => {
                 history.push(`/CommentList/${id}`)
             }}>View Comments</Button> */}
-            <CommentList />
+
         </>
     );
 };

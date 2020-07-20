@@ -1,7 +1,6 @@
 import React, { useContext, useRef, useEffect, useState } from 'react'
-import { Form, FormGroup, Input, Row, FormText, Button, Label, Spinner } from 'reactstrap'
+import { Form, FormGroup, Input, Row, Button, Label, Spinner } from 'reactstrap'
 import { PostContext } from "../../providers/PostProvider";
-import { useParams } from 'react-router-dom';
 import DatePicker from 'reactstrap-date-picker/lib/DatePicker';
 import { PostTagContext } from '../../providers/PostTagProvider';
 import PostTagForm from './PostTagForm';
@@ -10,12 +9,12 @@ import { CategoryContext } from '../../providers/CategoryProvider';
 //There are two ways to access this form:
 //1) By the post list views; and 2) By the post details view
 //The post details view passes in a showEdit function that toggles a modal. Otherwise, showEdit is ignored.
-const EditPostForm = ({ showEdit }) => {
+const EditPostForm = ({ showEdit, postId }) => {
     const [ready, set] = useState(false)
     const [publishDate, setPublishDate] = useState(null)
     const [tagReady, tagSet] = useState(false)
     const { post, updatePost, getPost } = useContext(PostContext)
-    const { id } = useParams();
+    const id = postId;
     const { postTags, getAllPostTags } = useContext(PostTagContext);
     const { categories, getAllCategory } = useContext(CategoryContext);
 
@@ -88,26 +87,27 @@ const EditPostForm = ({ showEdit }) => {
     //setting default value for date
     if (ready === true && tagReady === true) {
         return (
-            <div className="container border pl-5 pr-5 mt-2 pb-1">
+            <div className="container">
                 <Form>
-                    <FormText className='h4 text-center'>Edit Post</FormText>
-                    <Row>
-                        <FormGroup className='row col mr-1'>
-                            <Input type='text' name='Title' id='postTitle' innerRef={title} defaultValue={post ? post.title : ''}
-                                placeholder='Title' className='form-control form-control-sm'></Input>
-                        </FormGroup>
-                        <FormGroup className='row col'>
-                            <Input type='text' name='ImageUrl' id='postImageUrl' innerRef={imageUrl} defaultValue={post ? post.imageLocation : ''}
-                                placeholder='Image URL' className='form-control form-control-sm'></Input>
-                        </FormGroup>
-                    </Row>
-                    <FormGroup className='row'>
-                        <Input type='textarea' name='Content' id='postContent' innerRef={content} defaultValue={post ? post.content : ''}
-                            placeholder='Add your content...' className='form-control form-control-sm'></Input>
+                    <FormGroup>
+                        <Label for="title">Post Title</Label>
+                        <Input type='text' name='Title' id='postTitle' innerRef={title} defaultValue={post ? post.title : ''}
+                            placeholder='Title' className='form-control'></Input>
                     </FormGroup>
-                    <FormGroup className='text-center'>
-                        <Label for='PublishDate'>Choose a Date to Publish Your Post</Label>
+                    <FormGroup>
+                        <Label for="ImageUrl">Post Image URL <small class="text-muted font-italic">(Optional)</small></Label>
+                        <Input type='text' name='ImageUrl' id='postImageUrl' innerRef={imageUrl} defaultValue={post ? post.imageLocation : ''}
+                            placeholder='Image URL' className='form-control'></Input>
+                    </FormGroup>
+                    <FormGroup>
+                        <Label for="Content">Post Content</Label>
+                        <Input type='textarea' name='Content' id='postContent' innerRef={content} defaultValue={post ? post.content : ''}
+                            placeholder='Add your content...' className='form-control' rows="7"></Input>
+                    </FormGroup>
+                    <FormGroup>
+                        <Label for='PublishDate'>Publish Date</Label>
                         <DatePicker value={publishDate} onChange={handleDateChange} />
+                        <small class="text-muted font-italic">You can leave this blank to keep your post unpublished.</small>
                     </FormGroup>
                     <FormGroup>
                         <Label for='categoryId'>Category</Label>
@@ -119,11 +119,12 @@ const EditPostForm = ({ showEdit }) => {
                     <FormGroup>
                         <PostTagForm postTags={postTags.map(pt => pt.tag)} chosenTags={chosenTags} setChosenTags={setChosenTags} />
                     </FormGroup>
-                    <div className='d-flex flex-row-reverse'>
-                        <Button size='sm mb-1' onClick={handleSubmit}>Save</Button>
+                    <div className='text-right'>
+                        <Button type="button" color="secondary" onClick={() => showEdit(false)} className="mx-2">Cancel</Button>
+                        <Button color="primary" onClick={handleSubmit}>Save</Button>
                     </div>
                 </Form>
-            </div>
+            </div >
         )
     }
     else return <Spinner />

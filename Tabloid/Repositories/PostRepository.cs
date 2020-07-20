@@ -36,6 +36,7 @@ namespace Tabloid.Repositories
             return _context.Post
                             .Include(p => p.UserProfile)
                             .Include(p => p.Category)
+                            .OrderByDescending(p => p.PublishDateTime)
                             .ToList();
         }
         //public List<Post> Search(string criterion, bool sortDescending)
