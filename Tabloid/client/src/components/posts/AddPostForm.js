@@ -31,7 +31,6 @@ const AddPostForm = () => {
 
     const handleSubmit = (event) => {
         const file = document.querySelector('input[type="file"]').files[0];
-        console.log(file);
 
         const Post = {
             title: title.current.value,
@@ -53,23 +52,25 @@ const AddPostForm = () => {
             return
         }
 
-        addPost(Post, chosenTags)
-            .then(resp => {
-                if (file != "") {
-                    const postId = resp.id;
-                    const posterId = resp.userProfileId;
+        if (file !== "") {
+            //get file extension
+            const extension = file.name.split('.').pop();
+            const newImageName = `${new Date().getTime()}.${extension}`;
 
-                    //get file extension
-                    const extension = file.name.split('.').pop();
+            const formData = new FormData();
+            formData.append('file', file, newImageName);
 
-                    const newImageName = `${posterId}_${postId}.${extension}`;
+            try {
+                uploadImage(formData, newImageName);
+            } catch {
+                window.alert("Image could not be uploaded.")
+            }
+            Post.imageLocation = newImageName;
+        } else {
+            Post.imageLocation = null;
+        }
 
-                    const formData = new FormData();
-                    formData.append('file', file, newImageName);
-
-                    uploadImage(formData, newImageName);
-                }
-            })
+        addPost(Post, chosenTags);
     }
     return (
         <div className="d-flex justify-content-center">

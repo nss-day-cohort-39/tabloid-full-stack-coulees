@@ -97,9 +97,8 @@ export const PostProvider = (props) => {
                 }
                 return resp;
             })
-                .then(resp => { getAllPosts(); return resp; }));
-        // .then(resp => history.push(`/posts/${resp.id}`))
-        // .then(getAllPosts));
+                .then(resp => history.push(`/posts/${resp.id}`))
+                .then(getAllPosts));
     };
 
     const deletePost = (id) => {

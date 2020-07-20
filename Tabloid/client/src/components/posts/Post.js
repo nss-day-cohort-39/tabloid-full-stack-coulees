@@ -37,11 +37,11 @@ const Post = ({ post }) => {
         <>
             <Card className="m-2" id={`post-${post.id}`}>
                 {
-                    post.imageLocation === ""
+                    post.imageLocation === "" || post.imageLocation === null
                         ?
                         <CardImg top />
                         :
-                        <CardImg top src={post.imageLocation} alt={post.title} />
+                        <CardImg top src={post.imageLocation[0] === "h" ? post.imageLocation : `/images/headers/${post.imageLocation}`} alt={post.title} />
                 }
                 <CardBody>
                     <div className="d-flex justify-content-between">

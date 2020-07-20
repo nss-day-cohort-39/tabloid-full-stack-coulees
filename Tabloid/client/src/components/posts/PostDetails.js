@@ -117,13 +117,13 @@ const PostDetails = () => {
                 }
                 {renderButtons(post, currentUserId)}
                 {
-                    post.imageLocation === ""
+                    post.imageLocation === "" || post.imageLocation === null
                         ?
                         ""
                         :
                         <>
                             <hr />
-                            <img src={post.imageLocation} alt={post.title} className="largeImage" />
+                            <img src={post.imageLocation[0] === "h" ? post.imageLocation : `/images/headers/${post.imageLocation}`} alt={post.title} className="largeImage" />
                         </>
 
                 }

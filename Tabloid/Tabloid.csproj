@@ -9,6 +9,22 @@
   </ItemGroup>
 
   <ItemGroup>
+    <None Remove="client\public\images\headers\11_87.jpg" />
+    <None Remove="client\public\images\headers\1595271590577.jpg" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Include="client\public\images\headers\11_87.jpg">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+    <Content Include="client\public\images\headers\1595271590577.jpg">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+  </ItemGroup>
+
+  <ItemGroup>
     <None Include="appsettings.Local.json" />
   </ItemGroup>
 

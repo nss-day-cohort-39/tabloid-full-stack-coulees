@@ -33,7 +33,7 @@ namespace Tabloid.Controllers
         [HttpPost]
         public IActionResult Upload(IFormFile file)
         {
-            string savePath = "wwwroot/images/headers/";
+            string savePath = "client/public/images/headers/";
 
             using var image = Image.Load(file.OpenReadStream());
             //image.Mutate(x => x.Resize(256, 256));
