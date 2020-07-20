@@ -30,9 +30,8 @@ const AddPostForm = () => {
     }
 
     const handleSubmit = (event) => {
-        const formData = new FormData();
-        formData.append('file', document.querySelector('input[type="file"]').files[0]);
-        console.log(formData.getAll('file'))
+        const file = document.querySelector('input[type="file"]').files[0];
+        console.log(file);
 
         const Post = {
             title: title.current.value,
@@ -53,8 +52,24 @@ const AddPostForm = () => {
             window.alert("Post must have content.")
             return
         }
-        uploadImage(formData)
-        //addPost(Post, chosenTags)
+
+        addPost(Post, chosenTags)
+            .then(resp => {
+                if (file != "") {
+                    const postId = resp.id;
+                    const posterId = resp.userProfileId;
+
+                    //get file extension
+                    const extension = file.name.split('.').pop();
+
+                    const newImageName = `${posterId}_${postId}.${extension}`;
+
+                    const formData = new FormData();
+                    formData.append('file', file, newImageName);
+
+                    uploadImage(formData, newImageName);
+                }
+            })
     }
     return (
         <div className="d-flex justify-content-center">

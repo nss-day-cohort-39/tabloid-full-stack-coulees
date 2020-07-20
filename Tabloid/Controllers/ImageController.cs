@@ -6,6 +6,8 @@ using Microsoft.AspNetCore.Authorization;
 using System.Security.Claims;
 using System.Collections.Generic;
 using Microsoft.AspNetCore.Http;
+using SixLabors.ImageSharp;
+using SixLabors.ImageSharp.Processing;
 
 namespace Tabloid.Controllers
 {
@@ -31,7 +33,12 @@ namespace Tabloid.Controllers
         [HttpPost]
         public IActionResult Upload(IFormFile file)
         {
-            // ...
+            string savePath = "wwwroot/images/headers/";
+
+            using var image = Image.Load(file.OpenReadStream());
+            //image.Mutate(x => x.Resize(256, 256));
+
+            image.Save(savePath+file.FileName);
             return Ok();
         }
 

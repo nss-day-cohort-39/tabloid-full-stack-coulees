@@ -64,7 +64,7 @@ export const PostProvider = (props) => {
     };
 
     const addPost = (post, tags = []) => {
-        getToken().then((token) =>
+        return getToken().then((token) =>
             fetch(apiUrl, {
                 method: "POST",
                 headers: {
@@ -97,8 +97,9 @@ export const PostProvider = (props) => {
                 }
                 return resp;
             })
-                .then(resp => history.push(`/posts/${resp.id}`))
-                .then(getAllPosts));
+                .then(resp => { getAllPosts(); return resp; }));
+        // .then(resp => history.push(`/posts/${resp.id}`))
+        // .then(getAllPosts));
     };
 
     const deletePost = (id) => {
