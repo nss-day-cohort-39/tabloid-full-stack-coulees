@@ -95,7 +95,7 @@ const PostDetails = () => {
                 <>
                     <hr />
                     <h5>
-                        Subscribe to Author
+                        Subscribe to Author:
                         <Button color='info' size='sm' className='ml-2' onClick={() => handleSubscription(post, currentUserId)}>Subscribe</Button>
                     </h5>
                 </>
