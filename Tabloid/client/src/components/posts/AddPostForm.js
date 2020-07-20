@@ -60,7 +60,9 @@ const AddPostForm = () => {
             return
         }
 
-        if (file !== "") {
+        //code for handling the image upload
+        if (file !== undefined) {
+            console.log(file);
             //get file extension
             const extension = file.name.split('.').pop();
 
@@ -105,7 +107,10 @@ const AddPostForm = () => {
                     </FormGroup>
                     <FormGroup>
                         <Label for="imageUpload">Header Image <small className="text-muted font-italic">(Optional)</small></Label>
-                        <Input type="file" name="file" id="imageUpload" onChange={previewImage} />
+                        <div className="d-flex justify-content-between">
+                            <Input type="file" name="file" id="imageUpload" onChange={previewImage} />
+                            <Button type="button" color="light" onClick={e => { setPreview(null); document.querySelector('input[type="file"]').value = null; }}>Clear</Button>
+                        </div>
                     </FormGroup>
                     <FormGroup>
                         {
