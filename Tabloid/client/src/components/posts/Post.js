@@ -49,7 +49,7 @@ const Post = ({ post }) => {
                         {
                             post.categoryId !== 0
                                 ?
-                                <h6><Badge className="text-left ml-1 p-2 badge-secondary badge-outlined">{post.category.name}</Badge></h6>
+                                <h6><Badge className="text-left ml-1 p-2 badge-secondary badge-outlined">{post?.category?.name}</Badge></h6>
                                 :
                                 ""
                         }
@@ -57,12 +57,12 @@ const Post = ({ post }) => {
 
                             post.categoryId === 0 && currentUserId === post.userProfileId
                                 ?
-                                <h6><Badge className="text-left ml-1 p-2 badge-secondary badge-outlined">{post.category.name}</Badge></h6>
+                                <h6><Badge className="text-left ml-1 p-2 badge-secondary badge-outlined">{post?.category?.name}</Badge></h6>
                                 :
                                 ""
                         }
                     </div>
-                    <div className="text-left px-2 lead">by <Link to={`/users/${post.userProfile.firebaseUserId}`}>{post.userProfile.fullName}</Link></div>
+                    <div className="text-left px-2 lead">by <Link to={`/users/${post?.userProfile?.firebaseUserId}`}>{post?.userProfile?.fullName}</Link></div>
 
                     {/* {postTags.map(tag => {
                     return (<Badge key={"tag-" + tag.id} color="info" className="mr-2 mb-2 px-2">{tag.tag.name}</Badge>)

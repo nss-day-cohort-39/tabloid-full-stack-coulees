@@ -14,8 +14,6 @@ export const PostProvider = (props) => {
     const apiUrl = '/api/post'
     const history = useHistory();
 
-
-
     const getAllPosts = () => {
         getToken().then((token) =>
             fetch(apiUrl, {
@@ -159,10 +157,22 @@ export const PostProvider = (props) => {
                 .then(() => { getAllPostTags(post.id); }))
     }
 
+    const searchPosts = (searchString) => {
+        getToken().then((token) =>
+            fetch(apiUrl + `/search?searchString=${searchString}`, {
+                method: "GET",
+                headers: {
+                    Authorization: `Bearer ${token}`
+                }
+            })
+                .then((res) => res.json())
+                .then(setPosts));
+    };
+
     return (
         <PostContext.Provider value={{
             posts, getAllPosts, addPost, getPost, deletePost, post,
-            getPostsByCurrentUser, getPublishedPosts, updatePost
+            getPostsByCurrentUser, getPublishedPosts, updatePost, searchPosts
         }}>
             {props.children}
         </PostContext.Provider>

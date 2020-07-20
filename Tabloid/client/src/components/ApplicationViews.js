@@ -16,6 +16,7 @@ import TagForm from "./tags/TagForm";
 import UserList from "./users/UserList";
 import UserDetails from "./users/UserDetails";
 import CommentList from "./comment/CommentList";
+import PostSearch from "./posts/SearchPosts";
 
 export default function ApplicationViews() {
   const { isLoggedIn } = useContext(UserProfileContext);
@@ -23,6 +24,11 @@ export default function ApplicationViews() {
   return (
     <main>
       <Switch>
+
+        {/* <Route path="/search">
+          {isLoggedIn ? <PostSearch /> : <Redirect to="/login" />}
+        </Route> */}
+
         <Route path="/" exact>
           {isLoggedIn ? <Hello /> : <Redirect to="/login" />}
         </Route>
@@ -67,6 +73,7 @@ export default function ApplicationViews() {
         <Route path="/users/:firebaseUserId" exact>
           {isLoggedIn ? <UserDetails /> : <Redirect to="/login" />}
         </Route>
+
         <Route path="/CommentList/:id">
           {isLoggedIn ? <CommentList /> : <Redirect to="/login" />}
         </Route>

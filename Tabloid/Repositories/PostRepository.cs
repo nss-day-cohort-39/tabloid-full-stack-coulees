@@ -10,6 +10,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Data.SqlClient;
 using System.Collections;
+using System.Threading.Tasks.Dataflow;
 
 namespace Tabloid.Repositories
 {
@@ -39,17 +40,6 @@ namespace Tabloid.Repositories
                             .OrderByDescending(p => p.PublishDateTime)
                             .ToList();
         }
-        //public List<Post> Search(string criterion, bool sortDescending)
-        //{
-        //    var query = _context.Post
-        //                        .Include(p => p.UserProfile)
-        //                        .Where(p => p.Title.Contains(criterion));
-
-        //    return sortDescending
-        //        ? query.OrderByDescending(p => p.CreateDateTime).ToList()
-        //        : query.OrderBy(p => p.CreateDateTime).ToList();
-        //}
-
         public Post GetById(int id)
         {
             return _context.Post
@@ -105,6 +95,15 @@ namespace Tabloid.Repositories
                             .ToList();
         }
 
+        //JOIN Tag t ON t.Id = PostTag.TagId
+        //JOIN Category c ON c.id = p.CategoryId
+        //           JOIN UserProfile up ON up.Id = p.UserProfileId
+        //           JOIN PostTag pt ON pt.PostId = p.Id
+
+
+
+        //OR LOWER(c.Name) LIKE @searchString
+        //OR LOWER(up.DisplayName) LIKE @searchString
         public List<Post> Search(string searchString)
         {
             using (var conn = new SqlConnection(_connectionString))
@@ -112,13 +111,18 @@ namespace Tabloid.Repositories
                 conn.Open();
                 using (var cmd = conn.CreateCommand())
                 {
-                    cmd.CommandText = "SELECT p.Id, p.Title, p.Content, p.CreateDateTime, p.PublishDateTime, p.IsApproved, p.CategoryId, p.UserProfileId, p.ImageLocation " +
-                    "FROM Post p WHERE LOWER(p.Title) LIKE @searchString OR LOWER(cast(p.Content as varchar(max))) LIKE @searchString";
+                    cmd.CommandText = @"
+                    SELECT p.Id, p.Title, p.Content, p.CreateDateTime, 
+                           p.PublishDateTime, p.IsApproved, p.CategoryId, 
+                           p.UserProfileId, p.ImageLocation
+                    FROM Post p
+                    WHERE LOWER(p.Title) LIKE @searchString 
+                    OR LOWER(cast(p.Content as varchar(max))) LIKE @searchString";
                     string[] searchWordsArray = searchString.Split(' ');
                     IEnumerable<string> newWordsArray = searchWordsArray.Select(word => $"%{word}%");
                     string searchWords = string.Join("|", newWordsArray);
-
                     cmd.Parameters.AddWithValue("@searchString", searchWords.ToLower());
+                    
                     var reader = cmd.ExecuteReader();
                     var posts = new List<Post>();
                     while (reader.Read())
@@ -129,16 +133,22 @@ namespace Tabloid.Repositories
                             Title = reader.GetString(reader.GetOrdinal("Title")),
                             Content = reader.GetString(reader.GetOrdinal("Content")),
                             CreateDateTime = reader.GetDateTime(reader.GetOrdinal("CreateDateTime")),
-                            PublishDateTime = reader.GetDateTime(reader.GetOrdinal("PublishDateTime")),
                             IsApproved = reader.GetBoolean(reader.GetOrdinal("IsApproved")),
                             CategoryId = reader.GetInt32(reader.GetOrdinal("CategoryId")),
                             UserProfileId = reader.GetInt32(reader.GetOrdinal("UserProfileId"))
+
                         };
 
                         if (!reader.IsDBNull(reader.GetOrdinal("ImageLocation")))
 
                         {
                             post.ImageLocation = reader.GetString(reader.GetOrdinal("ImageLocation"));
+                        }
+
+                        if (!reader.IsDBNull(reader.GetOrdinal("PublishDateTime")))
+
+                        {
+                            post.PublishDateTime = reader.GetDateTime(reader.GetOrdinal("PublishDateTime"));
                         }
 
                         posts.Add(post);
