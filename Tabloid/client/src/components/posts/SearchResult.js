@@ -9,7 +9,13 @@ const SearchResult = ({ result, show }) => {
         <DropdownItem>
             <Card onMouseEnter={() => showCollapse(true)} onMouseLeave={() => showCollapse(false)}>
                 <Link to={`/posts/${result.id}`} onClick={() => show(false)} >
-                    {result.imageLocation ? <CardImg top src={result.imageLocation} /> : ""}
+                    {
+                        result.imageLocation === "" || result.imageLocation === null
+                            ?
+                            <CardImg top />
+                            :
+                            <CardImg top src={result.imageLocation[0] === "h" ? result.imageLocation : `/images/headers/${result.imageLocation}`} alt={result.title} />
+                    }
                     <CardHeader>{result.title}</CardHeader>
                 </Link>
                 <Collapse isOpen={collapse}>
