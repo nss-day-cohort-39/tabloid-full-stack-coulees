@@ -141,7 +141,7 @@ namespace Tabloid.Repositories
                         OR LOWER(up.DisplayName) LIKE @searchString
                         OR LOWER(t.Name) LIKE @searchString";
 
-                        //string searchWords = string.Join("|", newWordsArray);
+               
 
                         cmd.Parameters.AddWithValue("@searchString", searchWords.ToLower());
 
