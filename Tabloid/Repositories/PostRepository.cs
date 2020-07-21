@@ -134,7 +134,6 @@ namespace Tabloid.Repositories
 
                         cmd.Parameters.AddWithValue("@searchString", searchWords.ToLower());
 
-
                         var reader = cmd.ExecuteReader();
                     
                         while (reader.Read())
@@ -193,7 +192,7 @@ namespace Tabloid.Repositories
 
                     }
                 }
-                return posts;
+                return posts.GroupBy(p => p.Id).Select(p => p.FirstOrDefault()).ToList(); 
             }
         }
 
