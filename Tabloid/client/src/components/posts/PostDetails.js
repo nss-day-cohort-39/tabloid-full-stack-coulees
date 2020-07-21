@@ -1,5 +1,5 @@
 import React, { useContext, useEffect, useState, useReducer } from 'react';
-import { Link, useParams } from "react-router-dom";
+import { Link, useParams, useHistory } from "react-router-dom";
 import { PostContext } from '../../providers/PostProvider';
 import { Button, Modal, ModalHeader, ModalBody, Badge, Spinner } from 'reactstrap';
 import EditPostForm from './EditPostForm';
@@ -55,11 +55,7 @@ const PostDetails = () => {
             .then(setTags)
             //9. Turn off the spinner and display the content
             .then(() => setReady(true))
-    }, []);
-
-    if (!post) {
-        return null;
-    }
+    }, [id]);
 
     //Event Handler Functions
     const confirmDelete = () => {
@@ -167,7 +163,7 @@ const PostDetails = () => {
                         {
                             post.categoryId !== 0
                                 ?
-                                <h4><Badge className="text-left ml-1 p-2 badge-secondary badge-outlined">{post.category.name}</Badge></h4>
+                                <h4><Badge className="text-left ml-1 p-2 badge-secondary badge-outlined">{post.category?.name}</Badge></h4>
                                 :
                                 ""
                         }
@@ -180,8 +176,8 @@ const PostDetails = () => {
                                 ""
                         }
                     </div>
-                    <h4 className="font-weight-normal">by <Link to={`/users/${post.userProfile.firebaseUserId}`}>{post.userProfile.fullName}</Link></h4>
-                    <h4 className="font-weight-normal">{dateTimeFormat === undefined ? "Unpublished" : "Posted" + dateTimeFormat}</h4>
+                    <h4 className="font-weight-normal">by <Link to={`/users/${post.userProfile?.firebaseUserId}`}>{post.userProfile?.fullName}</Link></h4>
+                    <h4 className="font-weight-normal">{dateTimeFormat === undefined ? "Unpublished" : "Posted " + dateTimeFormat}</h4>
                     {
                         postTags.length > 0
                             ?
@@ -216,7 +212,7 @@ const PostDetails = () => {
         );
     }
     else {
-        return <Spinner />
+        return <Spinner className="app-spinner dark" />
     }
 
 };

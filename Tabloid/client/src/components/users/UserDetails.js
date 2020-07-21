@@ -10,7 +10,7 @@ const UserDetails = () => {
 
     useEffect(() => {
         getUserProfile(firebaseUserId).then(() => set(true))
-    }, [])
+    }, [firebaseUserId])
 
     const date = new Date(user.createDateTime)
     const formattedDate = (((date.getMonth() > 8) ? (date.getMonth() + 1) : ('0' + (date.getMonth() + 1))) + '/' + ((date.getDate() > 9) ? date.getDate() : ('0' + date.getDate())) + '/' + date.getFullYear())

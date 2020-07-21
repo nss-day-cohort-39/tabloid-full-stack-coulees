@@ -153,15 +153,14 @@ export const PostProvider = (props) => {
     }
 
     const searchPosts = (searchString) => {
-        getToken().then((token) =>
+        return getToken().then((token) =>
             fetch(apiUrl + `/search?searchString=${searchString}`, {
                 method: "GET",
                 headers: {
                     Authorization: `Bearer ${token}`
                 }
             })
-                .then((res) => res.json())
-                .then(setPosts));
+                .then((res) => res.json()));
     };
 
     return (
