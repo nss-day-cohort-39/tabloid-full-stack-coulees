@@ -13,7 +13,7 @@ const TagList = () => {
         getAllTags()
     }, []);
 
-    //modal states for the delete tag pop up
+    //modal states for the add tag pop up
     const [addModal, setAddModal] = useState(false)
     const addModalToggle = () => setAddModal(!addModal)
 
