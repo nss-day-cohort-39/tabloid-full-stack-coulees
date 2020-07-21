@@ -11,6 +11,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Data.SqlClient;
 using System.Collections;
 using System.Threading.Tasks.Dataflow;
+using System;
 
 namespace Tabloid.Repositories
 {
@@ -135,6 +136,7 @@ namespace Tabloid.Repositories
                     
                     
                         WHERE LOWER(p.Title) LIKE @searchString
+                        WHERE p.IsApproved = 1
 
                         OR LOWER(cast(p.Content as varchar(max))) LIKE @searchString
                         OR LOWER(c.Name) LIKE @searchString
@@ -203,7 +205,7 @@ namespace Tabloid.Repositories
 
                     }
                 }
-                return posts.GroupBy(p => p.Id).Select(p => p.FirstOrDefault()).ToList(); 
+                return posts.Where(p => p.PublishDateTime < DateTime.Now).GroupBy(p => p.Id).Select(p => p.FirstOrDefault()).ToList(); 
             }
         }
 
