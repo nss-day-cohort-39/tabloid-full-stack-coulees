@@ -6,6 +6,7 @@ import EditPostForm from './EditPostForm';
 import { PostTagContext } from '../../providers/PostTagProvider';
 import CommentList from '../comment/CommentList';
 import { SubscriptionContext } from '../../providers/SubscriptionProvider';
+import { ImageContext } from '../../providers/ImageProvider';
 
 const PostDetails = () => {
     //State Variables And Context
@@ -21,6 +22,7 @@ const PostDetails = () => {
     const [postTags, setTags] = useState([])
     const [subscription, setSub] = useState([])
     const [ready, setReady] = useState(false)
+    const { deleteImage } = useContext(ImageContext)
 
     useEffect(() => {
         //On render:
@@ -63,6 +65,7 @@ const PostDetails = () => {
     const confirmDelete = () => {
         showDelete(false)
         deletePost(post.id)
+            .then(deleteImage(post.imageLocation))
     }
     const handleUnsubscribe = () => {
         unsubscribe(subscription.id)
@@ -178,7 +181,7 @@ const PostDetails = () => {
                         }
                     </div>
                     <h4 className="font-weight-normal">by <Link to={`/users/${post.userProfile.firebaseUserId}`}>{post.userProfile.fullName}</Link></h4>
-                    <h4 className="font-weight-normal">Posted {dateTimeFormat ? dateTimeFormat : ''}</h4>
+                    <h4 className="font-weight-normal">{dateTimeFormat === undefined ? "Unpublished" : "Posted" + dateTimeFormat}</h4>
                     {
                         postTags.length > 0
                             ?

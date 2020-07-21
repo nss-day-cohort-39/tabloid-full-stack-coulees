@@ -37,14 +37,14 @@ const EditPostForm = ({ showEdit, postId }) => {
                 setPost(post)
                 return post
             })
-            // .then((post) => {
-            //     setPublishDate(post.publishDateTime);
-            //     if (post.imageLocation !== null && post.imageLocation !== "") {
-            //         setPreview(post.imageLocation);
-            //     } else {
-            //         setPreview(null);
-            //     }
-            // })
+            .then((post) => {
+                setPublishDate(post.publishDateTime);
+                if (post.imageLocation !== null && post.imageLocation !== "") {
+                    setPreview(post.imageLocation);
+                } else {
+                    setPreview(null);
+                }
+            })
             .then(() => set(true))
 
         getAllCategory()
@@ -66,14 +66,14 @@ const EditPostForm = ({ showEdit, postId }) => {
     const title = useRef()
     const content = useRef()
 
-    // //handle the image upload preview area
-    // const [preview, setPreview] = useState(null);
+    //handle the image upload preview area
+    const [preview, setPreview] = useState(null);
 
-    // const previewImage = e => {
-    //     if (e.target.files.length) {
-    //         setPreview(URL.createObjectURL(e.target.files[0]));
-    //     }
-    // };
+    const previewImage = e => {
+        if (e.target.files.length) {
+            setPreview(URL.createObjectURL(e.target.files[0]));
+        }
+    };
 
     //state to store the tag array
     const [chosenTags, setChosenTags] = useState([]);
@@ -107,9 +107,8 @@ const EditPostForm = ({ showEdit, postId }) => {
             }
 
             newImageName = `${new Date().getTime()}.${extension}`;
+            Post.imageLocation = newImageName;
         }
-
-        //setPreview(null);
 
         Post.title = title.current.value;
         Post.content = content.current.value;
@@ -144,7 +143,7 @@ const EditPostForm = ({ showEdit, postId }) => {
                     uploadImage(formData, newImageName)
                         .then(deleteImage(post.imageLocation)); //delete old image
 
-                    Post.imageLocation = newImageName;
+                    setPreview(null);
                 }
             })
             .then(() => {
@@ -169,17 +168,17 @@ const EditPostForm = ({ showEdit, postId }) => {
                     <FormGroup>
                         <Label for="imageUpload">Header Image <small className="text-muted font-italic">(Optional)</small></Label>
                         <div className="d-flex justify-content-between">
-                            <Input type="file" name="file" id="imageUpload" />
-                            {/* <Button type="button" color="light" onClick={/e => { setPreview(null); document.querySelector('input[type="file"]').value = null; }}>Clear</Button> */}
+                            <Input type="file" name="file" id="imageUpload" onChange={e => previewImage(e)} />
+                            <Button type="button" color="light" onClick={e => { setPreview(null); document.querySelector('input[type="file"]').value = null; post.imageLocation = null; }}>Clear</Button>
                         </div>
                     </FormGroup>
                     <FormGroup>
                         {
-                            // preview === null
-                            //     ?
-                            //     <Alert color="light">No image selected</Alert>
-                            //     :
-                            //     <img src={preview[0] === "b" || preview.startsWith("http") ? preview : `/images/headers/${preview}`} alt="image preview" className="img-thumbnail" />
+                            preview === null
+                                ?
+                                <Alert color="light">No image selected</Alert>
+                                :
+                                <img src={preview[0] === "b" || preview.startsWith("http") ? preview : `/images/headers/${preview}`} alt="image preview" className="img-thumbnail" />
 
                         }
                     </FormGroup>
