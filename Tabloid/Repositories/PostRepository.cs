@@ -134,9 +134,7 @@ namespace Tabloid.Repositories
                         LEFT JOIN PostTag pt ON pt.PostId = p.Id
                         LEFT JOIN Tag t ON pt.TagId = t.Id
                     
-                    
                         WHERE LOWER(p.Title) LIKE @searchString
-                        WHERE p.IsApproved = 1
 
                         OR LOWER(cast(p.Content as varchar(max))) LIKE @searchString
                         OR LOWER(c.Name) LIKE @searchString
@@ -205,7 +203,7 @@ namespace Tabloid.Repositories
 
                     }
                 }
-                return posts.Where(p => p.PublishDateTime < DateTime.Now).GroupBy(p => p.Id).Select(p => p.FirstOrDefault()).ToList(); 
+                return posts.Where(p => p.PublishDateTime <= DateTime.Now).Where(p => p.IsApproved == true).GroupBy(p => p.Id).Select(p => p.FirstOrDefault()).ToList(); 
             }
         }
 
