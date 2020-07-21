@@ -17,7 +17,6 @@ export const ImageProvider = (props) => {
                 body: data
             }).then(resp => {
                 if (resp.ok) {
-                    console.log(data);
                     return;
                 }
                 throw new Error("The image could not be uploaded.");
