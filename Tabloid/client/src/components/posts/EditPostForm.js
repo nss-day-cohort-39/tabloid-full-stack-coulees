@@ -6,6 +6,7 @@ import { PostTagContext } from '../../providers/PostTagProvider';
 import PostTagForm from './PostTagForm';
 import { CategoryContext } from '../../providers/CategoryProvider';
 import { ImageContext } from '../../providers/ImageProvider';
+import { useHistory, useLocation } from 'react-router-dom'
 
 //There are two ways to access this form:
 //1) By the post list views; and 2) By the post details view
@@ -19,7 +20,10 @@ const EditPostForm = ({ showEdit, postId }) => {
     const id = postId;
     const { postTags, getAllPostTags } = useContext(PostTagContext);
     const { categories, getAllCategory } = useContext(CategoryContext);
-    const { uploadImage } = useContext(ImageContext)
+    const { uploadImage, deleteImage } = useContext(ImageContext)
+
+    let location = useLocation();
+    const history = useHistory();
 
     const [categorySelect, setCategorySelection] = useState("");
 
@@ -33,14 +37,14 @@ const EditPostForm = ({ showEdit, postId }) => {
                 setPost(post)
                 return post
             })
-            .then((post) => {
-                setPublishDate(post.publishDateTime);
-                if (post.imageLocation !== null && post.imageLocation !== "") {
-                    setPreview(post.imageLocation);
-                } else {
-                    setPreview(null);
-                }
-            })
+            // .then((post) => {
+            //     setPublishDate(post.publishDateTime);
+            //     if (post.imageLocation !== null && post.imageLocation !== "") {
+            //         setPreview(post.imageLocation);
+            //     } else {
+            //         setPreview(null);
+            //     }
+            // })
             .then(() => set(true))
 
         getAllCategory()
@@ -62,14 +66,14 @@ const EditPostForm = ({ showEdit, postId }) => {
     const title = useRef()
     const content = useRef()
 
-    //handle the image upload preview area
-    const [preview, setPreview] = useState(null);
+    // //handle the image upload preview area
+    // const [preview, setPreview] = useState(null);
 
-    const previewImage = e => {
-        if (e.target.files.length) {
-            setPreview(URL.createObjectURL(e.target.files[0]));
-        }
-    };
+    // const previewImage = e => {
+    //     if (e.target.files.length) {
+    //         setPreview(URL.createObjectURL(e.target.files[0]));
+    //     }
+    // };
 
     //state to store the tag array
     const [chosenTags, setChosenTags] = useState([]);
@@ -77,34 +81,12 @@ const EditPostForm = ({ showEdit, postId }) => {
     const handleSubmit = e => {
         e.preventDefault();
         const file = document.querySelector('input[type="file"]').files[0];
+        console.log(file);
 
-        const Post = {
-
-            title: title.current.value,
-            content: content.current.value,
-            publishDateTime: publishDate,
-            publishDateTime: publishDate,
-            categoryId: (categorySelect !== "" ? +categorySelect : post.categoryId)
-        }
-        if (categorySelect === "") {
-            Post.categoryId = post.categoryId;
-        }
-        if (!Post.title.length) {
-            window.alert("Post must have a title.")
-            return
-        }
-        if (!Post.content.length) {
-            window.alert("Post must have content.")
-            return
-        }
-        //add back all of the values that the user is not allowed to change
-        Post.id = post.id
-        Post.createDateTime = post.createDateTime
-        Post.userProfileId = post.userProfileId
-        Post.isApproved = post.isApproved
+        const Post = {};
 
         //code for handling the image upload
-        if (preview === null) {
+        if (file === undefined) {
             Post.imageLocation = null;
         } else {
             //get file extension
@@ -128,14 +110,43 @@ const EditPostForm = ({ showEdit, postId }) => {
                 const formData = new FormData();
                 formData.append('file', file, newImageName);
 
-                uploadImage(formData, newImageName);
+                uploadImage(formData, newImageName)
+                    .then(deleteImage(post.imageLocation)); //delete old image
 
                 Post.imageLocation = newImageName;
             }
         }
-        setPreview(null);
+        //setPreview(null);
+
+        Post.title = title.current.value;
+        Post.content = content.current.value;
+        Post.publishDateTime = publishDate;
+        Post.categoryId = (categorySelect !== "" ? +categorySelect : post.categoryId);
+
+        if (categorySelect === "") {
+            Post.categoryId = post.categoryId;
+        }
+        if (!Post.title.length) {
+            window.alert("Post must have a title.")
+            return
+        }
+        if (!Post.content.length) {
+            window.alert("Post must have content.")
+            return
+        }
+        //add back all of the values that the user is not allowed to change
+        Post.id = post.id
+        Post.createDateTime = post.createDateTime
+        Post.userProfileId = post.userProfileId
+        Post.isApproved = post.isApproved
+
+        console.log(Post)
 
         updatePost(Post, chosenTags)
+            .then(() => {
+                history.push({ pathname: "/empty" });
+                history.replace({ pathname: location.pathname })
+            })
         if (showEdit) {
             showEdit(false)
         }
@@ -145,7 +156,7 @@ const EditPostForm = ({ showEdit, postId }) => {
     if (ready === true && tagReady === true) {
         return (
             <div className="container">
-                <Form>
+                <Form encType="multipart/form-data">
                     <FormGroup>
                         <Label for="title">Post Title</Label>
                         <Input type='text' name='Title' id='postTitle' innerRef={title} defaultValue={post ? post.title : ''}
@@ -154,17 +165,17 @@ const EditPostForm = ({ showEdit, postId }) => {
                     <FormGroup>
                         <Label for="imageUpload">Header Image <small className="text-muted font-italic">(Optional)</small></Label>
                         <div className="d-flex justify-content-between">
-                            <Input type="file" name="file" id="imageUpload" onChange={previewImage} />
-                            <Button type="button" color="light" onClick={e => { setPreview(null); document.querySelector('input[type="file"]').value = null; }}>Clear</Button>
+                            <Input type="file" name="file" id="imageUpload" />
+                            {/* <Button type="button" color="light" onClick={/e => { setPreview(null); document.querySelector('input[type="file"]').value = null; }}>Clear</Button> */}
                         </div>
                     </FormGroup>
                     <FormGroup>
                         {
-                            preview === null
-                                ?
-                                <Alert color="light">No image selected</Alert>
-                                :
-                                <img src={preview[0] === "b" || preview.startsWith("http") ? preview : `/images/headers/${preview}`} alt="image preview" className="img-thumbnail" />
+                            // preview === null
+                            //     ?
+                            //     <Alert color="light">No image selected</Alert>
+                            //     :
+                            //     <img src={preview[0] === "b" || preview.startsWith("http") ? preview : `/images/headers/${preview}`} alt="image preview" className="img-thumbnail" />
 
                         }
                     </FormGroup>

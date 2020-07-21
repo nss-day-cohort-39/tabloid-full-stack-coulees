@@ -62,5 +62,22 @@ namespace Tabloid.Controllers
             return Ok();
         }
 
+        [HttpDelete]
+        public IActionResult Remove(string fileName)
+        {
+            string deletePath = $"client/public/images/headers/{fileName}";
+
+
+            if ((System.IO.File.Exists(deletePath)))
+            {
+                System.IO.File.Delete(deletePath);
+                return Ok();
+            } else
+            {
+                return Conflict();
+            }
+
+        }
+
     }
 }

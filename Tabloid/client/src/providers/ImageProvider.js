@@ -8,7 +8,7 @@ export const ImageProvider = (props) => {
     const { getToken } = useContext(UserProfileContext)
 
     const uploadImage = (data) => {
-        getToken().then((token) =>
+        return getToken().then((token) =>
             fetch('/api/image', {
                 method: "POST",
                 headers: {
@@ -24,9 +24,27 @@ export const ImageProvider = (props) => {
             }));
     };
 
+    const deleteImage = (image) => {
+        getToken().then((token) =>
+            fetch(`/api/image?fileName=${image}`, {
+                method: "DELETE",
+                headers: {
+                    Authorization: `Bearer ${token}`,
+                    "Content-Type": "application/json"
+                }
+            }).then(resp => {
+                if (resp.ok) {
+                    return
+                }
+                else {
+                    window.alert("The image could not be deleted")
+                }
+            }));
+    };
+
     return (
         <ImageContext.Provider value={{
-            uploadImage
+            uploadImage, deleteImage
         }}>
             {props.children}
         </ImageContext.Provider>

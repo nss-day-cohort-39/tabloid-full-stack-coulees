@@ -91,7 +91,7 @@ export const PostProvider = (props) => {
                             }));
                     }
                 }
-                return resp;
+                console.log(resp);
             })
                 .then(resp => history.push(`/posts/${resp.id}`))
                 .then(getAllPosts));
@@ -151,7 +151,6 @@ export const PostProvider = (props) => {
                     }
                 })
                 .then(getPost(post.id))
-                .then(() => history.push(`/posts/${post.id}`))
                 .then(() => { getAllPostTags(post.id); }))
     }
 

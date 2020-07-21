@@ -158,47 +158,48 @@ const PostDetails = () => {
         return (
             <>
                 <div className="container">
-                    <h2 className="d-flex justify-content-between">
-                        {post.title}
+                    <div className="d-flex justify-content-between">
+                        <h2 className="d-flex justify-content-between">
+                            {post.title}</h2>
                         {
                             post.categoryId !== 0
                                 ?
-                                <Badge className="text-left ml-1 p-2 badge-secondary badge-outlined">{post.category.name}</Badge>
+                                <h4><Badge className="text-left ml-1 p-2 badge-secondary badge-outlined">{post.category.name}</Badge></h4>
                                 :
                                 ""
                         }
                         {
 
-                        post.categoryId === 0 && currentUserId === post.userProfileId
+                            post.categoryId === 0 && currentUserId === post.userProfileId
+                                ?
+                                <h4><Badge className="text-left ml-1 p-2 badge-secondary badge-outlined">{post.category.name}</Badge></h4>
+                                :
+                                ""
+                        }
+                    </div>
+                    <h4 className="font-weight-normal">by <Link to={`/users/${post.userProfile.firebaseUserId}`}>{post.userProfile.fullName}</Link></h4>
+                    <h4 className="font-weight-normal">Posted {dateTimeFormat ? dateTimeFormat : ''}</h4>
+                    {
+                        postTags.length > 0
                             ?
-                            <h4><Badge className="text-left ml-1 p-2 badge-secondary badge-outlined">{post.category.name}</Badge></h4>
+                            <h5 className="mt-3">
+                                {postTags.map(tag => {
+                                    return (<Badge key={"tag-" + tag.id} className="mr-2 mb-2 px-2 badge-outlined badge-info">{tag.tag.name}</Badge>)
+                                })}
+                            </h5>
                             :
                             ""
                     }
-                </div>
-                <h4 className="font-weight-normal">by <Link to={`/users/${post.userProfile.firebaseUserId}`}>{post.userProfile.fullName}</Link></h4>
-                <h4 className="font-weight-normal">Posted {dateTimeFormat ? dateTimeFormat : ''}</h4>
-                {
-                    postTags.length > 0
-                        ?
-                        <h5 className="mt-3">
-                            {postTags.map(tag => {
-                                return (<Badge key={"tag-" + tag.id} className="mr-2 mb-2 px-2 badge-outlined badge-info">{tag.tag.name}</Badge>)
-                            })}
-                        </h5>
-                        :
-                        ""
-                }
-                {renderButtons(post, currentUserId)}
-                {
-                    post.imageLocation === "" || post.imageLocation === null
-                        ?
-                        ""
-                        :
-                        <>
-                            <hr />
-                            <img src={post.imageLocation[0] === "h" ? post.imageLocation : `/images/headers/${post.imageLocation}`} alt={post.title} className="largeImage" />
-                        </>
+                    {renderButtons(post, currentUserId)}
+                    {
+                        post.imageLocation === "" || post.imageLocation === null
+                            ?
+                            ""
+                            :
+                            <>
+                                <hr />
+                                <img src={post.imageLocation[0] === "h" ? post.imageLocation : `/images/headers/${post.imageLocation}`} alt={post.title} className="largeImage" />
+                            </>
 
                     }
 
