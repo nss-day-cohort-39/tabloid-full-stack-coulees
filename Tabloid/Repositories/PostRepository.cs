@@ -95,15 +95,8 @@ namespace Tabloid.Repositories
                             .ToList();
         }
 
-        //JOIN Tag t ON t.Id = PostTag.TagId
-        //JOIN Category c ON c.id = p.CategoryId
-        //           JOIN UserProfile up ON up.Id = p.UserProfileId
-        //           JOIN PostTag pt ON pt.PostId = p.Id
+        
 
-
-
-        //OR LOWER(c.Name) LIKE @searchString
-        //OR LOWER(up.DisplayName) LIKE @searchString
         public List<Post> Search(string searchString)
         {
             using (var conn = new SqlConnection(_connectionString))
@@ -114,10 +107,21 @@ namespace Tabloid.Repositories
                     cmd.CommandText = @"
                     SELECT p.Id, p.Title, p.Content, p.CreateDateTime, 
                            p.PublishDateTime, p.IsApproved, p.CategoryId, 
-                           p.UserProfileId, p.ImageLocation
+                           p.UserProfileId, p.ImageLocation, up.DisplayName, c.Name, t.Name
                     FROM Post p
-                    WHERE LOWER(p.Title) LIKE @searchString 
-                    OR LOWER(cast(p.Content as varchar(max))) LIKE @searchString";
+                    
+                    JOIN Category c ON c.id = p.CategoryId
+                    JOIN UserProfile up ON up.Id = p.UserProfileId
+                    JOIN PostTag pt ON pt.PostId = p.Id
+                    JOIN Tag t ON pt.TagId = t.Id
+                    
+                    
+                    WHERE LOWER(p.Title) LIKE @searchString
+
+                    OR LOWER(cast(p.Content as varchar(max))) LIKE @searchString
+                    OR LOWER(c.Name) LIKE @searchString
+                    OR LOWER(up.DisplayName) LIKE @searchString
+                    OR LOWER(t.Name) LIKE @searchString";
                     string[] searchWordsArray = searchString.Split(' ');
                     IEnumerable<string> newWordsArray = searchWordsArray.Select(word => $"%{word}%");
                     string searchWords = string.Join("|", newWordsArray);
@@ -161,12 +165,6 @@ namespace Tabloid.Repositories
                 }
             }
         }
-
-
-
-
-
-
 
     }
 }

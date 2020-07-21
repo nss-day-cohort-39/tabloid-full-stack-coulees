@@ -89,7 +89,7 @@ const PostDetails = () => {
                     {
                         post.categoryId !== 0
                             ?
-                            <h4><Badge className="text-left ml-1 p-2 badge-secondary badge-outlined">{post.category.name}</Badge></h4>
+                            <h4><Badge className="text-left ml-1 p-2 badge-secondary badge-outlined">{post.category?.name}</Badge></h4>
                             :
                             ""
                     }
@@ -97,12 +97,12 @@ const PostDetails = () => {
 
                         post.categoryId === 0 && currentUserId === post.userProfileId
                             ?
-                            <h4><Badge className="text-left ml-1 p-2 badge-secondary badge-outlined">{post.category.name}</Badge></h4>
+                            <h4><Badge className="text-left ml-1 p-2 badge-secondary badge-outlined">{post.category?.name}</Badge></h4>
                             :
                             ""
                     }
                 </h2>
-                <h4 className="font-weight-normal">by <Link to={`/users/${post.userProfile.firebaseUserId}`}>{post.userProfile.fullName}</Link></h4>
+                <h4 className="font-weight-normal">by <Link to={`/users/${post.userProfile?.firebaseUserId}`}>{post.userProfile?.fullName}</Link></h4>
                 <h4 className="font-weight-normal">Posted {dateTimeFormat ? dateTimeFormat : ''}</h4>
                 {
                     postTags.length > 0
