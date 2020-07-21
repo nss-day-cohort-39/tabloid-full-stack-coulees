@@ -72,6 +72,7 @@ namespace Tabloid.Controllers
             post.IsApproved = false;
             return CreatedAtAction("Get", new { id = post.Id }, post);
         }
+
         [HttpPut("{id}")]
         public IActionResult Put(int id, Post post)
         {

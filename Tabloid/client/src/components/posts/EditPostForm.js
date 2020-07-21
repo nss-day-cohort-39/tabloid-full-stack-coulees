@@ -1,10 +1,12 @@
 import React, { useContext, useRef, useEffect, useState } from 'react'
-import { Form, FormGroup, Input, Row, Button, Label, Spinner } from 'reactstrap'
+import { Form, FormGroup, Input, Row, Button, Label, Spinner, Alert, InputGroup, InputGroupAddon, InputGroupText } from 'reactstrap'
 import { PostContext } from "../../providers/PostProvider";
 import DatePicker from 'reactstrap-date-picker/lib/DatePicker';
 import { PostTagContext } from '../../providers/PostTagProvider';
 import PostTagForm from './PostTagForm';
 import { CategoryContext } from '../../providers/CategoryProvider';
+import { ImageContext } from '../../providers/ImageProvider';
+import { useHistory, useLocation } from 'react-router-dom'
 
 //There are two ways to access this form:
 //1) By the post list views; and 2) By the post details view
@@ -18,11 +20,15 @@ const EditPostForm = ({ showEdit, postId }) => {
     const id = postId;
     const { postTags, getAllPostTags } = useContext(PostTagContext);
     const { categories, getAllCategory } = useContext(CategoryContext);
+    const { uploadImage, deleteImage } = useContext(ImageContext)
 
+    let location = useLocation();
+    const history = useHistory();
+
+    const [oldImage, setOldImage] = useState(null);
     const [categorySelect, setCategorySelection] = useState("");
 
     const handleDateChange = (e) => {
-        console.log(e)
         setPublishDate(e)
     }
 
@@ -32,8 +38,17 @@ const EditPostForm = ({ showEdit, postId }) => {
                 setPost(post)
                 return post
             })
-            .then((post) => setPublishDate(post.publishDateTime))
+            .then((post) => {
+                setPublishDate(post.publishDateTime);
+                setOldImage(post.imageLocation);
+                if (post.imageLocation !== null && post.imageLocation !== "") {
+                    setPreview(post.imageLocation);
+                } else {
+                    setPreview(null);
+                }
+            })
             .then(() => set(true))
+
         getAllCategory()
     }, [])
     const handleCategorySelection = (e) => {
@@ -51,22 +66,65 @@ const EditPostForm = ({ showEdit, postId }) => {
     }, [])
 
     const title = useRef()
-    const imageUrl = useRef()
     const content = useRef()
+    const imageUrl = useRef()
+
+    //handle the image upload preview area
+    const [preview, setPreview] = useState(null);
+
+    const previewImage = e => {
+        if (e.target.files.length) {
+            setPreview(URL.createObjectURL(e.target.files[0]));
+        }
+    };
+
+    const previewUrlImage = e => {
+        if (e.target.value.length) {
+            setPreview(e.target.value);
+        }
+    };
 
     //state to store the tag array
     const [chosenTags, setChosenTags] = useState([]);
 
-    const handleSubmit = () => {
-        const Post = {
+    const handleSubmit = e => {
+        e.preventDefault();
+        const file = document.querySelector('input[type="file"]').files[0];
 
-            title: title.current.value,
-            imageLocation: imageUrl.current.value,
-            content: content.current.value,
-            publishDateTime: publishDate,
-            publishDateTime: publishDate,
-            categoryId: (categorySelect !== "" ? +categorySelect : post.categoryId)
+        const Post = {};
+        let newImageName = ""
+
+        //code for handling the image upload
+        if (file !== undefined) {
+            //get file extension
+            const extension = file.name.split('.').pop();
+
+            const allowedExstensions = [
+                'png',
+                'bmp',
+                'gif',
+                'jpg',
+                'jpeg'
+            ];
+
+            if (!allowedExstensions.includes(extension)) {
+                window.alert("Your file must be a .jpg, .gif, .png, or .bmp.");
+                return;
+            }
+
+            newImageName = `${new Date().getTime()}.${extension}`;
+            Post.imageLocation = newImageName;
+        } else if (file === undefined && imageUrl.current.value !== "") {
+            Post.imageLocation = imageUrl.current.value;
+        } else {
+            Post.imageLocation = post.imageLocation;
         }
+
+        Post.title = title.current.value;
+        Post.content = content.current.value;
+        Post.publishDateTime = publishDate;
+        Post.categoryId = (categorySelect !== "" ? +categorySelect : post.categoryId);
+
         if (categorySelect === "") {
             Post.categoryId = post.categoryId;
         }
@@ -83,7 +141,29 @@ const EditPostForm = ({ showEdit, postId }) => {
         Post.createDateTime = post.createDateTime
         Post.userProfileId = post.userProfileId
         Post.isApproved = post.isApproved
+
         updatePost(Post, chosenTags)
+            .then(() => {
+                if (file !== undefined) {
+                    const formData = new FormData();
+                    formData.append('file', file, newImageName);
+
+                    uploadImage(formData, newImageName);
+                    setPreview(null);
+                }
+            })
+            .then(() => { //delete old image
+                const newImage = Post.imageLocation;
+
+                if (oldImage !== null && !oldImage.startsWith("http") && oldImage !== newImage) {
+
+                    deleteImage(oldImage);
+                }
+            })
+            .then(() => {
+                history.push({ pathname: "/empty" });
+                history.replace({ pathname: location.pathname })
+            })
         if (showEdit) {
             showEdit(false)
         }
@@ -93,16 +173,34 @@ const EditPostForm = ({ showEdit, postId }) => {
     if (ready === true && tagReady === true) {
         return (
             <div className="container">
-                <Form>
+                <Form encType="multipart/form-data">
                     <FormGroup>
                         <Label for="title">Post Title</Label>
                         <Input type='text' name='Title' id='postTitle' innerRef={title} defaultValue={post ? post.title : ''}
                             placeholder='Title' className='form-control'></Input>
                     </FormGroup>
                     <FormGroup>
-                        <Label for="ImageUrl">Post Image URL <small class="text-muted font-italic">(Optional)</small></Label>
-                        <Input type='text' name='ImageUrl' id='postImageUrl' innerRef={imageUrl} defaultValue={post ? post.imageLocation : ''}
-                            placeholder='Image URL' className='form-control'></Input>
+                        <Label for="imageUpload">Header Image <small className="text-muted font-italic">(Optional)</small></Label>
+                        <div className="d-flex justify-content-between">
+                            <Input type="file" name="file" id="imageUpload" onChange={e => previewImage(e)} onClick={() => imageUrl.current.value = ""} />
+                            <Button type="button" color="light" onClick={e => { setPreview(null); document.querySelector('input[type="file"]').value = null; post.imageLocation = null; }}>Clear</Button>
+                        </div>
+                        <InputGroup className="mt-2">
+                            <InputGroupAddon addonType="prepend">
+                                <InputGroupText>OR</InputGroupText>
+                            </InputGroupAddon>
+                            <Input type='text' name='imageUrl' id='imageUrl' innerRef={imageUrl} defaultValue={post.imageLocation !== null ? (post.imageLocation.startsWith("http") ? post.imageLocation : "") : ""} placeholder="http://myImageUrl" onChange={previewUrlImage} />
+                        </InputGroup>
+                    </FormGroup>
+                    <FormGroup>
+                        {
+                            preview === null
+                                ?
+                                <Alert color="light">No image selected</Alert>
+                                :
+                                <img src={preview[0] === "b" || preview.startsWith("http") ? preview : `/images/headers/${preview}`} alt="image preview" className="img-thumbnail" />
+
+                        }
                     </FormGroup>
                     <FormGroup>
                         <Label for="Content">Post Content</Label>
@@ -112,7 +210,7 @@ const EditPostForm = ({ showEdit, postId }) => {
                     <FormGroup>
                         <Label for='PublishDate'>Publish Date</Label>
                         <DatePicker value={publishDate} onChange={handleDateChange} />
-                        <small class="text-muted font-italic">You can leave this blank to keep your post unpublished.</small>
+                        <small className="text-muted font-italic">You can leave this blank to keep your post unpublished.</small>
                     </FormGroup>
                     <FormGroup>
                         <Label for='categoryId'>Category</Label>
@@ -126,7 +224,7 @@ const EditPostForm = ({ showEdit, postId }) => {
                     </FormGroup>
                     <div className='text-right'>
                         <Button type="button" color="secondary" onClick={() => showEdit(false)} className="mx-2">Cancel</Button>
-                        <Button color="primary" onClick={handleSubmit}>Save</Button>
+                        <Button color="primary" type="submit" onClick={e => handleSubmit(e)}>Save</Button>
                     </div>
                 </Form>
             </div >

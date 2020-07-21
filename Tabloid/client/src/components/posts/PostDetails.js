@@ -6,6 +6,7 @@ import EditPostForm from './EditPostForm';
 import { PostTagContext } from '../../providers/PostTagProvider';
 import CommentList from '../comment/CommentList';
 import { SubscriptionContext } from '../../providers/SubscriptionProvider';
+import { ImageContext } from '../../providers/ImageProvider';
 
 const PostDetails = () => {
     //State Variables And Context
@@ -21,6 +22,7 @@ const PostDetails = () => {
     const [postTags, setTags] = useState([])
     const [subscription, setSub] = useState([])
     const [ready, setReady] = useState(false)
+    const { deleteImage } = useContext(ImageContext)
 
     useEffect(() => {
         //On render:
@@ -59,6 +61,7 @@ const PostDetails = () => {
     const confirmDelete = () => {
         showDelete(false)
         deletePost(post.id)
+            .then(deleteImage(post.imageLocation))
     }
     const handleUnsubscribe = () => {
         unsubscribe(subscription.id)
@@ -121,7 +124,7 @@ const PostDetails = () => {
                 <>
                     <Modal isOpen={deleteModal} >
                         <ModalHeader>Delete a Post</ModalHeader>
-                        <ModalBody class="lead">
+                        <ModalBody className="lead">
                             <div className="lead mb-2">Are you sure you want to delete the post "{post.title}"?</div>
                             <div className="text-right">
                                 <Button onClick={() => showDelete(false)}>Cancel</Button>
@@ -154,12 +157,13 @@ const PostDetails = () => {
         return (
             <>
                 <div className="container">
-                    <h2 className="d-flex justify-content-between">
-                        {post.title}
+                    <div className="d-flex justify-content-between">
+                        <h2 className="d-flex justify-content-between">
+                            {post.title}</h2>
                         {
                             post.categoryId !== 0
                                 ?
-                                <Badge className="text-left ml-1 p-2 badge-secondary badge-outlined">{post.category?.name}</Badge>
+                                <h4><Badge className="text-left ml-1 p-2 badge-secondary badge-outlined">{post.category.name}</Badge></h4>
                                 :
                                 ""
                         }
@@ -171,9 +175,9 @@ const PostDetails = () => {
                                 :
                                 ""
                         }
-                    </h2>
-                    <h4 className="font-weight-normal">by <Link to={`/users/${post.userProfile?.firebaseUserId}`}>{post.userProfile?.fullName}</Link></h4>
-                    <h4 className="font-weight-normal">Posted {dateTimeFormat ? dateTimeFormat : ''}</h4>
+                    </div>
+                    <h4 className="font-weight-normal">by <Link to={`/users/${post.userProfile.firebaseUserId}`}>{post.userProfile.fullName}</Link></h4>
+                    <h4 className="font-weight-normal">{dateTimeFormat === undefined ? "Unpublished" : "Posted" + dateTimeFormat}</h4>
                     {
                         postTags.length > 0
                             ?
@@ -187,13 +191,13 @@ const PostDetails = () => {
                     }
                     {renderButtons(post, currentUserId)}
                     {
-                        post.imageLocation === ""
+                        post.imageLocation === "" || post.imageLocation === null
                             ?
                             ""
                             :
                             <>
                                 <hr />
-                                <img src={post.imageLocation} alt={post.title} className="largeImage" />
+                                <img src={post.imageLocation[0] === "h" ? post.imageLocation : `/images/headers/${post.imageLocation}`} alt={post.title} className="largeImage" />
                             </>
 
                     }

@@ -9,26 +9,29 @@ import { SubscriptionProvider } from './providers/SubscriptionProvider';
 import { TagProvider } from './providers/TagProvider';
 import { PostTagProvider } from './providers/PostTagProvider';
 import { CommentProvider } from './providers/CommentProvider';
+import { ImageProvider } from './providers/ImageProvider';
 
 //it is important that PostTagProvider stays outside of Post Provider
 function App() {
   return (
     <Router>
       <UserProfileProvider>
-        <PostTagProvider>
-          <PostProvider>
-            <CategoryProvider>
-              <SubscriptionProvider>
-                <CommentProvider>
-                  <TagProvider>
-                    <Header />
-                    <ApplicationViews />
-                  </TagProvider>
-                </CommentProvider>
-              </SubscriptionProvider>
-            </CategoryProvider>
-          </PostProvider>
-        </PostTagProvider>
+        <ImageProvider>
+          <PostTagProvider>
+            <PostProvider>
+              <CategoryProvider>
+                <SubscriptionProvider>
+                  <CommentProvider>
+                    <TagProvider>
+                      <Header />
+                      <ApplicationViews />
+                    </TagProvider>
+                  </CommentProvider>
+                </SubscriptionProvider>
+              </CategoryProvider>
+            </PostProvider>
+          </PostTagProvider>
+        </ImageProvider>
       </UserProfileProvider>
     </Router>
   );

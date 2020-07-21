@@ -1,24 +1,29 @@
 import { PostContext } from "../../providers/PostProvider";
 import DatePicker from 'reactstrap-date-picker/lib/DatePicker';
 import React, { useContext, useRef, useState, useEffect } from 'react'
-import { Form, FormGroup, Input, Row, FormText, Button, Label, Badge, Modal, ModalHeader, ModalBody } from 'reactstrap'
+import { Form, FormGroup, Input, Button, Label, Alert, InputGroup, InputGroupAddon, InputGroupText } from 'reactstrap'
 import PostTagForm from './PostTagForm';
 import { CategoryContext } from '../../providers/CategoryProvider';
+import { ImageContext } from "../../providers/ImageProvider";
+import { useHistory } from "react-router-dom";
 
 const AddPostForm = () => {
     const { addPost } = useContext(PostContext)
     const { categories, getAllCategory } = useContext(CategoryContext)
+    const { uploadImage } = useContext(ImageContext)
     const [publishDate, set] = useState()
     const [categorySelect, setCategorySelection] = useState("");
     const [chosenTags, setChosenTags] = useState([]);
+
+    const history = useHistory();
 
     const handleDateChange = (e) => {
         set(e.target.value)
     }
 
     const title = useRef()
-    const imageUrl = useRef()
     const content = useRef()
+    const imageUrl = useRef()
 
     useEffect(() => {
         getAllCategory()
@@ -27,10 +32,27 @@ const AddPostForm = () => {
     const handleCategorySelection = (e) => {
         setCategorySelection(e.target.value)
     }
-    const handleSubmit = () => {
+
+    //handle the image upload preview area
+    const [preview, setPreview] = useState(null);
+
+    const previewImage = e => {
+        if (e.target.files.length) {
+            setPreview(URL.createObjectURL(e.target.files[0]));
+        }
+    };
+
+    const previewUrlImage = e => {
+        if (e.target.value.length) {
+            setPreview(e.target.value);
+        }
+    };
+
+    const handleSubmit = (event) => {
+        const file = document.querySelector('input[type="file"]').files[0];
+
         const Post = {
             title: title.current.value,
-            imageLocation: imageUrl.current.value,
             content: content.current.value,
             publishDateTime: publishDate,
             categoryId: +categorySelect,
@@ -44,16 +66,48 @@ const AddPostForm = () => {
             window.alert("Post must have content.")
             return
         }
-        if (categorySelect === "") {
-            window.alert("You must choose a category.")
-            return
+
+        //code for handling the image upload
+        if (file !== undefined) {
+
+            //get file extension
+            const extension = file.name.split('.').pop();
+
+            const allowedExstensions = [
+                'png',
+                'bmp',
+                'gif',
+                'jpg',
+                'jpeg'
+            ];
+
+            if (!allowedExstensions.includes(extension)) {
+                window.alert("Your file must be a .jpg, .gif, .png, or .bmp.");
+                return;
+            } else {
+
+                const newImageName = `${new Date().getTime()}.${extension}`;
+
+                const formData = new FormData();
+                formData.append('file', file, newImageName);
+
+                uploadImage(formData, newImageName);
+
+                Post.imageLocation = newImageName;
+            }
+        } else if (file === undefined && imageUrl.current.value !== "") {
+            Post.imageLocation = imageUrl.current.value;
+        } else {
+            Post.imageLocation = null;
         }
+
         addPost(Post, chosenTags)
+            .then(history.push('/myposts'));
     }
     return (
         <div className="d-flex justify-content-center">
             <div className="smallContainer border rounded p-4">
-                <Form>
+                <Form encType="multipart/form-data">
                     <h4>Create a new Post</h4>
                     <hr />
                     <FormGroup>
@@ -62,9 +116,26 @@ const AddPostForm = () => {
                             placeholder='Something New and Amazing' className='form-control'></Input>
                     </FormGroup>
                     <FormGroup>
-                        <Label for="ImageUrl">Post Image URL <small class="text-muted font-italic">(Optional)</small></Label>
-                        <Input type='text' name='ImageUrl' id='postImageUrl' innerRef={imageUrl}
-                            placeholder='http://example.com/image.jpg' className='form-control'></Input>
+                        <Label for="imageUpload">Header Image <small className="text-muted font-italic">(Optional)</small></Label>
+                        <div className="d-flex justify-content-between">
+                            <Input type="file" name="file" id="imageUpload" onChange={previewImage} onClick={() => imageUrl.current.value = ""} />
+                            <Button type="button" size="sm" color="light" onClick={e => { setPreview(null); document.querySelector('input[type="file"]').value = null; }}>Clear</Button>
+                        </div>
+                        <InputGroup className="mt-2">
+                            <InputGroupAddon addonType="prepend">
+                                <InputGroupText>OR</InputGroupText>
+                            </InputGroupAddon>
+                            <Input type='text' name='imageUrl' id='imageUrl' innerRef={imageUrl} placeholder="http://myImageUrl" onChange={previewUrlImage} />
+                        </InputGroup>
+                    </FormGroup>
+                    <FormGroup>
+                        {
+                            preview === null
+                                ?
+                                <Alert color="light">No image selected</Alert>
+                                :
+                                <img src={preview} alt="image preview" className="img-thumbnail" />
+                        }
                     </FormGroup>
                     <FormGroup>
                         <Label for="Content">Post Content</Label>
@@ -74,7 +145,7 @@ const AddPostForm = () => {
                     <FormGroup>
                         <Label for='PublishDate'>Publish Date</Label>
                         <Input type='date' name='PublishDate' id='publishDate' onChange={handleDateChange} />
-                        <small class="text-muted font-italic">You can leave this blank to keep your post unpublished.</small>
+                        <small className="text-muted font-italic">You can leave this blank to keep your post unpublished.</small>
                     </FormGroup>
                     <FormGroup>
                         <Label for='categoryId'>Category</Label>

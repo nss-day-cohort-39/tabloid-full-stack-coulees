@@ -60,7 +60,7 @@ export const PostProvider = (props) => {
     };
 
     const addPost = (post, tags = []) => {
-        getToken().then((token) =>
+        return getToken().then((token) =>
             fetch(apiUrl, {
                 method: "POST",
                 headers: {
@@ -91,14 +91,12 @@ export const PostProvider = (props) => {
                             }));
                     }
                 }
-                return resp;
             })
-                .then(resp => history.push(`/posts/${resp.id}`))
                 .then(getAllPosts));
     };
 
     const deletePost = (id) => {
-        getToken().then((token) =>
+        return getToken().then((token) =>
             fetch(apiUrl + `/${id}`, {
                 method: "DELETE",
                 headers: {
@@ -151,7 +149,6 @@ export const PostProvider = (props) => {
                     }
                 })
                 .then(getPost(post.id))
-                .then(() => history.push(`/posts/${post.id}`))
                 .then(() => { getAllPostTags(post.id); }))
     }
 
