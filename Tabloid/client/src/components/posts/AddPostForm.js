@@ -29,6 +29,7 @@ const AddPostForm = () => {
         setCategorySelection(e.target.value)
     }
 
+    //handle the image upload preview area
     const [preview, setPreview] = useState(null);
 
     const previewImage = e => {

@@ -1,10 +1,11 @@
 import React, { useContext, useRef, useEffect, useState } from 'react'
-import { Form, FormGroup, Input, Row, Button, Label, Spinner } from 'reactstrap'
+import { Form, FormGroup, Input, Row, Button, Label, Spinner, Alert } from 'reactstrap'
 import { PostContext } from "../../providers/PostProvider";
 import DatePicker from 'reactstrap-date-picker/lib/DatePicker';
 import { PostTagContext } from '../../providers/PostTagProvider';
 import PostTagForm from './PostTagForm';
 import { CategoryContext } from '../../providers/CategoryProvider';
+import { ImageContext } from '../../providers/ImageProvider';
 
 //There are two ways to access this form:
 //1) By the post list views; and 2) By the post details view
@@ -17,18 +18,27 @@ const EditPostForm = ({ showEdit, postId }) => {
     const id = postId;
     const { postTags, getAllPostTags } = useContext(PostTagContext);
     const { categories, getAllCategory } = useContext(CategoryContext);
+    const { uploadImage } = useContext(ImageContext)
 
     const [categorySelect, setCategorySelection] = useState("");
 
     const handleDateChange = (e) => {
-        console.log(e)
         setPublishDate(e)
     }
 
     useEffect(() => {
         getPost(id)
-            .then((post) => setPublishDate(post.publishDateTime))
+            .then((post) => {
+                setPublishDate(post.publishDateTime);
+
+                if (post.imageLocation !== null && post.imageLocation !== "") {
+                    setPreview(post.imageLocation);
+                } else {
+                    setPreview(null);
+                }
+            }) //only set these once the post has loaded
             .then(() => set(true))
+
         getAllCategory()
     }, [])
     const handleCategorySelection = (e) => {
@@ -46,17 +56,27 @@ const EditPostForm = ({ showEdit, postId }) => {
     }, [])
 
     const title = useRef()
-    const imageUrl = useRef()
     const content = useRef()
+
+    //handle the image upload preview area
+    const [preview, setPreview] = useState(null);
+
+    const previewImage = e => {
+        if (e.target.files.length) {
+            setPreview(URL.createObjectURL(e.target.files[0]));
+        }
+    };
 
     //state to store the tag array
     const [chosenTags, setChosenTags] = useState([]);
 
-    const handleSubmit = () => {
+    const handleSubmit = e => {
+        e.preventDefault();
+        const file = document.querySelector('input[type="file"]').files[0];
+
         const Post = {
 
             title: title.current.value,
-            imageLocation: imageUrl.current.value,
             content: content.current.value,
             publishDateTime: publishDate,
             publishDateTime: publishDate,
@@ -78,6 +98,39 @@ const EditPostForm = ({ showEdit, postId }) => {
         Post.createDateTime = post.createDateTime
         Post.userProfileId = post.userProfileId
         Post.isApproved = post.isApproved
+
+        //code for handling the image upload
+        if (preview === null) {
+            Post.imageLocation = null;
+        } else {
+            //get file extension
+            const extension = file.name.split('.').pop();
+
+            const allowedExstensions = [
+                'png',
+                'bmp',
+                'gif',
+                'jpg',
+                'jpeg'
+            ];
+
+            if (!allowedExstensions.includes(extension)) {
+                window.alert("Your file must be a .jpg, .gif, .png, or .bmp.");
+                return;
+            } else {
+
+                const newImageName = `${new Date().getTime()}.${extension}`;
+
+                const formData = new FormData();
+                formData.append('file', file, newImageName);
+
+                uploadImage(formData, newImageName);
+
+                Post.imageLocation = newImageName;
+            }
+        }
+        setPreview(null);
+
         updatePost(Post, chosenTags)
         if (showEdit) {
             showEdit(false)
@@ -95,9 +148,21 @@ const EditPostForm = ({ showEdit, postId }) => {
                             placeholder='Title' className='form-control'></Input>
                     </FormGroup>
                     <FormGroup>
-                        <Label for="ImageUrl">Post Image URL <small className="text-muted font-italic">(Optional)</small></Label>
-                        <Input type='text' name='ImageUrl' id='postImageUrl' innerRef={imageUrl} defaultValue={post ? post.imageLocation : ''}
-                            placeholder='Image URL' className='form-control'></Input>
+                        <Label for="imageUpload">Header Image <small className="text-muted font-italic">(Optional)</small></Label>
+                        <div className="d-flex justify-content-between">
+                            <Input type="file" name="file" id="imageUpload" onChange={previewImage} />
+                            <Button type="button" color="light" onClick={e => { setPreview(null); document.querySelector('input[type="file"]').value = null; }}>Clear</Button>
+                        </div>
+                    </FormGroup>
+                    <FormGroup>
+                        {
+                            preview === null
+                                ?
+                                <Alert color="light">No image selected</Alert>
+                                :
+                                <img src={preview[0] === "b" || preview.startsWith("http") ? preview : `/images/headers/${preview}`} alt="image preview" className="img-thumbnail" />
+
+                        }
                     </FormGroup>
                     <FormGroup>
                         <Label for="Content">Post Content</Label>
@@ -121,7 +186,7 @@ const EditPostForm = ({ showEdit, postId }) => {
                     </FormGroup>
                     <div className='text-right'>
                         <Button type="button" color="secondary" onClick={() => showEdit(false)} className="mx-2">Cancel</Button>
-                        <Button color="primary" onClick={handleSubmit}>Save</Button>
+                        <Button color="primary" type="submit" onClick={e => handleSubmit(e)}>Save</Button>
                     </div>
                 </Form>
             </div >
