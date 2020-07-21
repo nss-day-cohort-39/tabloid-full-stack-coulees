@@ -17,7 +17,6 @@ import {
 import { UserProfileContext } from "../providers/UserProfileProvider";
 import logo from "../logo.svg"
 import PostSearch from './posts/SearchPosts';
-import { Route, Redirect } from "react-router-dom";
 
 export default function Header() {
   const { isLoggedIn, logout, isAdmin, setIsAdmin } = useContext(UserProfileContext);

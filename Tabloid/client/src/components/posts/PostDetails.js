@@ -1,5 +1,5 @@
 import React, { useContext, useEffect, useState, useReducer } from 'react';
-import { Link, useParams } from "react-router-dom";
+import { Link, useParams, useHistory } from "react-router-dom";
 import { PostContext } from '../../providers/PostProvider';
 import { Button, Modal, ModalHeader, ModalBody, Badge, Spinner } from 'reactstrap';
 import EditPostForm from './EditPostForm';
@@ -53,11 +53,7 @@ const PostDetails = () => {
             .then(setTags)
             //9. Turn off the spinner and display the content
             .then(() => setReady(true))
-    }, []);
-
-    if (!post) {
-        return null;
-    }
+    }, [id]);
 
     //Event Handler Functions
     const confirmDelete = () => {
@@ -212,7 +208,7 @@ const PostDetails = () => {
         );
     }
     else {
-        return <Spinner />
+        return <Spinner className="app-spinner dark" />
     }
 
 };
