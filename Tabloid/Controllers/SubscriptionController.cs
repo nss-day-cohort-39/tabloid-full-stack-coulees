@@ -52,7 +52,9 @@ namespace Tabloid.Controllers
             {
                 return NotFound();
             }
-            return Ok(CurrentUserSubPosts);
+
+            var OrderedCurrentUserSubPosts = CurrentUserSubPosts.OrderByDescending(p => p.PublishDateTime).ToList();
+            return Ok(OrderedCurrentUserSubPosts);
         }
 
         [HttpGet("subs")]
