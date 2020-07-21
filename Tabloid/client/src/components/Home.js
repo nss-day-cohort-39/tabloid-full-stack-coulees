@@ -26,7 +26,7 @@ const Home = () => {
             </div>
         );
     } else {
-        return <Spinner />
+        return <Spinner className="app-spinner dark" />
     }
 }
 
