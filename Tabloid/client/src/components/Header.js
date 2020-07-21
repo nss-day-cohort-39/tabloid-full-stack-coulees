@@ -18,6 +18,7 @@ import { UserProfileContext } from "../providers/UserProfileProvider";
 import logo from "../logo.svg"
 import PostSearch from './posts/SearchPosts';
 import { Route, Redirect } from "react-router-dom";
+import UserAvatar from './users/UserAvatar';
 
 export default function Header() {
   const { isLoggedIn, logout, isAdmin, setIsAdmin } = useContext(UserProfileContext);
@@ -85,6 +86,9 @@ export default function Header() {
           <Nav navbar>
             {isLoggedIn &&
               <>
+                <NavItem>
+                  <UserAvatar user={JSON.parse(sessionStorage.getItem("userProfile"))} />
+                </NavItem>
                 <NavItem>
                   <a aria-current="page" className="nav-link"
                     style={{ cursor: "pointer" }} onClick={logout}>Logout</a>
