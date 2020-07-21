@@ -13,8 +13,9 @@ import { ImageContext } from '../../providers/ImageProvider';
 const EditPostForm = ({ showEdit, postId }) => {
     const [ready, set] = useState(false)
     const [publishDate, setPublishDate] = useState(null)
+    const [post, setPost] = useState({})
     const [tagReady, tagSet] = useState(false)
-    const { post, updatePost, getPost } = useContext(PostContext)
+    const { updatePost, getPost } = useContext(PostContext)
     const id = postId;
     const { postTags, getAllPostTags } = useContext(PostTagContext);
     const { categories, getAllCategory } = useContext(CategoryContext);
@@ -29,14 +30,17 @@ const EditPostForm = ({ showEdit, postId }) => {
     useEffect(() => {
         getPost(id)
             .then((post) => {
+                setPost(post)
+                return post
+            })
+            .then((post) => {
                 setPublishDate(post.publishDateTime);
-
                 if (post.imageLocation !== null && post.imageLocation !== "") {
                     setPreview(post.imageLocation);
                 } else {
                     setPreview(null);
                 }
-            }) //only set these once the post has loaded
+            })
             .then(() => set(true))
 
         getAllCategory()
@@ -93,7 +97,7 @@ const EditPostForm = ({ showEdit, postId }) => {
             window.alert("Post must have content.")
             return
         }
-        //add back all of the values that the user is not allowed to change (Categories will eventually be changeable)
+        //add back all of the values that the user is not allowed to change
         Post.id = post.id
         Post.createDateTime = post.createDateTime
         Post.userProfileId = post.userProfileId

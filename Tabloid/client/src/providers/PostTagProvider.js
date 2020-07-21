@@ -15,7 +15,10 @@ export const PostTagProvider = (props) => {
                     Authorization: `Bearer ${token}`
                 }
             }).then(resp => resp.json())
-                .then(setPostTags));
+                .then((tags) => {
+                    setPostTags(tags)
+                    return tags
+                }));
     };
 
     return (
