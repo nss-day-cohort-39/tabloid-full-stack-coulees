@@ -25,10 +25,6 @@ export default function ApplicationViews() {
     <main>
       <Switch>
 
-        {/* <Route path="/search">
-          {isLoggedIn ? <PostSearch /> : <Redirect to="/login" />}
-        </Route> */}
-
         <Route path="/" exact>
           {isLoggedIn ? <Hello /> : <Redirect to="/login" />}
         </Route>

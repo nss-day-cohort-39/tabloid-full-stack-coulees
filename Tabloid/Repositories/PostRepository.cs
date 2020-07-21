@@ -107,13 +107,17 @@ namespace Tabloid.Repositories
                     cmd.CommandText = @"
                     SELECT p.Id, p.Title, p.Content, p.CreateDateTime, 
                            p.PublishDateTime, p.IsApproved, p.CategoryId, 
-                           p.UserProfileId, p.ImageLocation, up.DisplayName, c.Name, t.Name
+                           p.UserProfileId, p.ImageLocation, up.DisplayName AS upDisplayName,
+                           up.FirebaseUserId As upFirebaseUserId, up.FirstName AS upFirstName,
+                           up.LastName AS upLastName, up.Email AS upEmail, up.CreateDateTime AS upCreateDateTime,
+                           up.ImageLocation AS upImageLocation, up.UserTypeId AS upUserTypeId, 
+                           up.IsApproved AS upIsApproved, c.Id AS CatId, c.Name AS CatName, t.Name, up.Id AS upId
                     FROM Post p
                     
                     JOIN Category c ON c.id = p.CategoryId
                     JOIN UserProfile up ON up.Id = p.UserProfileId
-                    JOIN PostTag pt ON pt.PostId = p.Id
-                    JOIN Tag t ON pt.TagId = t.Id
+                    LEFT JOIN PostTag pt ON pt.PostId = p.Id
+                    LEFT JOIN Tag t ON pt.TagId = t.Id
                     
                     
                     WHERE LOWER(p.Title) LIKE @searchString
@@ -124,9 +128,10 @@ namespace Tabloid.Repositories
                     OR LOWER(t.Name) LIKE @searchString";
                     string[] searchWordsArray = searchString.Split(' ');
                     IEnumerable<string> newWordsArray = searchWordsArray.Select(word => $"%{word}%");
-                    string searchWords = string.Join("|", newWordsArray);
+                    string searchWords = string.Join("", newWordsArray);
                     cmd.Parameters.AddWithValue("@searchString", searchWords.ToLower());
-                    
+
+
                     var reader = cmd.ExecuteReader();
                     var posts = new List<Post>();
                     while (reader.Read())
@@ -139,8 +144,24 @@ namespace Tabloid.Repositories
                             CreateDateTime = reader.GetDateTime(reader.GetOrdinal("CreateDateTime")),
                             IsApproved = reader.GetBoolean(reader.GetOrdinal("IsApproved")),
                             CategoryId = reader.GetInt32(reader.GetOrdinal("CategoryId")),
-                            UserProfileId = reader.GetInt32(reader.GetOrdinal("UserProfileId"))
-
+                            UserProfileId = reader.GetInt32(reader.GetOrdinal("UserProfileId")),
+                            Category = new Category()
+                            {
+                                Id = reader.GetInt32(reader.GetOrdinal("CatId")),
+                                Name = reader.GetString(reader.GetOrdinal("CatName"))
+                            },
+                            UserProfile = new UserProfile()
+                            {
+                                Id = reader.GetInt32(reader.GetOrdinal("UpId")),
+                                FirebaseUserId = reader.GetString(reader.GetOrdinal("UpFirebaseUserId")),
+                                DisplayName = reader.GetString(reader.GetOrdinal("UpDisplayName")),
+                                FirstName = reader.GetString(reader.GetOrdinal("UpFirstName")),
+                                LastName = reader.GetString(reader.GetOrdinal("UpLastName")),
+                                Email = reader.GetString(reader.GetOrdinal("UpEmail")),
+                                CreateDateTime = reader.GetDateTime(reader.GetOrdinal("upCreateDateTime")),
+                                UserTypeId = reader.GetInt32(reader.GetOrdinal("UpUserTypeId")),
+                                IsApproved = reader.GetBoolean(reader.GetOrdinal("UpIsApproved"))
+                            }
                         };
 
                         if (!reader.IsDBNull(reader.GetOrdinal("ImageLocation")))
@@ -153,6 +174,12 @@ namespace Tabloid.Repositories
 
                         {
                             post.PublishDateTime = reader.GetDateTime(reader.GetOrdinal("PublishDateTime"));
+                        }
+
+                        if (!reader.IsDBNull(reader.GetOrdinal("ImageLocation")))
+
+                        {
+                            post.UserProfile.ImageLocation = reader.GetString(reader.GetOrdinal("UpImageLocation"));
                         }
 
                         posts.Add(post);
