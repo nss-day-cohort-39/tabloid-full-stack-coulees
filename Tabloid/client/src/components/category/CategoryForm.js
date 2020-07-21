@@ -1,28 +1,38 @@
-import React, { useContext, useRef } from "react"
-import { Form } from "reactstrap"
+import React, { useContext, useRef, useState } from "react"
+import { Form, Alert } from "reactstrap"
 import { CategoryContext } from "../../providers/CategoryProvider"
 import { useHistory } from 'react-router-dom'
 
 export const CategoryForm = ({ toggle }) => {
-    const { getAllCategory, addCategory } = useContext(CategoryContext)
+    const { categories, getAllCategory, addCategory } = useContext(CategoryContext)
     const name = useRef("name")
     const history = useHistory();
+
+    const [showError, setError] = useState(false);
+
     const addNewCategory = () => {
-        return addCategory({
-            name: name.current.value
-        })
-            .then(toggle)
-            .then(getAllCategory)
-            .then(() => {
-                history.push("/category")
+        const alreadyExists = categories.some(cat => cat.name.toLowerCase() === name.current.value.toLowerCase());
+
+        if (alreadyExists) {
+            setError(true);
+        } else {
+            return addCategory({
+                name: name.current.value
             })
+                .then(toggle)
+                .then(getAllCategory)
+                .then(() => {
+                    history.push("/category")
+                })
+        }
+
     }
 
     return (
         <Form className="categoryForm">
             <fieldset>
                 <div className="form-group">
-                    <label for="name">Name</label>
+                    <label htmlFor="name">Name</label>
                     <input
                         type="text"
                         id="name"
@@ -31,6 +41,7 @@ export const CategoryForm = ({ toggle }) => {
                         autoFocus
                         className="form-control categoryName"
                         placeholder=""
+                        onChange={() => setError(false)}
                     />
                 </div>
             </fieldset>
@@ -46,6 +57,9 @@ export const CategoryForm = ({ toggle }) => {
                     className="btn btn-primary ml-2">
                     Save
             </button>
+                <Alert color="danger" isOpen={showError} className="mt-2 text-center">
+                    This category already exists!
+                </Alert>
             </fieldset>
         </Form>
     )

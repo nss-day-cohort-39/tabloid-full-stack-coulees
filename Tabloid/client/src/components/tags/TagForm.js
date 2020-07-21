@@ -17,9 +17,7 @@ const TagForm = ({ toggle }) => {
     const submitForm = (e) => {
         e.preventDefault();
 
-        const alreadyExists = tags.some(tag => tag.name === name.current.value);
-
-        console.log(alreadyExists);
+        const alreadyExists = tags.some(tag => tag.name.toLowerCase() === name.current.value.toLowerCase());
 
         if (alreadyExists) {
             setError(true);
