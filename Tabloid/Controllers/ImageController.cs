@@ -16,19 +16,6 @@ namespace Tabloid.Controllers
     [ApiController]
     public class ImageController : ControllerBase
     {
-        private readonly PostRepository _postRepository;
-        private readonly UserProfileRepository _userProfileRepository;
-        private readonly PostTagRepository _postTagRepository;
-        private readonly CommentRepository _commentRepository;
-
-        //using context instead of config
-        public ImageController(ApplicationDbContext context)
-        {
-            _postRepository = new PostRepository(context);
-            _userProfileRepository = new UserProfileRepository(context);
-            _postTagRepository = new PostTagRepository(context);
-            _commentRepository = new CommentRepository(context);
-        }
 
         [HttpPost]
         public IActionResult Upload(IFormFile file)

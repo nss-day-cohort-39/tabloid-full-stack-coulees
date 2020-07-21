@@ -19,8 +19,6 @@ const TagForm = ({ toggle }) => {
 
         const alreadyExists = tags.some(tag => tag.name === name.current.value);
 
-        console.log(alreadyExists);
-
         if (alreadyExists) {
             setError(true);
         } else {

@@ -1,5 +1,5 @@
 import React, { useContext, useRef, useEffect, useState } from 'react'
-import { Form, FormGroup, Input, Row, Button, Label, Spinner, Alert } from 'reactstrap'
+import { Form, FormGroup, Input, Row, Button, Label, Spinner, Alert, InputGroup, InputGroupAddon, InputGroupText } from 'reactstrap'
 import { PostContext } from "../../providers/PostProvider";
 import DatePicker from 'reactstrap-date-picker/lib/DatePicker';
 import { PostTagContext } from '../../providers/PostTagProvider';
@@ -25,6 +25,7 @@ const EditPostForm = ({ showEdit, postId }) => {
     let location = useLocation();
     const history = useHistory();
 
+    const [oldImage, setOldImage] = useState(null);
     const [categorySelect, setCategorySelection] = useState("");
 
     const handleDateChange = (e) => {
@@ -39,6 +40,7 @@ const EditPostForm = ({ showEdit, postId }) => {
             })
             .then((post) => {
                 setPublishDate(post.publishDateTime);
+                setOldImage(post.imageLocation);
                 if (post.imageLocation !== null && post.imageLocation !== "") {
                     setPreview(post.imageLocation);
                 } else {
@@ -65,6 +67,7 @@ const EditPostForm = ({ showEdit, postId }) => {
 
     const title = useRef()
     const content = useRef()
+    const imageUrl = useRef()
 
     //handle the image upload preview area
     const [preview, setPreview] = useState(null);
@@ -75,21 +78,24 @@ const EditPostForm = ({ showEdit, postId }) => {
         }
     };
 
+    const previewUrlImage = e => {
+        if (e.target.value.length) {
+            setPreview(e.target.value);
+        }
+    };
+
     //state to store the tag array
     const [chosenTags, setChosenTags] = useState([]);
 
     const handleSubmit = e => {
         e.preventDefault();
         const file = document.querySelector('input[type="file"]').files[0];
-        console.log(file);
 
         const Post = {};
         let newImageName = ""
 
         //code for handling the image upload
-        if (file === undefined) {
-            Post.imageLocation = post.imageLocation;
-        } else {
+        if (file !== undefined) {
             //get file extension
             const extension = file.name.split('.').pop();
 
@@ -108,6 +114,10 @@ const EditPostForm = ({ showEdit, postId }) => {
 
             newImageName = `${new Date().getTime()}.${extension}`;
             Post.imageLocation = newImageName;
+        } else if (file === undefined && imageUrl.current.value !== "") {
+            Post.imageLocation = imageUrl.current.value;
+        } else {
+            Post.imageLocation = post.imageLocation;
         }
 
         Post.title = title.current.value;
@@ -132,18 +142,22 @@ const EditPostForm = ({ showEdit, postId }) => {
         Post.userProfileId = post.userProfileId
         Post.isApproved = post.isApproved
 
-        console.log(Post)
-
         updatePost(Post, chosenTags)
             .then(() => {
                 if (file !== undefined) {
                     const formData = new FormData();
                     formData.append('file', file, newImageName);
 
-                    uploadImage(formData, newImageName)
-                        .then(deleteImage(post.imageLocation)); //delete old image
-
+                    uploadImage(formData, newImageName);
                     setPreview(null);
+                }
+            })
+            .then(() => { //delete old image
+                const newImage = Post.imageLocation;
+
+                if (oldImage !== null && !oldImage.startsWith("http") && oldImage !== newImage) {
+
+                    deleteImage(oldImage);
                 }
             })
             .then(() => {
@@ -168,9 +182,15 @@ const EditPostForm = ({ showEdit, postId }) => {
                     <FormGroup>
                         <Label for="imageUpload">Header Image <small className="text-muted font-italic">(Optional)</small></Label>
                         <div className="d-flex justify-content-between">
-                            <Input type="file" name="file" id="imageUpload" onChange={e => previewImage(e)} />
+                            <Input type="file" name="file" id="imageUpload" onChange={e => previewImage(e)} onClick={() => imageUrl.current.value = ""} />
                             <Button type="button" color="light" onClick={e => { setPreview(null); document.querySelector('input[type="file"]').value = null; post.imageLocation = null; }}>Clear</Button>
                         </div>
+                        <InputGroup className="mt-2">
+                            <InputGroupAddon addonType="prepend">
+                                <InputGroupText>OR</InputGroupText>
+                            </InputGroupAddon>
+                            <Input type='text' name='imageUrl' id='imageUrl' innerRef={imageUrl} defaultValue={post.imageLocation !== null ? (post.imageLocation.startsWith("http") ? post.imageLocation : "") : ""} placeholder="http://myImageUrl" onChange={previewUrlImage} />
+                        </InputGroup>
                     </FormGroup>
                     <FormGroup>
                         {

@@ -1,10 +1,11 @@
 import { PostContext } from "../../providers/PostProvider";
 import DatePicker from 'reactstrap-date-picker/lib/DatePicker';
 import React, { useContext, useRef, useState, useEffect } from 'react'
-import { Form, FormGroup, Input, Button, Label, Alert } from 'reactstrap'
+import { Form, FormGroup, Input, Button, Label, Alert, InputGroup, InputGroupAddon, InputGroupText } from 'reactstrap'
 import PostTagForm from './PostTagForm';
 import { CategoryContext } from '../../providers/CategoryProvider';
 import { ImageContext } from "../../providers/ImageProvider";
+import { useHistory } from "react-router-dom";
 
 const AddPostForm = () => {
     const { addPost } = useContext(PostContext)
@@ -14,12 +15,15 @@ const AddPostForm = () => {
     const [categorySelect, setCategorySelection] = useState("");
     const [chosenTags, setChosenTags] = useState([]);
 
+    const history = useHistory();
+
     const handleDateChange = (e) => {
         set(e.target.value)
     }
 
     const title = useRef()
     const content = useRef()
+    const imageUrl = useRef()
 
     useEffect(() => {
         getAllCategory()
@@ -35,6 +39,12 @@ const AddPostForm = () => {
     const previewImage = e => {
         if (e.target.files.length) {
             setPreview(URL.createObjectURL(e.target.files[0]));
+        }
+    };
+
+    const previewUrlImage = e => {
+        if (e.target.value.length) {
+            setPreview(e.target.value);
         }
     };
 
@@ -59,7 +69,7 @@ const AddPostForm = () => {
 
         //code for handling the image upload
         if (file !== undefined) {
-            console.log(file);
+
             //get file extension
             const extension = file.name.split('.').pop();
 
@@ -85,11 +95,14 @@ const AddPostForm = () => {
 
                 Post.imageLocation = newImageName;
             }
+        } else if (file === undefined && imageUrl.current.value !== "") {
+            Post.imageLocation = imageUrl.current.value;
         } else {
             Post.imageLocation = null;
         }
 
-        addPost(Post, chosenTags);
+        addPost(Post, chosenTags)
+            .then(history.push('/myposts'));
     }
     return (
         <div className="d-flex justify-content-center">
@@ -105,9 +118,15 @@ const AddPostForm = () => {
                     <FormGroup>
                         <Label for="imageUpload">Header Image <small className="text-muted font-italic">(Optional)</small></Label>
                         <div className="d-flex justify-content-between">
-                            <Input type="file" name="file" id="imageUpload" onChange={previewImage} />
-                            <Button type="button" color="light" onClick={e => { setPreview(null); document.querySelector('input[type="file"]').value = null; }}>Clear</Button>
+                            <Input type="file" name="file" id="imageUpload" onChange={previewImage} onClick={() => imageUrl.current.value = ""} />
+                            <Button type="button" size="sm" color="light" onClick={e => { setPreview(null); document.querySelector('input[type="file"]').value = null; }}>Clear</Button>
                         </div>
+                        <InputGroup className="mt-2">
+                            <InputGroupAddon addonType="prepend">
+                                <InputGroupText>OR</InputGroupText>
+                            </InputGroupAddon>
+                            <Input type='text' name='imageUrl' id='imageUrl' innerRef={imageUrl} placeholder="http://myImageUrl" onChange={previewUrlImage} />
+                        </InputGroup>
                     </FormGroup>
                     <FormGroup>
                         {

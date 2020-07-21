@@ -91,9 +91,7 @@ export const PostProvider = (props) => {
                             }));
                     }
                 }
-                console.log(resp);
             })
-                .then(resp => history.push(`/posts/${resp.id}`))
                 .then(getAllPosts));
     };
 

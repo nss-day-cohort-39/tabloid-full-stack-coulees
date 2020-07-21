@@ -25,7 +25,6 @@ const PostTagForm = ({ chosenTags, setChosenTags, postTags }) => {
 
     const updateChosenTags = () => {
         //check to see if the current tag has already been selected
-        console.log(selectedTagId);
         if (selectedTagId !== 0 && selectedTagId !== "") {
             if (!chosenTags.some(tag => tag.id === +selectedTagId)) {
                 //get the tag object to pass to the chosenTags array
