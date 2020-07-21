@@ -163,7 +163,7 @@ const PostDetails = () => {
                         {
                             post.categoryId !== 0
                                 ?
-                                <h4><Badge className="text-left ml-1 p-2 badge-secondary badge-outlined">{post.category.name}</Badge></h4>
+                                <h4><Badge className="text-left ml-1 p-2 badge-secondary badge-outlined">{post.category?.name}</Badge></h4>
                                 :
                                 ""
                         }
