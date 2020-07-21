@@ -62,6 +62,17 @@ namespace Tabloid.Repositories
                             .OrderByDescending(p => p.CreateDateTime)
                             .ToList();
         }
+        public List<Post> GetPublishedByUserProfileId(int id)
+        {
+            return _context.Post.Include(p => p.UserProfile)
+                            .Include(p => p.Category)
+                            .Where(p => p.UserProfileId == id)
+                            .Where(p => p.IsApproved == true)
+                            .Where(p => p.PublishDateTime <= DateAndTime.Now)
+                            .Where(p => p.UserProfile.IsApproved == true)
+                            .OrderByDescending(p => p.CreateDateTime)
+                            .ToList();
+        }
 
         public void Add(Post post)
         {

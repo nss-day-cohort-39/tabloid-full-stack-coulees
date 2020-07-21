@@ -35,10 +35,19 @@ namespace Tabloid.Repositories
                             .Include(p => p.SubscriberUserProfile)
                             .FirstOrDefault(p => p.Id == id);
         }
+        public Subscription GetByPost(Post post)
+        {
+            return _context.Subscription
+                            .Include(s => s.SubscriberUserProfile)
+                            .Include(s => s.ProviderUserProfile)
+                            .Where(s => s.EndDateTime == null)
+                            .FirstOrDefault(p => p.ProviderUserProfileId == post.UserProfileId);
+        }
         public List<Subscription> GetByUserProfileId(int id)
         {
-            return _context.Subscription.Include(p => p.SubscriberUserProfile)
-                            .Where(p => p.Id== id)
+            return _context.Subscription
+                            .Where(s => s.SubscriberUserProfileId == id)
+                            .Where(s => s.EndDateTime == null)
                             .ToList();
         }
 
@@ -53,6 +62,11 @@ namespace Tabloid.Repositories
         {
             var subscription = GetById(id);
             _context.Subscription.Remove(subscription);
+            _context.SaveChanges();
+        }
+        public void Update(Subscription sub)
+        {
+            _context.Entry(sub).State = EntityState.Modified;
             _context.SaveChanges();
         }
     }
