@@ -32,13 +32,6 @@ export const ImageProvider = (props) => {
                     Authorization: `Bearer ${token}`,
                     "Content-Type": "application/json"
                 }
-            }).then(resp => {
-                if (resp.ok) {
-                    return
-                }
-                else {
-                    window.alert("The image could not be deleted")
-                }
             }));
     };
 

@@ -84,10 +84,11 @@ const EditPostForm = ({ showEdit, postId }) => {
         console.log(file);
 
         const Post = {};
+        let newImageName = ""
 
         //code for handling the image upload
         if (file === undefined) {
-            Post.imageLocation = null;
+            Post.imageLocation = post.imageLocation;
         } else {
             //get file extension
             const extension = file.name.split('.').pop();
@@ -103,19 +104,11 @@ const EditPostForm = ({ showEdit, postId }) => {
             if (!allowedExstensions.includes(extension)) {
                 window.alert("Your file must be a .jpg, .gif, .png, or .bmp.");
                 return;
-            } else {
-
-                const newImageName = `${new Date().getTime()}.${extension}`;
-
-                const formData = new FormData();
-                formData.append('file', file, newImageName);
-
-                uploadImage(formData, newImageName)
-                    .then(deleteImage(post.imageLocation)); //delete old image
-
-                Post.imageLocation = newImageName;
             }
+
+            newImageName = `${new Date().getTime()}.${extension}`;
         }
+
         //setPreview(null);
 
         Post.title = title.current.value;
@@ -143,6 +136,17 @@ const EditPostForm = ({ showEdit, postId }) => {
         console.log(Post)
 
         updatePost(Post, chosenTags)
+            .then(() => {
+                if (file !== undefined) {
+                    const formData = new FormData();
+                    formData.append('file', file, newImageName);
+
+                    uploadImage(formData, newImageName)
+                        .then(deleteImage(post.imageLocation)); //delete old image
+
+                    Post.imageLocation = newImageName;
+                }
+            })
             .then(() => {
                 history.push({ pathname: "/empty" });
                 history.replace({ pathname: location.pathname })
