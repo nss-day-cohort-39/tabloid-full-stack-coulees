@@ -181,7 +181,7 @@ const PostDetails = () => {
                         }
                     </div>
                     <h4 className="font-weight-normal">by <Link to={`/users/${post.userProfile.firebaseUserId}`}>{post.userProfile.fullName}</Link></h4>
-                    <h4 className="font-weight-normal">{dateTimeFormat === undefined ? "Unpublished" : "Posted" + dateTimeFormat}</h4>
+                    <h4 className="font-weight-normal">{dateTimeFormat === undefined ? "Unpublished" : "Posted " + dateTimeFormat}</h4>
                     {
                         postTags.length > 0
                             ?
