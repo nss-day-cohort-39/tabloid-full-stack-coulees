@@ -81,7 +81,6 @@ namespace Tabloid.Controllers
             return NoContent();
         }
 
-
         [HttpPost]
         public IActionResult Comment(Comment comment)
         {

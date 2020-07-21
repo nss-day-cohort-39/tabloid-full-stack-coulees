@@ -163,7 +163,7 @@ const PostDetails = () => {
                         {
                             post.categoryId !== 0
                                 ?
-                                <Badge className="text-left ml-1 p-2 badge-secondary badge-outlined">{post.category.name}</Badge>
+                                <Badge className="text-left ml-1 p-2 badge-secondary badge-outlined">{post.category?.name}</Badge>
                                 :
                                 ""
                         }
@@ -171,19 +171,19 @@ const PostDetails = () => {
 
                             post.categoryId === 0 && currentUserId === post.userProfileId
                                 ?
-                                <h4><Badge className="text-left ml-1 p-2 badge-secondary badge-outlined">{post.category.name}</Badge></h4>
+                                <h4><Badge className="text-left ml-1 p-2 badge-secondary badge-outlined">{post.category?.name}</Badge></h4>
                                 :
                                 ""
                         }
                     </h2>
-                    <h4 className="font-weight-normal">by <Link to={`/users/${post.userProfile.firebaseUserId}`}>{post.userProfile.fullName}</Link></h4>
+                    <h4 className="font-weight-normal">by <Link to={`/users/${post.userProfile?.firebaseUserId}`}>{post.userProfile?.fullName}</Link></h4>
                     <h4 className="font-weight-normal">Posted {dateTimeFormat ? dateTimeFormat : ''}</h4>
                     {
                         postTags.length > 0
                             ?
                             <h5 className="mt-3">
                                 {postTags.map(tag => {
-                                    return (<Badge key={"tag-" + tag.id} className="mr-2 mb-2 px-2 badge-outlined badge-info">{tag.tag.name}</Badge>)
+                                    return (<Badge key={"tag-" + tag.id} className="mr-2 mb-2 px-2 badge-outlined badge-info">{tag.tag?.name}</Badge>)
                                 })}
                             </h5>
                             :
