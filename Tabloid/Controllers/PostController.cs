@@ -5,6 +5,8 @@ using Tabloid.Models;
 using Microsoft.AspNetCore.Authorization;
 using System.Security.Claims;
 using System.Collections.Generic;
+using System;
+using Microsoft.Extensions.Configuration;
 
 namespace Tabloid.Controllers
 {
@@ -19,9 +21,9 @@ namespace Tabloid.Controllers
         private readonly CommentRepository _commentRepository;
 
         //using context instead of config
-        public PostController(ApplicationDbContext context)
+        public PostController(ApplicationDbContext context, IConfiguration configuration)
         {
-            _postRepository = new PostRepository(context);
+            _postRepository = new PostRepository(context, configuration);
             _userProfileRepository = new UserProfileRepository(context);
             _postTagRepository = new PostTagRepository(context);
             _commentRepository = new CommentRepository(context);
@@ -61,20 +63,6 @@ namespace Tabloid.Controllers
             return Ok(_postRepository.GetPublished());
         }
 
-        [HttpGet("search")]
-        public IActionResult Search(string q, bool sortDesc)
-        {
-            if (q == null)
-            {
-                return Ok(_postRepository.GetAll());
-            }
-            else
-            {
-                return Ok(_postRepository.Search(q, sortDesc));
-
-            }
-
-        }
         [HttpPost]
         public IActionResult Post(Post post)
         {
@@ -125,6 +113,20 @@ namespace Tabloid.Controllers
                 return NoContent();
             }
             return Unauthorized();
+        }
+
+        [HttpGet("search")]
+        public IActionResult Search(string searchString)
+        {
+            if (String.IsNullOrEmpty(searchString))
+            {
+                return Ok(_postRepository.GetAll());
+            }
+            else
+            {
+                return Ok(_postRepository.Search(searchString));
+
+            }
         }
         private UserProfile GetCurrentUserProfile()
         {

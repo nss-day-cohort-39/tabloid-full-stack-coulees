@@ -175,7 +175,7 @@ const PostDetails = () => {
 
                             post.categoryId === 0 && currentUserId === post.userProfileId
                                 ?
-                                <h4><Badge className="text-left ml-1 p-2 badge-secondary badge-outlined">{post.category.name}</Badge></h4>
+                                <h4><Badge className="text-left ml-1 p-2 badge-secondary badge-outlined">{post.category?.name}</Badge></h4>
                                 :
                                 ""
                         }
@@ -187,7 +187,7 @@ const PostDetails = () => {
                             ?
                             <h5 className="mt-3">
                                 {postTags.map(tag => {
-                                    return (<Badge key={"tag-" + tag.id} className="mr-2 mb-2 px-2 badge-outlined badge-info">{tag.tag.name}</Badge>)
+                                    return (<Badge key={"tag-" + tag.id} className="mr-2 mb-2 px-2 badge-outlined badge-info">{tag.tag?.name}</Badge>)
                                 })}
                             </h5>
                             :

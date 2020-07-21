@@ -24,6 +24,7 @@ export default function ApplicationViews() {
   return (
     <main>
       <Switch>
+
         <Route path="/" exact>
           {isLoggedIn ? <Home /> : <Redirect to="/login" />}
         </Route>
@@ -68,6 +69,7 @@ export default function ApplicationViews() {
         <Route path="/users/:firebaseUserId" exact>
           {isLoggedIn ? <UserDetails /> : <Redirect to="/login" />}
         </Route>
+
         <Route path="/CommentList/:id">
           {isLoggedIn ? <CommentList /> : <Redirect to="/login" />}
         </Route>

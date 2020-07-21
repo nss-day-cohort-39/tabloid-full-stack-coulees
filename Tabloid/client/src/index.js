@@ -6,13 +6,15 @@ import * as firebase from "firebase/app";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "./index.css";
 
+
+
 const firebaseConfig = {
   apiKey: process.env.REACT_APP_API_KEY,
 };
 firebase.initializeApp(firebaseConfig);
 
 ReactDOM.render(
-    <App />,
+  <App />,
   document.getElementById('root')
 );
 

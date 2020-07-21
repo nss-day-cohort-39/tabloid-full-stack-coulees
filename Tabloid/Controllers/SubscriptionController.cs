@@ -5,6 +5,7 @@ using System.Security.Claims;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Configuration;
 using Tabloid.Data;
 using Tabloid.Models;
 using Tabloid.Repositories;
@@ -21,11 +22,11 @@ namespace Tabloid.Controllers
         private readonly PostRepository _postRepostiory;
 
         //using context instead of config
-        public SubscriptionController(ApplicationDbContext context)
+        public SubscriptionController(ApplicationDbContext context, IConfiguration configuration)
         {
             _subscriptionRepository = new SubscriptionRepository(context);
             _userProfileRepository = new UserProfileRepository(context);
-            _postRepostiory = new PostRepository(context);
+            _postRepostiory = new PostRepository(context, configuration);
         }
 
         [HttpGet]
