@@ -5,6 +5,8 @@
 
 ## Leave out user uploaded images
 Tabloid/client/public/images/headers/
+Tabloid/client/public/images/avatars/small/
+Tabloid/client/public/images/avatars/full/
 
 # User-specific files
 *.rsuser

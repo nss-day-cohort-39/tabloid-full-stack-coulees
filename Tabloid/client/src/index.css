@@ -134,3 +134,24 @@ hr.dotted {
   object-fit: cover;
   max-height: 40vh;
 }
+
+/* avatar classes */
+
+.avatar-round {
+  width: 40px;
+  height: 40px;
+  border-radius: 20px;
+  object-fit: cover;
+  cursor: pointer;
+}
+
+.avatar-round-large {
+  width: 150px;
+  height: 150px;
+  border-radius: 75px;
+  object-fit: cover;
+}
+
+.overflow-hidden {
+  overflow: hidden;
+}
