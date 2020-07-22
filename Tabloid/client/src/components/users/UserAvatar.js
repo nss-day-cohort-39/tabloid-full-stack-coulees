@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { Modal, ModalHeader, ModalBody } from 'reactstrap';
+import UserAvatarUploadForm from './UserAvatarUploadForm';
 
 const UserAvatar = (user) => {
 
@@ -18,6 +19,7 @@ const UserAvatar = (user) => {
                     Change Avatar
                 </ModalHeader>
                 <ModalBody>
+                    <UserAvatarUploadForm user={userProfile} />
                 </ModalBody>
             </Modal>
         </>

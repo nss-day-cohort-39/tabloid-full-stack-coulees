@@ -158,6 +158,23 @@ export function UserProfileProvider(props) {
         .then(() => history.push("/users")))
   }
 
+  const updateUser = (user) => {
+    return getToken().then((token) =>
+      fetch(apiUrl + `/${post.id}`, {
+        method: "PUT",
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify(user)
+      }).then(resp => {
+        if (resp.ok) {
+          return;
+        }
+        throw new Error("Unauthorized");
+      }));
+  }
+
   const reactivateUser = (user) => {
     return getToken().then((token) =>
       fetch(apiUrl + `/reactivate/${user.id}`, {
