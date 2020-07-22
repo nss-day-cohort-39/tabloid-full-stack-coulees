@@ -189,7 +189,7 @@ namespace Tabloid.Repositories
                                 post.PublishDateTime = reader.GetDateTime(reader.GetOrdinal("PublishDateTime"));
                             }
 
-                            if (!reader.IsDBNull(reader.GetOrdinal("ImageLocation")))
+                            if (!reader.IsDBNull(reader.GetOrdinal("upImageLocation")))
 
                             {
                                 post.UserProfile.ImageLocation = reader.GetString(reader.GetOrdinal("UpImageLocation"));
