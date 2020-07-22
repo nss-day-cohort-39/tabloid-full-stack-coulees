@@ -49,7 +49,7 @@ export const PostProvider = (props) => {
     }
 
     const getPostsByCurrentUser = () => {
-        getToken().then((token) =>
+        return getToken().then((token) =>
             fetch(apiUrl + `/currentUser`, {
                 method: "GET",
                 headers: {
