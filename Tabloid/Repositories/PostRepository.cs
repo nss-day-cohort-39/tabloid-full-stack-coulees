@@ -125,7 +125,7 @@ namespace Tabloid.Repositories
                                p.UserProfileId, p.ImageLocation, up.DisplayName AS upDisplayName,
                                up.FirebaseUserId As upFirebaseUserId, up.FirstName AS upFirstName,
                                up.LastName AS upLastName, up.Email AS upEmail, up.CreateDateTime AS upCreateDateTime,
-                               up.ImageLocation AS upImageLocation, up.UserTypeId AS upUserTypeId, 
+                               up.ImageLocation AS UpImageLocation, up.UserTypeId AS upUserTypeId, 
                                up.IsApproved AS upIsApproved, c.Id AS CatId, c.Name AS CatName, t.Name, up.Id AS upId
                         FROM Post p
                     
@@ -189,7 +189,7 @@ namespace Tabloid.Repositories
                                 post.PublishDateTime = reader.GetDateTime(reader.GetOrdinal("PublishDateTime"));
                             }
 
-                            if (!reader.IsDBNull(reader.GetOrdinal("upImageLocation")))
+                            if (!reader.IsDBNull(reader.GetOrdinal("UpImageLocation")))
 
                             {
                                 post.UserProfile.ImageLocation = reader.GetString(reader.GetOrdinal("UpImageLocation"));
