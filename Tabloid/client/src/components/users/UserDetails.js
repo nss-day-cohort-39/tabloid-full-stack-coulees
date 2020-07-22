@@ -21,7 +21,7 @@ const UserDetails = () => {
                 <Card style={{ border: "none" }} className="smallContainer">
                     {
                         user.imageLocation
-                            ? <CardImg src={user.imageLocation} style={{ width: '150px', height: '150px' }} />
+                            ? <CardImg src={user.imageLocation.startsWith("http") ? user.imageLocation : `/images/avatars/full/${user.imageLocation}`} className="avatar-round-large" />
                             : <i className='fas fa-user fa-7x ml-4' />
                     }
                     <CardHeader style={{ backgroundColor: "#fff" }}>

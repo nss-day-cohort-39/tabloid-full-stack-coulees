@@ -17,6 +17,7 @@ export function UserProfileProvider(props) {
   const [users, setUsers] = useState([])
   const [user, setUser] = useState({})
   const [deactivated, setDeactivated] = useState([])
+  const [currentUser, setCurrentUser] = useState(null)
 
   useEffect(() => {
     firebase.auth().onAuthStateChanged((u) => {
@@ -158,23 +159,6 @@ export function UserProfileProvider(props) {
         .then(() => history.push("/users")))
   }
 
-  const updateUser = (user) => {
-    return getToken().then((token) =>
-      fetch(apiUrl + `/${post.id}`, {
-        method: "PUT",
-        headers: {
-          Authorization: `Bearer ${token}`,
-          "Content-Type": "application/json"
-        },
-        body: JSON.stringify(user)
-      }).then(resp => {
-        if (resp.ok) {
-          return;
-        }
-        throw new Error("Unauthorized");
-      }));
-  }
-
   const reactivateUser = (user) => {
     return getToken().then((token) =>
       fetch(apiUrl + `/reactivate/${user.id}`, {
@@ -194,11 +178,42 @@ export function UserProfileProvider(props) {
         .then(() => history.push("/users")))
   }
 
+  const updateUser = (user) => {
+    return getToken().then((token) =>
+      fetch(apiUrl + `/${user.id}`, {
+        method: "PUT",
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify(user)
+      }).then(resp => {
+        if (resp.ok) {
+          return;
+        }
+        throw new Error("Unauthorized");
+      }));
+  }
+
+  const getCurrentUserProfile = () => {
+    return getToken().then((token) =>
+      fetch(`${apiUrl}/current`, {
+        method: "GET",
+        headers: {
+          Authorization: `Bearer ${token}`
+        }
+      }).then(resp => resp.json())
+        .then((user) => {
+          setCurrentUser(user)
+          return user
+        }));
+  };
+
   return (
     <UserProfileContext.Provider value={{
       isLoggedIn, login, logout, register, getUserProfile, user, getActiveUsers,
       getToken, getAllUsers, users, isAdmin, setIsAdmin, setUser, deactivateUser,
-      reactivateUser, getDeactivatedUsers, deactivated
+      reactivateUser, getDeactivatedUsers, deactivated, updateUser, getCurrentUserProfile, currentUser
     }}>
       {isFirebaseReady
         ? props.children

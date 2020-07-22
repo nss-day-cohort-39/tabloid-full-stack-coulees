@@ -34,9 +34,36 @@ export const ImageProvider = (props) => {
             }));
     };
 
+    const uploadAvatarImage = (data) => {
+        return getToken().then((token) =>
+            fetch('/api/image/avatar', {
+                method: "POST",
+                headers: {
+                    Authorization: `Bearer ${token}`
+                },
+                body: data
+            }).then(resp => {
+                if (resp.ok) {
+                    return;
+                }
+                throw new Error("The image could not be uploaded.");
+            }));
+    };
+
+    const deleteAvatarImage = (image) => {
+        getToken().then((token) =>
+            fetch(`/api/image/avatar?fileName=${image}`, {
+                method: "DELETE",
+                headers: {
+                    Authorization: `Bearer ${token}`,
+                    "Content-Type": "application/json"
+                }
+            }));
+    };
+
     return (
         <ImageContext.Provider value={{
-            uploadImage, deleteImage
+            uploadImage, deleteImage, uploadAvatarImage, deleteAvatarImage
         }}>
             {props.children}
         </ImageContext.Provider>

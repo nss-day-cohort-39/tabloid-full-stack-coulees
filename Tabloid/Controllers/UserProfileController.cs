@@ -20,7 +20,7 @@ namespace Tabloid.Controllers
             _userProfileRepository = new UserProfileRepository(context);
         }
         [HttpGet]
-        public IActionResult Get()
+        public IActionResult GetCurrent()
         {
             var currentUser = GetCurrentUserProfile();
             if (currentUser.UserType.Name == "Admin")
@@ -29,6 +29,14 @@ namespace Tabloid.Controllers
             }
             return Unauthorized();
         }
+
+        [HttpGet("current")]
+        public IActionResult Get()
+        {
+            var currentUser = GetCurrentUserProfile();
+            return Ok(_userProfileRepository.GetByFirebaseUserId(currentUser.FirebaseUserId));
+        }
+
         [HttpGet("active")]
         public IActionResult GetActiveUsers()
         {
@@ -66,6 +74,14 @@ namespace Tabloid.Controllers
                 new { firebaseUserId = userProfile.FirebaseUserId },
                 userProfile);
         }
+
+        [HttpPut("{id}")]
+        public IActionResult Put(int id, UserProfile user)
+        {
+            _userProfileRepository.Update(user);
+            return NoContent();
+        }
+
         [HttpPut("deactivate/{id}")]
         public IActionResult Deactivate(int id, UserProfile user)
         {
