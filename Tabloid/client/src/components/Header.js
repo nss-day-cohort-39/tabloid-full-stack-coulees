@@ -36,7 +36,7 @@ export default function Header() {
 
   return (
     <div>
-      <Navbar light expand="md">
+      <Navbar light expand="lg">
         <NavbarBrand tag={RRNavLink} to="/"><img src={logo} className="mt-n1 mr-1" />Tabloid</NavbarBrand>
         <NavbarToggler onClick={toggle} />
         <Collapse isOpen={isOpen} navbar>

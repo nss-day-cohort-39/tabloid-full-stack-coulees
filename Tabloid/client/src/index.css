@@ -151,3 +151,7 @@ hr.dotted {
   border-radius: 75px;
   object-fit: cover;
 }
+
+.overflow-hidden {
+  overflow: hidden;
+}

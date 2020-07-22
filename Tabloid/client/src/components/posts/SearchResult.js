@@ -16,12 +16,12 @@ const SearchResult = ({ result, show }) => {
                             :
                             <CardImg top src={result.imageLocation[0] === "h" ? result.imageLocation : `/images/headers/${result.imageLocation}`} alt={result.title} />
                     }
-                    <CardHeader>{result.title}</CardHeader>
+                    <CardHeader className="overflow-hidden">{result.title}</CardHeader>
                 </Link>
                 <Collapse isOpen={collapse}>
                     <CardBody>
                         <div className="d-flex justify-content-between">
-                            <Link to={`/users/${result.userProfile?.firebaseUserId}`} onClick={() => show(false)}><p className="text-left lead">{result.userProfile?.displayName}</p></Link>
+                            <Link to={`/users/${result.userProfile?.firebaseUserId}`} onClick={() => show(false)}><p className="text-left lead overflow-hidden">{result.userProfile?.displayName}</p></Link>
                             {
                                 result.categoryId !== 0
                                     ?
